@@ -11,7 +11,7 @@ package main
  * this is going to be your basic printf, println and simlar.
  */
 import (
-	routes "./routes"
+	"routes"
 	"fmt"
 	"html"
 	http "net/http"
@@ -38,6 +38,7 @@ func serve() {
 	/* This is how you create routes. Once localhost:8080/foo gets call http will route the
 	   request to the `routes.FooHandler` */
 	http.HandleFunc("/foo", routes.FooHandler)
+	http.HandleFunc("/move", routes.MoveHandler)
 
 	/* Inline routes SHOULD NOT DO THIS FOR 99% OF CASES */
 	http.HandleFunc("/bar", func(w http.ResponseWriter, r *http.Request) {
