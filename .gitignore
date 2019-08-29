@@ -1,0 +1,28 @@
+Frontend/node_modules
+Frontend/README.md
+
+# dependencies
+Frontend/node_modules
+Frontend/.pnp
+Frontend/pnp.js
+
+# testing
+Frontend/coverage
+
+# production
+Frontend/build
+
+# misc
+Frontend/.env.local
+Frontend/.env.development.local
+Frontend/.env.test.local
+Frontend/.env.production.local
+
+Frontend/npm-debug.log*
+Frontend/yarn-debug.log*
+Frontend/yarn-error.log*
+
+# NO .DS_STORES PLEASE
+Frontend/.DS_Store
+.DS_Store
+Backend/.DS_Store
