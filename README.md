@@ -4,6 +4,7 @@
 * Download GoLang from https://golang.org
 * To view all packages GoLang offers -> https://golang.org/pkg/
 * cd to the root directory
+* Set up your environment, please reference envsetup.sh comments
 * run `go run Fractal-AI.go`
    * You can also run `go build Fractal-AI.go`
    * and then './Fractal-AI'
