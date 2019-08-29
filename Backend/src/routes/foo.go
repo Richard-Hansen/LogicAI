@@ -34,35 +34,35 @@ func FooHandler(w http.ResponseWriter, r *http.Request) {
 	/* Other datatypes */
 	var _ uint = 7
 	var _ float32 = 22. / 7
-  var _ string = "Hello"
+	var _ string = "Hello"
 
-  /* Arrays */
-  var _ [4]int
-  _ = [...]int{3, 1, 5, 10, 100}
+	/* Arrays */
+	var _ [4]int
+	_ = [...]int{3, 1, 5, 10, 100}
 
-  /* `malloc` for go */
-  _ = make([]int, 4)
+	/* `malloc` for go */
+	_ = make([]int, 4)
 
-  /* How to append arrays to eachother */
-  s := []int{1, 2, 3}
-  s = append(s, 4, 5, 6)
-  fmt.Println(s)
+	/* How to append arrays to eachother */
+	s := []int{1, 2, 3}
+	s = append(s, 4, 5, 6)
+	fmt.Println(s)
 
-  /* Multiple definitions */
-  _, _, _, _ = 1,2,3,"what"
+	/* Multiple definitions */
+	_, _, _, _ = 1, 2, 3, "what"
 
-  /* If statments */
-  if 5 < 6 {
-    fmt.Println("Stuff")
-  }
-  /* Branches, like asm */
-  goto love
+	/* If statments */
+	if 5 < 6 {
+		fmt.Println("Stuff")
+	}
+	/* Branches, like asm */
+	goto love
 love:
 
-  /* For loops */
-  for i := 1;  i<=5; i++ {
-          fmt.Printf("Welcome %d times\n",i)
-  }
+	/* For loops */
+	for i := 1; i <= 5; i++ {
+		fmt.Printf("Welcome %d times\n", i)
+	}
 }
 
 /* Lower case function, this will not be exported */
