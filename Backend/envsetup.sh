@@ -5,6 +5,6 @@
 # Run `chmod -x envsetup.sh` to give the script perms
 # Run `. envsetup.sh` to run the script                                      #
 ################################################################################
-GOPATH=$PWD
+export GOPATH=$PWD
 # Should set your GOPATH to your working directory where package main is
 printenv | grep GOPATH
