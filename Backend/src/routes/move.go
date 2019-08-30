@@ -3,9 +3,9 @@ package routes
 
 import (
 	"fmt"
-	http "net/http"
 	"html"
 	"io/ioutil"
+	http "net/http"
 )
 
 /**

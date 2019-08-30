@@ -46,10 +46,10 @@ func serve() {
 	http.Handle("/", http.FileServer(http.Dir("./Fractal-AI-Game/game/")))
 
 	/* Adding a `:` to the port number. */
-	portSyntex := ":" + strconv.Itoa(port)
-	fmt.Printf("Server running on %s\n", portSyntex)
-	
+	portSyntax := ":" + strconv.Itoa(port)
+	fmt.Printf("Server running on %s\n", portSyntax)
+
 	/* `_` is a throwaway varible, it means I don't care about the response of
 		 `http.ListenAndServe`. */
-	_ = http.ListenAndServe(portSyntex, nil)
+	_ = http.ListenAndServe(portSyntax, nil)
 }
