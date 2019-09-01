@@ -4,7 +4,7 @@ package routes
 import (
 	"fmt"
 	"html"
-	"io/ioutil"
+	// "io/ioutil"
 	http "net/http"
 )
 
@@ -18,9 +18,9 @@ func MoveHandler(w http.ResponseWriter, r *http.Request) {
 	defer fmt.Println("End MoveHandler")
 
 	/* Reading the body of the request, r */
-	reqBody, _ := ioutil.ReadAll(r.Body)
+	// reqBody, _ := ioutil.ReadAll(r.Body)
 
-	fmt.Printf("%s is type %T\n", reqBody, reqBody)
+	// fmt.Printf("%s is type %T\n", reqBody, reqBody)
 
 	/* Forming a response */
 	fmt.Fprintf(w, "Hello, you called %q", html.EscapeString(r.URL.Path))
