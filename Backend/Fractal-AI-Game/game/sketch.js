@@ -1,18 +1,21 @@
+var boundingRectangle;
+var vertices;
+
 function setup() {
-  // put setup code here
-  createCanvas(500,500)
+  createCanvas(windowWidth,windowHeight)
   rectMode(CENTER);
   textAlign(CENTER);
-  background(0)
+  boundingRectangle = new BoundingRectangle();
+  vertices = new Vertices();
 }
 
 function draw() {
-  fill(255,100,100)
-  rect(250, 250, 155, 155, 20);
+  /* Redraw the background */
+  background(0);
+  /* Draw bounding rectangle */
+  boundingRectangle.drawBoundingRectangle();
 
-  fill(0,0,255);
-  textSize(30);
-  text('Move route', 250, 260);
+  // vertices.drawGrid();
 }
 
 function mouseClicked() {
@@ -22,7 +25,7 @@ function mouseClicked() {
 
 function callMoveRoute() {
   httpPost("http://localhost:8080/move", {XOne: 0, YOne:2, XTwo:4, YTwo:6}, function(res) {
-    console.log(res);
+    // console.log(res);
   });
 
 }
