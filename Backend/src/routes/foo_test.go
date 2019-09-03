@@ -26,16 +26,16 @@ func BenchmarkLearnMultiple(b *testing.B) {
 /* Posting http test to Foo and reading response */
 func TestPOSTFoo(t *testing.T) {
 	// t.Run("Post To Foo", func(t *testing.T) {
-		request, _ := http.NewRequest(http.MethodPost, "/foo", nil)
-		response := httptest.NewRecorder()
+	request, _ := http.NewRequest(http.MethodPost, "/foo", nil)
+	response := httptest.NewRecorder()
 
-		FooHandler(response, request)
+	FooHandler(response, request)
 
-		got := response.Body.String()
-		want := "Hello foo"
+	got := response.Body.String()
+	want := "Hello foo"
 
-		if got != want {
-			t.Errorf("got %q, want %q", got, "Hello foo")
-		}
+	if got != want {
+		t.Errorf("got %q, want %q", got, "Hello foo")
+	}
 	// })
 }
