@@ -26,3 +26,5 @@ Frontend/yarn-error.log*
 Frontend/.DS_Store
 .DS_Store
 Backend/.DS_Store
+Backend/src/github.com
+Backend/pkg/

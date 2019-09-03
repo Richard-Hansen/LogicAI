@@ -1,5 +1,7 @@
 var boundingRectangle;
 var vertices;
+/* The size of the gameboard. e.g 5x5 3x8 .... */
+var size;
 
 function setup() {
   createCanvas(windowWidth,windowHeight)
@@ -7,6 +9,7 @@ function setup() {
   textAlign(CENTER);
   boundingRectangle = new BoundingRectangle();
   vertices = new Vertices();
+  size = createVector(5,5);
 }
 
 function draw() {
@@ -14,8 +17,8 @@ function draw() {
   background(0);
   /* Draw bounding rectangle */
   boundingRectangle.drawBoundingRectangle();
-
-  // vertices.drawGrid();
+  /* Draw the Grid */
+  vertices.drawGrid(size);
 }
 
 function mouseClicked() {

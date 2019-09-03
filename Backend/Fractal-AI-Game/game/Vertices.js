@@ -13,7 +13,7 @@ class Vertices {
     this.spredY = (windowHeight - windowHeight/15) - windowHeight/15;
   }
 
-  drawGrid() {
+  drawGrid(size) {
     push();
     fill(0,0,255,255);
     for(let i = 0; i < 25; i++){

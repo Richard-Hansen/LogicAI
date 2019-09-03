@@ -11,6 +11,7 @@ package main
  * this is going to be your basic printf, println and simlar.
  */
 import (
+	"MySQL"
 	"fmt"
 	http "net/http"
 	"routes"
@@ -23,11 +24,20 @@ import (
  */
 var port int = 8080
 
+const (
+	RED   = "\033[0;31m"
+	NC    = "\033[0m"
+	GREEN = "\033[0;32m"
+	BLUE  = "\033[0;34m"
+)
+
 /**
  * As usual, main is going to be where your program starts. Only `package main`
  * can contain a main. This should be very familiar
  */
 func main() {
+	fmt.Printf("%sBuilding SQL Connection%s\n", GREEN, NC)
+	MySQL.BuildConnection()
 	/* How to print to stdout */
 	fmt.Printf("Main starting\n")
 	/* This is how you call functions in Go */
@@ -47,9 +57,9 @@ func serve() {
 
 	/* Adding a `:` to the port number. */
 	portSyntax := ":" + strconv.Itoa(port)
-	fmt.Printf("Server running on %s\n", portSyntax)
+	fmt.Printf("%sServer running on %s\n%s", GREEN, portSyntax, NC)
 
 	/* `_` is a throwaway varible, it means I don't care about the response of
-		 `http.ListenAndServe`. */
+	`http.ListenAndServe`. */
 	_ = http.ListenAndServe(portSyntax, nil)
 }
