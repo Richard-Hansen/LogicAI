@@ -3,8 +3,8 @@ package main
 
 import (
 	"testing"
-  // httptest "net/http/httptest"
-  // http "net/http"
+	// httptest "net/http/httptest"
+	// http "net/http"
 )
 
 func TestServeFooRequest(t *testing.T) {
