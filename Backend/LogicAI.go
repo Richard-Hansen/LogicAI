@@ -52,6 +52,8 @@ func serve() {
 	/* @TODO */
 	http.HandleFunc("/move", routes.MoveHandler)
 
+	http.HandleFunc("/map", routes.MapHandler)
+
 	/* Default route, should send to game (i.e index.html) */
 	http.Handle("/", http.FileServer(http.Dir("./Fractal-AI-Game/game/")))
 
