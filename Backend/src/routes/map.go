@@ -1,12 +1,12 @@
 package routes
 
 import (
+	"C"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	http "net/http"
-	"C"
-	"encoding/json"
-  "os"
+	"os"
 )
 
 /**
@@ -25,23 +25,26 @@ func MapHandler(w http.ResponseWriter, r *http.Request) {
 	var mapData map[string]interface{}
 	json.Unmarshal(reqBody, &mapData)
 
-  /* Open map file @TODO */
-  mapJson, err := os.Open("gameBoards/TestMap.json")
-  /* Make sure we opened a real map */
-  if err != nil {
-    fmt.Println(err)
-  }
-  /* Close the file after scope ends */
-  defer mapJson.Close()
+	/* Open map file @TODO */
+	mapJson, err := os.Open("gameBoards/" + mapData["map"].(string) + ".json")
+	/* Make sure we opened a real map */
+	if err != nil {
+		fmt.Println(err)
+	}
+	/* Close the file after scope ends */
+	defer mapJson.Close()
 
-  /* Read Map data */
-  mapJsonInByteForm, _ := ioutil.ReadAll(mapJson)
+	/* Read Map data */
+	mapJsonInByteForm, _ := ioutil.ReadAll(mapJson)
 
-  var mapDataJson map[string]interface{}
-  json.Unmarshal(mapJsonInByteForm, &mapDataJson)
+	var mapDataJson map[string]interface{}
+	json.Unmarshal(mapJsonInByteForm, &mapDataJson)
 
-  fmt.Println(mapDataJson["MapName"])
+	data := mapDataJson["MapName"].(string) + " "
+	data += mapDataJson["size"].(string) + " "
+	data += mapDataJson["sizeName"].(string) + " "
+	data += fmt.Sprintf("%v", mapDataJson["vertices"])
 
 	/* Forming a response */
-	fmt.Fprintf(w, "%s", &mapDataJson)
+	fmt.Fprintf(w, "%s", data)
 }

@@ -1,6 +1,6 @@
 {
   "MapName": "TestMap0",
-	"size": 16,
+	"size": "16",
 	"sizeName": "4x4",
 	"vertices": [
 		[0, 0],
