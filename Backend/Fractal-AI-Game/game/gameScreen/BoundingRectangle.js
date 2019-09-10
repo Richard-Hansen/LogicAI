@@ -1,5 +1,6 @@
 
-
+/* This was JFF, this is no longer called. I will keep it here just so we can mess around
+   with ideas here. Use it as our "scratch" class (Comments are not needed) */
 class BoundingRectangle {
   constructor() {
     this.x = 0;

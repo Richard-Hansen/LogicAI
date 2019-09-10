@@ -43,7 +43,8 @@ func MapHandler(w http.ResponseWriter, r *http.Request) {
 	data := mapDataJson["MapName"].(string) + " "
 	data += mapDataJson["size"].(string) + " "
 	data += mapDataJson["sizeName"].(string) + " "
-	data += fmt.Sprintf("%v", mapDataJson["vertices"])
+	data += fmt.Sprintf("%v", mapDataJson["vertices"]) + " "
+	data += mapDataJson["connections"].(string)
 
 	/* Forming a response */
 	fmt.Fprintf(w, "%s", data)
