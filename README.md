@@ -18,8 +18,10 @@ In the world of game-playing, there are a myriad of approaches that could be tak
    * Run `. envsetup.sh`
 * run `go run Fractal-AI.go`
    * You can also run `go build Fractal-AI.go`
-   * and then './Fractal-AI'
+   * and then `./Fractal-AI`
 * Open a browser and go to `localhost:8080/`
 
 ## Helpful Tips
 * Run `go fmt file.go` to automatically format your files
+* Run `go test ./...` to run all the tests. The `. envsetup.sh` you ran before also runs these tests. 
+* Run `go test -bench=./...` to run the benchmark tests. This will tell you how fast things run.
