@@ -17,7 +17,11 @@ class gameScreen {
   /* ctor, does not require any params. Asks the backend for all mapdata */
   constructor() {
     this.callMapRoute();
+    /* Scores of the AI and player */
+    this.scoreAI = 0;
+    this.scorePlayer = 0;
   }
+
   /* draw function that will be called at 60fps once gameState has been moved to 1. */
   draw() {
     /* Setting background to white */
@@ -26,6 +30,28 @@ class gameScreen {
     this.drawVertices();
     /* Draws the title onto the screen */
     this.drawTitle();
+    /* Show the score of the player and AI */
+    this.drawScoreBoard(this.scoreAI, this.scorePlayer);
+  }
+
+  /**
+   * drawScoreBoard - This function will show the score of the AI and of the player
+   */
+  drawScoreBoard(ai, player){
+    /* push all my settings */
+    push();
+    /* Setting fontSize to windowHeight/13 */
+    textSize(windowHeight/13);
+    /* Setting style to Georgia because it looks good */
+    textFont('Georgia');
+    /* Translate back to 0,0 (so the top left corner is the (0,0) coordinate) */
+    translate(0,0);
+    /* Set my textAlign to the left so they get lined up correctly */
+    textAlign(LEFT);
+    /* Drawing 'AI' in the left top corner of the screen */
+    text('AI: ' + ai + '\nYou: ' + player, windowWidth/40, windowHeight/9);
+    /* popping all my settings so other functions dont have to deal with them */
+    pop();
   }
 
   /**

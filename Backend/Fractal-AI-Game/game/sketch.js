@@ -14,6 +14,9 @@ function setup() {
   textAlign(CENTER);
   /* Making an instance of the game, this will call the map route to setup the game */
   mgameScreen = new gameScreen();
+  /* Making an instance of the start screen, this is where you will make your
+     username and what not */
+  mstartScreen = new startScreen();
   /* Set the gameState */
   gameState = 1;
 }
@@ -25,7 +28,8 @@ function draw() {
             2 = score screen
   */
   if(gameState == 0){
-
+    /* Init state, will be called when a new user logs in */
+    mstartScreen.draw();
   }else if(gameState == 1) {
     /* Call our games draw function, conditional rendering at its finest :) */
     mgameScreen.draw();
