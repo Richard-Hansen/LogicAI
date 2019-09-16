@@ -6,6 +6,8 @@
  * 4. As a user, I would like to be remembered [by the browser] so that information is stored between sessions
  * 5. As a user, I would like to be able to select a game board to play on
  * 6. As a user, I would like to be able to navigate to the game board page so that I would be able to go to the game
+ * 16.
+ * 18.
  */
 
 
