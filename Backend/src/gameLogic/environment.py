@@ -1,6 +1,7 @@
 import numpy as np
 
-class MiniBoard:
+# environment for the 2x2 board
+class Envy:
 	def __init__(self, areas=[0.25]*4):
 
 		# edge representation value for each player
@@ -14,9 +15,9 @@ class MiniBoard:
 		self.squares_taken_areas_p1 = []
 		self.squares_taken_areas_p2 = []
 
-		# number of states is equal to (4**8) * (5**4) because each edge can be taken by p1, p2, or none - we also need to include for which squares the edge was taken to be the last edge
+		# number of states is equal to (3**12) because each edge can be taken by p1, p2, or none - we also need to include for which squares the edge was taken to be the last edge
 		# if taken by p1 or p2 - will need to also include what its bordering 
-		self.num_states = (4**8) * (5**4)
+		self.num_states = (3**16)
 
 		# the number of the edges - just will be representing each of them
 		#  _ _
@@ -24,7 +25,9 @@ class MiniBoard:
 		# |_|_|
 		# horizontal lines are from 0 - 5, vertical lines are from 6 - 11
 		# when a player makes a move, the value will be placed in this array
-		self.board = [0] * 12
+		self.edges = [0] * 12
+
+		self.squares = [0] * 4
 
 		# edges for each of the squares
 		self.top_left_square = [0, 2, 6, 8]
@@ -36,10 +39,10 @@ class MiniBoard:
 		# 1d array that says the weightage of each of the squares - numbered from topleft to bottom right
 		self.areas = areas
 
-		print(self.board, areas)
+		print(self.edges, areas)
 
 
-	# rewards calculated all the game board is filled up
+	# rewards calculated when all the game board is filled up - for each player given the player
 	def reward(self, player):
 		# calcuate the value for each of the players
 		if not self.ended():
@@ -62,9 +65,56 @@ class MiniBoard:
 
 
 	# determines if mini board is filled completely
-	def mini_board_filled(self):
-		self.ended = (0 not in self.board)
+	def tiny_board_filled(self):
+		self.ended = (0 not in self.edges)
 		return self.ended
 
 
-m = MiniBoard()
+	# tiny board over - determines whether the game is over
+	def tiny_board_over(self, during_game = False):
+		if during_game:
+			# during the game can determine whether the game is over by looking at the number of squares that have been completed
+			if len(self.squares_taken_areas_p1) + len(self.squares_taken_areas_p2) == 4:
+				# means that the game is over
+				self.ended = True
+				return True
+			return False
+		else:
+			# during other situtations, want to calculate whether the game is in a done state - for training
+			# can check whether the game is over by seeing if all the edges have weights
+			return self.tiny_board_filled()
+
+
+	# gets the current state after it has been hashed into an integer
+	def get_state(self, state_info):
+		h = 0
+		
+		for i in len(state_info):
+			# the first 12 numbers can either be 0, 1, or 2 - for the edges
+			h += (3 ** i) * state_info[i]
+		return h
+
+
+	# get the edges that are still available
+	def get_unfilled_edges(self):
+		unfilled_edges = []
+		for i in len(edges):
+			if edges[i] != 0:
+				unfilled_edges.push(i)
+		return unfilled_edges
+
+
+	# update the state of the index
+	def update_state(self, edge_chosen_index, player):
+		self.edges[edge_chosen_index] = player
+
+
+# gets the current state based on the hash and the value stored
+def get_state_hash_and_values(env, i=0, j=0, player):
+	# will have a tuple of the state, the winner, and the ended
+	results = []
+
+	for v in ()
+
+
+m = Envy()
