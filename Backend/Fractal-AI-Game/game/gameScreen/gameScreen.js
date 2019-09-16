@@ -1,3 +1,14 @@
+/**
+ * 8.
+ * 9.
+ * 10.
+ * 11.
+ * 13.
+ * 14.
+ * 15.
+ * 17.
+ */
+
 /* The MapName found in the JSON */
 var mapName;
 /* The size found in the JSON */
