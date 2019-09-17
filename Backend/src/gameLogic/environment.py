@@ -1,5 +1,3 @@
-import numpy as np
-
 # environment for the 2x2 board
 class Envy:
 	def __init__(self, areas=[0.25]*4):
@@ -30,14 +28,18 @@ class Envy:
 		self.squares = [0] * 4
 
 		# edges for each of the squares
-		self.top_left_square = [0, 2, 6, 8]
-		self.top_right_square = [1, 3, 8, 10]
-		self.bottom_left_square = [2, 4, 7, 9]
-		self.bottom_right_square = [3, 5, 9, 11]
+		self.top_left_square = [0, 2, 6, 7]
+		self.top_right_square = [1, 3, 7, 8]
+		self.bottom_left_square = [2, 4, 9, 10]
+		self.bottom_right_square = [3, 5, 10, 11]
 		self.all_squares_edges = [self.top_left_square, self.top_right_square, self.bottom_left_square, self.bottom_right_square]
 
 		# 1d array that says the weightage of each of the squares - numbered from topleft to bottom right
 		self.areas = areas
+
+		# contains the dictionary of the state and the results obtained from that environment for each player and the value that they would have
+		results_p1 = []
+		results_p2 = []
 
 		print(self.edges, areas)
 
@@ -91,6 +93,7 @@ class Envy:
 		
 		for i in len(state_info):
 			# the first 12 numbers can either be 0, 1, or 2 - for the edges
+			# last 4 numbers are to denote who has taken each edge
 			h += (3 ** i) * state_info[i]
 		return h
 
@@ -109,12 +112,65 @@ class Envy:
 		self.edges[edge_chosen_index] = player
 
 
-# gets the current state based on the hash and the value stored
-def get_state_hash_and_values(env, i=0, j=0, player):
-	# will have a tuple of the state, the winner, and the ended
-	results = []
+	# gets the current state based on the hash and the value stored
+	def get_state_hash_and_values(self, state_info):
+		# player value functions
+		p1_value = 0
+		p2_value = 0
 
-	for v in ()
+		# number of edges to complete a square
+		# edges_needed_top_left, edges_needed_top_right, edges_needed_bottom_left, edges_needed_bottom_right 
+		edges_needed = [4,4,4,4]
+		
+		for i in range(4):
+			if state_info[self.top_left_square[i]] > 0:
+				edges_needed[0] -= 1
+			if state_info[self.top_right_square[i]] > 0:
+				edges_needed[1] -= 1
+			if state_info[self.bottom_left_square[i]] > 0:
+				edges_needed[2] -= 1
+			if state_info[self.bottom_right_square[i]] > 0:
+				edges_needed[3] -= 1
+
+		# total edges remaining
+		edges_remaining = sum(edges_needed)
+
+		# player who can player next
+		next_player = self.p1 if edges_remaining % 2 == 0 else self.p2
+
+		for edges_needed_for_side_index in range(4):
+			if edges_needed[edges_needed_for_side_index] == 4 or edges_needed[edges_needed_for_side_index] == 3:
+				# same value to both
+				if next_player == self.p1:
+					p1_value += 0.5 * self.areas[edges_needed_for_side_index]
+				else:
+					p2_value += 0.5 * self.areas[edges_needed_for_side_index]
+			elif edges_needed[edges_needed_for_side_index] == 2:
+				if next_player == self.p1:
+					p1_value += 0.25 * self.areas[edges_needed_for_side_index]
+				else:
+					p2_value += 0.75 * self.areas[edges_needed_for_side_index]
+			elif edges_needed[edges_needed_for_side_index] == 1:
+				# can get that point
+				if next_player == self.p1:
+					p1_value += 0.9 * self.areas[edges_needed_for_side_index]
+				else:
+					p2_value += 0.1 * self.areas[edges_needed_for_side_index]
+			elif edges_needed[edges_needed_for_side_index] == 0:
+				if state_info[12] == 0:
+					p1_value += self.areas[edges_needed_for_side_index]
+				else:
+					p2_value += self.areas[edges_needed_for_side_index]
+
+		print("P VALUES", p1_value, p2_value)
+   
+		# else:
+		# 	# to get all the possible states
+		# 	self.get_state_hash_and_values(state_info.append(0), indicies_left - 1)
+		# 	self.get_state_hash_and_values(state_info.append(1), indicies_left - 1, areas)
+		# 	if indicies_left != 4:
+		# 		self.get_state_hash_and_values(state_info.append(2), indicies_left - 1, areas)
 
 
 m = Envy()
+m.get_state_hash_and_values([2,2,2,2,2,2,1,2,1,2,1,0,0,0,0,0])
