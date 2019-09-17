@@ -25,7 +25,7 @@ func MapHandler(w http.ResponseWriter, r *http.Request) {
 	var mapData map[string]interface{}
 	json.Unmarshal(reqBody, &mapData)
 
-	/* Open map file @TODO */
+	/* Open map json file */
 	mapJson, err := os.Open("gameBoards/" + mapData["map"].(string) + ".json")
 	/* Make sure we opened a real map */
 	if err != nil {
