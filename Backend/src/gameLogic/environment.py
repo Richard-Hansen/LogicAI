@@ -1,4 +1,31 @@
-import numpy as np
+# creates the big environment 
+class Environment:
+	def __init__(self, areas=[0.25]*16):
+		self.areas = areas
+		self.envys = self.__create_envys()
+
+	# creates the smaller environments based on the big environment provided
+	def __create_envys(self):
+		envys = []
+		for i in range(9):
+			mini_areas = self.areas[i:i+2]
+			mini_areas += self.areas[i+4:i+6]
+			envys.append(Envy(mini_areas))
+		return envys
+
+	# gets the smaller environment with the parts
+	def get_envy(self, envy_index):
+		return self.envys[envy_index]
+
+	# creates the states for the environment
+	def create_envy_states(self):
+		for envy in envys:
+			envy.create_state_hash_and_values()
+
+	# update the smaller environment based on the agent's actions
+	def update_envys(self, player, envy_tuples):
+		for (envy_index, edge) in envy_tuples:
+			self.envys[envy_index].update_state(player, edge)
 
 # environment for the 2x2 board
 class Envy:
@@ -30,14 +57,17 @@ class Envy:
 		self.squares = [0] * 4
 
 		# edges for each of the squares
-		self.top_left_square = [0, 2, 6, 8]
-		self.top_right_square = [1, 3, 8, 10]
-		self.bottom_left_square = [2, 4, 7, 9]
-		self.bottom_right_square = [3, 5, 9, 11]
+		self.top_left_square = [0, 2, 6, 7]
+		self.top_right_square = [1, 3, 7, 8]
+		self.bottom_left_square = [2, 4, 9, 10]
+		self.bottom_right_square = [3, 5, 10, 11]
 		self.all_squares_edges = [self.top_left_square, self.top_right_square, self.bottom_left_square, self.bottom_right_square]
 
 		# 1d array that says the weightage of each of the squares - numbered from topleft to bottom right
 		self.areas = areas
+
+		# contains the dictionary of the state and the results obtained from that environment for each player and the value that they would have
+		self.hash_to_values = None
 
 		print(self.edges, areas)
 
@@ -49,19 +79,7 @@ class Envy:
 			return 0
 
 		# calculate the amount to give to each player
-		return sum(squares_taken_areas_p1) if player == p1 else sum(squares_taken_areas_p2)
-		
-
-	# determines if a square has been filled and appends the area of that square to the list of squares captured 
-	def square_filled(self, current_player, edge_filled):
-		filled = False
-
-		for i in len(self.all_squares_edges):
-			if edge_filled in self.all_squares_edges[i]:
-				self.squares_taken_areas.append(self.areas[i])
-				filled = True
-
-		return filled
+		return sum(squares_taken_areas_p1) if player == p1 else sum(squares_taken_areas_p2)		
 
 
 	# determines if mini board is filled completely
@@ -86,11 +104,12 @@ class Envy:
 
 
 	# gets the current state after it has been hashed into an integer
-	def get_state(self, state_info):
+	def get_hash(self, state_info):
 		h = 0
 		
-		for i in len(state_info):
+		for i in range(len(state_info)):
 			# the first 12 numbers can either be 0, 1, or 2 - for the edges
+			# last 4 numbers are to denote who has taken each edge
 			h += (3 ** i) * state_info[i]
 		return h
 
@@ -105,16 +124,124 @@ class Envy:
 
 
 	# update the state of the index
-	def update_state(self, edge_chosen_index, player):
+	def update_state(self, player, edge_chosen_index):
 		self.edges[edge_chosen_index] = player
 
 
-# gets the current state based on the hash and the value stored
-def get_state_hash_and_values(env, i=0, j=0, player):
-	# will have a tuple of the state, the winner, and the ended
-	results = []
+	# calcuate the value for each the states
+	def calculate_values(self, state_info):
+		# player value functions
+		value = 0
 
-	for v in ()
+		# number of edges to complete a square
+		# edges_needed_top_left, edges_needed_top_right, edges_needed_bottom_left, edges_needed_bottom_right 
+		edges_needed = [4,4,4,4]
+		
+		for i in range(4):
+			if state_info[self.top_left_square[i]] > 0:
+				edges_needed[0] -= 1
+			if state_info[self.top_right_square[i]] > 0:
+				edges_needed[1] -= 1
+			if state_info[self.bottom_left_square[i]] > 0:
+				edges_needed[2] -= 1
+			if state_info[self.bottom_right_square[i]] > 0:
+				edges_needed[3] -= 1
+
+		# total edges remaining
+		edges_remaining = sum(edges_needed)
+
+		for edges_needed_for_side_index in range(4):
+			if edges_needed[edges_needed_for_side_index] == 4 or edges_needed[edges_needed_for_side_index] == 3:
+				value += 0.5 * self.areas[edges_needed_for_side_index]
+			elif edges_needed[edges_needed_for_side_index] == 2:
+				value += 0.25 * self.areas[edges_needed_for_side_index]
+			elif edges_needed[edges_needed_for_side_index] == 1:
+				value += 0.9 * self.areas[edges_needed_for_side_index]
+			elif edges_needed[edges_needed_for_side_index] == 0:
+				if state_info[edges_needed_for_side_index + 12] == self.p1:
+					value += self.areas[edges_needed_for_side_index]
+
+		# print("VALUES", value)
+		return value
+
+	# gets the state value
+	def state_value_for_choosing_edge(self, player, edge_to_consider_index):
+		if self.edges[edge_to_consider_index] == 0:
+			self.edges[edge_to_consider_index] = player
+
+			value = self.hash_to_values[self.get_hash(self.edges)]
+
+			self.edges[edge_to_consider_index] = 0
+
+			return value
+
+		raise Exception('Edge already chosen')
 
 
-m = Envy()
+	# gets the current state based on the hash and the value stored
+	def create_state_hash_and_values(self):
+		self.hash_to_values = {}
+
+		TERNARY = 3
+		# Written in coordination with Richard 
+		# please don't judge us, it had to be done for the sake of the project
+		for a in range(TERNARY): # 0
+			for b in range(TERNARY): # 1
+				for c in range(TERNARY): # 2
+					for d in range(TERNARY): # 3
+						for e in range(TERNARY): # 4
+							for f in range(TERNARY): # 5
+								for g in range(TERNARY): # 6
+									for h in range(TERNARY): # 7
+										for i in range(TERNARY): # 8
+											for j in range(TERNARY): # 9
+												for k in range(TERNARY): # 10
+													for l in range(TERNARY): # 11
+														for m in range(TERNARY - 1): # 12
+															for n in range(TERNARY - 1): # 13
+																for o in range(TERNARY - 1): # 14
+																	for p in range(TERNARY - 1): # 15
+																		state_info = [a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p]
+
+																		# if there is an empty edge, then the square cannot be owned
+																		if (a == 0 or c == 0 or g == 0 or h == 0) and m != 0:
+																			continue
+																		if (b == 0 or d == 0 or h == 0 or i == 0) and n != 0:
+																			continue
+																		if (c == 0 or e == 0 or j == 0 or k == 0) and o != 0:
+																			continue
+																		if (d == 0 or f == 0 or k == 0 or l == 0) and p != 0:
+																			continue
+
+																		# if all edges are taken then the square must be owned
+																		if (a != 0 and c != 0 and g != 0 and h != 0) and m == 0:
+																			continue
+																		if (b != 0 and d != 0 and h != 0 and i != 0) and n == 0:
+																			continue
+																		if (c != 0 and e != 0 and j != 0 and k != 0) and o == 0:
+																			continue
+																		if (d != 0 and f != 0 and k != 0 and l != 0) and p == 0:
+																			continue
+
+
+																		# the number of moves made by each player must be within a distance of 1 of eachother
+																		count_1 = 0
+																		count_2 = 0
+																		for v in state_info:
+																			if v == 1:
+																				count_1 += 1
+																			elif v == 2:
+																				count_2 += 1
+
+																		if abs(count_1 - count_2) > 1:
+																			continue
+
+																		h = self.get_hash(state_info)
+																		value = self.calculate_values(state_info)
+																		self.hash_to_values[h] = value
+
+
+		print(self.hash_to_values)
+
+m = Envy(areas=[0.05, 0.25, 0.4, 0.1])
+m.create_state_hash_and_values()
