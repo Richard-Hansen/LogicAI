@@ -48,7 +48,7 @@ class startScreen {
   /*
   * switch - hides inputs and switches gameState
   */
-  switch = () => {
+  switch() {
     this.bs.hide()
     this.ds.hide()
     this.input.hide()
@@ -59,7 +59,7 @@ class startScreen {
   /*
   * playGame - checks if username has been entered and sets username then switches page
   */
-  playGame = () => {
+  playGame() {
     if (!this.input.elt.value) {
       alert("Please enter a username")
     } else {
@@ -83,7 +83,7 @@ class startScreen {
   /*
   * callAuthRoute - Sets username
   */
-  callAuthRoute = () => {
+  callAuthRoute() {
     var that = this
     httpPost("http://localhost:8080/auth", { user: userID, username: that.input.elt.value }, function (res) {
       window.localStorage.setItem("userName", that.input.elt.value)
@@ -93,7 +93,7 @@ class startScreen {
   /*
   * callScoresRoute - Gets high scores
   */
-  callScoresRoute = () => {
+  callScoresRoute() {
     httpPost("http://localhost:8080/hiscores", function (res) {
       console.log(res)
     })

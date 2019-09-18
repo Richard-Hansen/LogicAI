@@ -14,40 +14,44 @@ class BoardSelector {
             this.boardContainer.style('left', '65%')
             this.boardContainer.style('margin-left', -1 * 400 / 2 + 'px')
         } catch (err) {
-
+            console.log("error", err)
         }
         this.buttons = []
+        var that = this
         for (var i = 0; i < 20; i += 1) {
-            let fnc = function () {
-                this.changeBoard(i)
-            }
             try {
                 var c = createButton((i + 1).toString())
-                c.parent(this.boardContainer)
+                c.parent(that.boardContainer)
                 c.style('width', '100%')
                 c.style('height', '40px')
                 c.style('background-color', 'rgba(255,0,0,0.1)')
-                c.mousePressed(fnc)
-                this.buttons.push(c)
-            } catch (err) { }
+                c.attribute('name', i)
+                c.mousePressed(this.changeBoard(i))
+                that.buttons.push(c)
+            } catch (err) {
+                console.log("error in createbutton", err)
+            }
         }
         // Retrieve board from local storage
         board = window.localStorage.getItem("board")
         // Calling curried functions requires calling the second function hence ()()
-        this.changeBoard(board)
+        this.changeBoard(board)()
     }
 
     changeBoard(e) {
-        if (e === undefined)
-            return
-        board = e
-        window.localStorage.setItem("board", e)
-        try {
-            this.buttons.forEach(element => {
-                element.style('background-color', 'rgba(255,0,0,0.1)')
-            });
-            this.buttons[e].style('background-color', 'rgba(255,0,0,0.6)')
-        } catch (err) { }
+        var that = this // store this for scope change
+        return function () {
+            if (e === undefined)
+                return
+            board = e
+            window.localStorage.setItem("board", e)
+            try {
+                that.buttons.forEach(element => {
+                    element.style('background-color', 'rgba(255,0,0,0.1)')
+                });
+                that.buttons[e].style('background-color', 'rgba(255,0,0,0.6)')
+            } catch (err) { }
+        }
     }
 
     hide() {
