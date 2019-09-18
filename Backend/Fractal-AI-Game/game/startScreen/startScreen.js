@@ -83,16 +83,17 @@ class startScreen {
   /*
   * callAuthRoute - Sets username
   */
-  callAuthRoute() {
-    httpPost("http://localhost:8080/auth", { user: userID, username: this.input.elt.value }, function (res) {
-      console.log(res)
+  callAuthRoute = () => {
+    var that = this
+    httpPost("http://localhost:8080/auth", { user: userID, username: that.input.elt.value }, function (res) {
+      window.localStorage.setItem("userName", that.input.elt.value)
     })
   }
 
   /*
   * callScoresRoute - Gets high scores
   */
-  callScoresRoute() {
+  callScoresRoute = () => {
     httpPost("http://localhost:8080/hiscores", function (res) {
       console.log(res)
     })

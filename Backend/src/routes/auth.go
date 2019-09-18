@@ -40,18 +40,6 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
 		panic(rerr.Error())
 	}
 	fmt.Println(res)
-	// sqlStatement := `INSERT INTO user VALUES() * FROM user`
-	// rows, errs := db.Query(sqlStatement)
-	// defer rows.Close()
-	// for rows.Next() {
-	// 	var id int
-	// 	var name string
-	// 	errs = rows.Scan(&id, &name)
-	// 	if errs != nil {
-	// 		panic(err)
-	// 	}
-	// 	fmt.Printf("%s is %d\n", name, id)
-	// }
 
 	/* Forming a response */
 	fmt.Fprintf(w, "Hello, you called %q, %s", html.EscapeString(r.URL.Path), &reqBody)
