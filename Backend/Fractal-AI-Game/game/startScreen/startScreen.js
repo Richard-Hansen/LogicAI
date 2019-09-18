@@ -40,7 +40,7 @@ class startScreen {
     this.input.hide()
     this.button.hide()
     this.ds = new difficultySelector()
-    this.bs = new boardSelector()
+    this.bs = new BoardSelector()
     this.bs.hide()
     this.ds.hide()
   }
