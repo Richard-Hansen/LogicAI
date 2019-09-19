@@ -138,18 +138,18 @@ class AgentX86:
 		self.X_env.update_envys(player, self.big_to_tiny[action])
 
 		#update the state history for each agentling who's state changed based on the above move
-		for agent, edge in self.big_to_tiny[action]
+		for agent, edge in self.big_to_tiny[action]:
 			self.agentlings[agent].update_state_history()
 
-	# update all the state values for every agent in agneltings list
-	def update(self):
-		# for every agentling in agentX86
-		for a in agentlings:
-			# get the final reward for 
-			reward = a.env.reward(a.player)
+	# # update all the state values for every agent in agneltings list
+	# def update(self):
+	# 	# for every agentling in agentX86
+	# 	for a in agentlings:
+	# 		# get the final reward for 
+	# 		reward = a.env.reward(a.player)
 
-			for prev in reversed(a.state_history):
-				 value = a.env.
+	# 		for prev in reversed(a.state_history):
+	# 			 value = a.env.
 
 
 #AgentX86 is made up of 9 agentlings. Each agentling will contribute it's value for all it's visible edges, depending on the current game state
