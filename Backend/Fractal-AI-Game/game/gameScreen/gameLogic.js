@@ -6,6 +6,7 @@ var squaresAreas = [];
  */
 function gameLogic() {
   this.fillQuads = [];
+
   /* Constructor that will send the HTTP request to get the square data */
   this.constructor = function() {
     /* Make my HTTP request to squareData with the current map */
@@ -34,6 +35,7 @@ function gameLogic() {
      I really do not like the way this is coded and I would love to
      go back and fix this if I have time @TODO */
   this.checkSquareTaken = function(vert) {
+    if(this.playerTurn == 1) {this.playerTurn=2}else{this.playerTurn=1}
     for(var i = 0; i < squares.length; i++) {
       var tempValue = 0;
       for (var j = 0; j < squares[i].length - 1; j++) {
@@ -63,8 +65,11 @@ function gameLogic() {
         squares.splice(i,1);
         var ret = squaresAreas[i]
         squaresAreas.splice(i,1);
-        return ret;
+        return [ret, i];
       }
     }
+    return [undefined, undefined]
   }
 }
+
+// module.exports = gameLogic;
