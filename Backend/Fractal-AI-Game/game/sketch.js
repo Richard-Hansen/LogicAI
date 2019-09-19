@@ -22,7 +22,7 @@ function setup() {
      username and what not */
   mstartScreen = new startScreen();
   /* Set the gameState */
-  gameState = 0;
+  gameState = 1;
 }
 
 function draw() {

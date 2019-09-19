@@ -18,6 +18,9 @@ var sizeName;
 /* Array that contains all the vertices for our game */
 var vertices = [];
 
+/* Create the gameLogic varible */
+mgameLogic = new gameLogic();
+
 /**
  * This class will contain all the relevant game code for LogicalAI.
  * When we have entered gameState 1 the draw function found in this class will
@@ -31,8 +34,8 @@ class gameScreen {
     /* Scores of the AI and player */
     this.scoreAI = 0;
     this.scorePlayer = 0;
-    /* Create the gameLogic varible */
-    this.gameLogic = new gameLogic();
+    /* Call the ctor for gameLogic function */
+    mgameLogic.constructor();
   }
 
   /* draw function that will be called at 60fps once gameState has been moved to 1. */
@@ -45,6 +48,8 @@ class gameScreen {
     this.drawTitle();
     /* Show the score of the player and AI */
     this.drawScoreBoard(this.scoreAI, this.scorePlayer);
+    /* Need to draw the quads that are filled */
+    mgameLogic.draw();
   }
 
   /**
@@ -305,5 +310,7 @@ function mouseClicked() {
     /* Splices the dotted line from the connections array for the vertex, this will make sure
        we no longer check that line when clicking */
     vertices[res[0]].connections.splice(res[1], 1);
+    /* We now need to check if the square has been taken by the person that clicked */
+    mgameLogic.checkSquareTaken(vertices)
   }
 }
