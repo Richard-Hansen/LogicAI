@@ -3,10 +3,10 @@ package routes
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
-  http "net/http"
 	"gameLogic"
-  // "os"
+	"io/ioutil"
+	http "net/http"
+	// "os"
 	// "math"
 	// "strconv"
 	// "strings"
@@ -22,9 +22,9 @@ type MapData struct {
 }
 
 func SquareData(w http.ResponseWriter, r *http.Request) {
-  fmt.Println("SquareData start")
-  defer fmt.Println("SquareData end")
-  /* Reading the body of the request, r */
+	fmt.Println("SquareData start")
+	defer fmt.Println("SquareData end")
+	/* Reading the body of the request, r */
 	reqBody, _ := ioutil.ReadAll(r.Body)
 
 	/* Marshal data into a map */
@@ -32,12 +32,12 @@ func SquareData(w http.ResponseWriter, r *http.Request) {
 	json.Unmarshal(reqBody, &mapData)
 
 	/* Open map json file */
-  file, _ := ioutil.ReadFile("gameBoards/" + mapData["map"].(string) + ".json")
+	file, _ := ioutil.ReadFile("gameBoards/" + mapData["map"].(string) + ".json")
 	_ = file
 
-  data := MapData{}
+	data := MapData{}
 
-  _ = json.Unmarshal([]byte(file), &data);
+	_ = json.Unmarshal([]byte(file), &data)
 
 	ret := data.Squares + " "
 	areaArray := gameLogic.FindArea("Map1")
