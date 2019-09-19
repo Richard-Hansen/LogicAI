@@ -1,7 +1,7 @@
 class DifficultySelector {
     constructor() {
         // Retrieve difficulty from local storage
-        difficulty = window.localStorage.getItem("difficulty")
+        difficulty = window.localStorage.getItem("difficulty") || 'easy'
     }
 
     createInputs() {
