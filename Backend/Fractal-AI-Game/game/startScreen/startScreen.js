@@ -24,20 +24,21 @@ class startScreen {
     this.boxAlpha = 0;
     this.inpWidth = windowWidth / 3.5
     this.inpHeight = windowHeight / 15
-    this.input = createInput().size(windowWidth / 3.5, windowHeight / 15);
-    this.input.style('font-size', '30px');
-    this.input.style('border-radius', '0px');
-    this.input.style('position', 'absolute');
-    this.input.style('top', '85%');
-    this.input.style('left', '50%');
-    this.input.style('margin-left', -1 * this.inpWidth / 2 + 'px')
-    this.input.style('margin-top', -1 * this.inpHeight / 2 + 'px')
+    this.nameInput = createInput();
+    this.nameInput.size(windowWidth / 3.5, windowHeight / 15)
+    this.nameInput.style('font-size', '30px');
+    this.nameInput.style('border-radius', '0px');
+    this.nameInput.style('position', 'absolute');
+    this.nameInput.style('top', '85%');
+    this.nameInput.style('left', '50%');
+    this.nameInput.style('margin-left', -1 * this.inpWidth / 2 + 'px')
+    this.nameInput.style('margin-top', -1 * this.inpHeight / 2 + 'px')
     this.loginUser();
     this.button = createButton('play');
-    this.button.mousePressed(this.playGame);
+    this.button.mousePressed(this.playGame.bind(this));
     this.button.position(100, windowHeight / 1.1)
     this.button.center('horizontal')
-    this.input.hide()
+    this.nameInput.hide()
     this.button.hide()
     this.ds = new difficultySelector()
     this.bs = new BoardSelector()
@@ -51,7 +52,7 @@ class startScreen {
   switch() {
     this.bs.hide()
     this.ds.hide()
-    this.input.hide()
+    this.nameInput.hide()
     this.button.hide()
     gameState = 1;
   }
@@ -60,7 +61,7 @@ class startScreen {
   * playGame - checks if username has been entered and sets username then switches page
   */
   playGame() {
-    if (!this.input.elt.value) {
+    if (!this.nameInput.elt.value) {
       alert("Please enter a username")
     } else {
       this.callAuthRoute()
@@ -76,7 +77,7 @@ class startScreen {
       userID = Math.floor(Math.random() * 10000000);
       window.localStorage.setItem("userID", userID)
     } else {
-      this.input.elt.value = window.localStorage.getItem("userName");
+      this.nameInput.elt.value = window.localStorage.getItem("userName");
     }
   }
 
@@ -85,8 +86,8 @@ class startScreen {
   */
   callAuthRoute() {
     var that = this
-    httpPost("http://localhost:8080/auth", { user: userID, username: that.input.elt.value }, function (res) {
-      window.localStorage.setItem("userName", that.input.elt.value)
+    httpPost("http://localhost:8080/auth", { user: userID, username: that.nameInput.elt.value }, function (res) {
+      window.localStorage.setItem("userName", that.nameInput.elt.value)
     })
   }
 
@@ -100,7 +101,7 @@ class startScreen {
   }
 
   checkKeyPress(keyCode) {
-    if (keyCode === 13 && this.input.elt === document.activeElement) {
+    if (keyCode === 13 && this.nameInput.elt === document.activeElement) {
       this.playGame()
     }
   }
@@ -151,7 +152,7 @@ class startScreen {
     if (this.titleY < windowHeight / 7) {
       /* Set the new startscreen state */
       this.startScreenState = 1;
-      this.input.show()
+      this.nameInput.show()
       this.button.show()
       this.bs.show()
       this.ds.show()
