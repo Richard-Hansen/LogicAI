@@ -1,4 +1,5 @@
 var squares = [];
+var squaresAreas = [];
 /**
  * This function is going to check if any squares have been completed by either
  * the AI or the player.
@@ -11,11 +12,11 @@ function gameLogic() {
     httpPost("http://localhost:8080/squareData", {map: "Map1"}, function(res) {
       /* Splits the response by spaces and places it back into res */
       res = res.split(" ");
-
       /* Iterate through all indices */
-      for(let i = 0; i < res.length; i++) {
+      for(let i = 0; i < res.length-1; i++) {
         squares.push(res[i].split(","));
       }
+      squaresAreas = res[res.length-1].split(",")
     });
   }
 
@@ -60,6 +61,9 @@ function gameLogic() {
       if(tempValue == 4){
         this.fillQuads.push([squares[i][0], squares[i][1], squares[i][2], squares[i][3]]);
         squares.splice(i,1);
+        var ret = squaresAreas[i]
+        squaresAreas.splice(i,1);
+        return ret;
       }
     }
   }
