@@ -2,7 +2,7 @@ package gameLogic
 
 import (
 	"encoding/json"
-	// "fmt"
+	"fmt"
 	"io/ioutil"
 	"math"
 	"strconv"
@@ -38,8 +38,14 @@ func FindArea(mapName string) [16]float64 {
 	fullArea := 0.0
 
 	/* Reading my gameBoard json file into the varible file */
-	file, _ := ioutil.ReadFile("gameBoards/" + mapName + ".json")
+	// file, _ := ioutil.ReadFile("gameBoards/" + mapName + ".json")
+	file, err := ioutil.ReadFile(mapName)
 
+	if err != nil {
+		area[0] = -1;
+		return area
+	}
+	fmt.Println(err)
 	/* Creating an empty MapData object */
 	data := MapData{}
 
