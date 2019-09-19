@@ -1,8 +1,11 @@
+from callDatabases import set_hash_value, get_hash_value_and_state_by_hash_code
+
 # creates the big environment 
 class Environment:
-	def __init__(self, areas=[0.25]*16):
+	def __init__(self, areas=[0.25]*16, environment_id=0):
 		self.areas = areas
 		self.envys = self.__create_envys()
+		self.environment_id = map_id 
 
 	# creates the smaller environments based on the big environment provided
 	def __create_envys(self):
@@ -10,7 +13,7 @@ class Environment:
 		for i in range(9):
 			mini_areas = self.areas[i:i+2]
 			mini_areas += self.areas[i+4:i+6]
-			envys.append(Envy(mini_areas))
+			envys.append(Envy(mini_areas, self.envionment_id, i))
 		return envys
 
 	# gets the smaller environment with the parts
@@ -30,11 +33,15 @@ class Environment:
 
 # environment for the 2x2 board
 class Envy:
-	def __init__(self, areas=[0.25]*4):
+	def __init__(self, areas=[0.25]*4, environment_id=0, envy_id=0):
 
 		# edge representation value for each player
-		self.p1 = -1
-		self.p2 = 1
+		self.p1 = 1
+		self.p2 = 2
+
+		# stores teh environment and the envy id for use in the database
+		self.envy_id = envy_id
+		self.environment_id	= environment_id
 
 		# ended for the entire game
 		self.ended = False
@@ -68,7 +75,7 @@ class Envy:
 		self.areas = areas
 
 		# contains the dictionary of the state and the results obtained from that environment for each player and the value that they would have
-		self.hash_to_values = None
+		self.hash_to_values_and_state = None
 
 		print(self.edges, areas)
 
@@ -106,15 +113,18 @@ class Envy:
 
 	# gets the current state after it has been hashed into an integer
 	def get_hash(self, state_info = None):
+		# there is no state info so just get it from the current state
 		if state_info == None:
-			(self.edges + self.squares)
+			state_info = (self.edges + self.squares)
+
 		h = 0
 		k = 0
 		for i in range(len(state_info) - 1, -1, -1):
 			# the first 12 numbers can either be 0, 1, or 2 - for the edges
-			# last 4 numbers are to denote who has taken each edge
+			# last 4 numbers are to denote who has taken each square - 0, 1, or 2 
 			h += (3 ** k) * state_info[i]
 			k += 1
+
 		return h
 
 
@@ -145,32 +155,28 @@ class Envy:
 
 	# get the value of the state given the player and returns the values of the state corresponding to that hash
 	def get_state_value(self, player, hash_key):
+		# if the player is p1, then we can use the hash that we already have
+		(value, state) = get_hash_value_and_state_by_hash_code(hash_key, self.environment_id, self.envy_id)
 		if player == self.p1:
-			value = self.hash_to_values[hash_key]
 			return value
 		else:
-			# change the hash to ternary and then calculate the value for the other player
-			state_translated = self.ternary(hash_key)
-			state_translated.reverse()
-			if len(state_translated) < 16:
-				state_translated = ([0] * (16 - len(state_translated))) + state_translated
-			print("STATES IS", hash_key, state_translated)
-			# look at calcluating the value for player 2
-			value = self.calculate_values(state_translated, self.p2)
-			return value
+			# if doing the conversion from scratch
+			# state_translated = self.ternary(hash_key)
+			# state_translated.reverse()
+			# if len(state_translated) < 16:
+			# 	state_translated = ([0] * (16 - len(state_translated))) + state_translated
 
-			# get the hash key for the new value
-			# new_hash_key = self.get_hash([1 if i == 2 else 2 if i == 1 else 0 for i in state])
-			# print("OLD HASH", state, hash_key, new_hash_key)
-			# state = self.hash_to_values[new_hash_key]
+			# change the hash to ternary and then calculate the value for the other player
+			new_hash_key = self.get_hash([1 if i == 2 else 2 if i == 1 else 0 for i in state])
+			# look at calcluating the value for player 2
+			(new_value, new_state) = get_hash_value_and_state_by_hash_code(new_hash_key, self.environment_id, self.envy_id)
+			return new_value
 			
 
 	# calcuate the value for each the states
-	def calculate_values(self, state_info, player = None):
+	def calculate_values(self, state_info):
+		# print("STATE INFO", state_info)
 		# calclulate the use of the values with player 1's values
-		if player == None:
-			player = self.p1
-
 		# player value functions
 		value = 0
 
@@ -191,6 +197,8 @@ class Envy:
 		# total edges remaining
 		edges_remaining = sum(edges_needed)
 
+		# print("EDGES NEEDED", edges_needed)
+
 		for edges_needed_for_side_index in range(4):
 			if edges_needed[edges_needed_for_side_index] == 4 or edges_needed[edges_needed_for_side_index] == 3:
 				value += 0.5 * self.areas[edges_needed_for_side_index]
@@ -199,9 +207,7 @@ class Envy:
 			elif edges_needed[edges_needed_for_side_index] == 1:
 				value += 0.9 * self.areas[edges_needed_for_side_index]
 			elif edges_needed[edges_needed_for_side_index] == 0:
-				if state_info[edges_needed_for_side_index + 12] == player:
-					if player == self.p2:
-						print("HERE", value)
+				if state_info[edges_needed_for_side_index + 12] == self.p1:
 					value += self.areas[edges_needed_for_side_index]
 
 		# print("VALUES", value)
@@ -213,7 +219,7 @@ class Envy:
 		if self.edges[edge_to_consider_index] == 0:
 			self.edges[edge_to_consider_index] = player
 
-			value = self.hash_to_values[self.get_hash(self.edges)]
+			(value, state) = get_hash_value_and_state(self.get_hash(self.edges))
 
 			self.edges[edge_to_consider_index] = 0
 
@@ -224,7 +230,7 @@ class Envy:
 
 	# gets the current state based on the hash and the value stored
 	def create_state_hash_and_values(self):
-		self.hash_to_values = {}
+		self.hash_to_values_and_state = {}
 
 		TERNARY = 3
 		# Written in coordination with Richard 
@@ -280,14 +286,35 @@ class Envy:
 																		# if abs(count_1 - count_2) > 1:
 																		# 	continue
 
+																		# get the hash for the key
 																		hash_key = self.get_hash(state_info)
+
+																		# calculate the value for the state
 																		value = self.calculate_values(state_info)
-																		self.hash_to_values[hash_key] = value
 
-		print(len(self.hash_to_values))
+																		# save the hash code, value, and the state information
+																		self.hash_to_values_and_state[hash_key] = (value, state_info)
 
-m = Envy(areas=[0.05, 0.45, 0.4, 0.1])
-m.create_state_hash_and_values()
+																		if state_info == [1,0,2,0,0,0,2,1,0,0,0,0,1,0,0,0] or state_info == [2, 0,  1, 0, 0, 0, 1, 2, 0, 0, 0, 0, 2, 0, 0, 0]:
+																			print("VLAUES", value, hash_key, state_info)
 
-print("STATE", m.get_state_value(1, m.get_hash([1,0,1,0,0,0,2,2,0,1,2,0,2,0,0,0])))
-print("STATE", m.get_state_value(-1, m.get_hash([1,0,1,0,0,0,2,2,0,1,2,0,2,0,0,0])))
+
+																		# if there are enough hash to values and states, then can place in the database
+																		if len(self.hash_to_values_and_state) == 900:
+																			# hash_to_values_and_state is ready to be put in the database and then clear the local dictionary - local caching mechanism
+																			set_hash_value(self.hash_to_values_and_state, self.environment_id, self.envy_id)
+																			self.hash_to_values_and_state = {}
+
+		# at the end of the loop when the states have all been already generated - need to say that it needs to have the different values in the db
+		if len(self.hash_to_values_and_state) > 0:
+			set_hash_value(self.hash_to_values_and_state, self.environment_id, self.envy_id)
+			self.hash_to_values_and_state = {}
+
+# m = Envy(areas=[0.05, 0.45, 0.4, 0.1])
+# m.create_state_hash_and_values()
+
+# print("STATE P1", m.get_state_value(1, m.get_hash([1,0,2,1,1,1,2,1,1,1,1,1,1,0,1,1]))) 
+# print("STATEE 1!!", m.calculate_values([1,0,2,0,0,0,2,1,0,0,0,0,1,0,0,0]))
+# print("STATEE 2!!", m.calculate_values([2, 0,  1, 0, 0, 0, 1, 2, 0, 0, 0, 0, 2, 0, 0, 0]))
+
+# print("STATE P2", m.get_state_value(2, m.get_hash([1,0,2,1,1,1,2,1,1,1,1,1,1,0,1,1]))) 

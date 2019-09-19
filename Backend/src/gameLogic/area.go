@@ -2,7 +2,7 @@ package gameLogic
 
 import (
 	"encoding/json"
-	"fmt"
+	// "fmt"
 	"io/ioutil"
 	"math"
 	"strconv"
@@ -38,7 +38,7 @@ func FindArea(mapName string) [16]float64 {
 	fullArea := 0.0
 
 	/* Reading my gameBoard json file into the varible file */
-	file, _ := ioutil.ReadFile("../../gameBoards/" + mapName + ".json")
+	file, _ := ioutil.ReadFile("gameBoards/" + mapName + ".json")
 
 	/* Creating an empty MapData object */
 	data := MapData{}
@@ -126,20 +126,12 @@ func FindArea(mapName string) [16]float64 {
 		area1 := math.Sqrt(p1 * (p1 - a) * (p1 - c) * (p1 - e))
 		area2 := math.Sqrt(p2 * (p2 - b) * (p2 - d) * (p2 - e))
 
-		/* For debugging purposes. */
-		fmt.Printf("a: %g b: %g c: %g d: %g e: %g\n", a, b, c, d, e)
-		fmt.Printf("p1: %g p2: %g\n", p1, p2)
-		fmt.Printf("area1: %g area2: %g\n\n", area1, area2)
-
 		/* Adding both the triangles together to get the full area of the square */
 		area[i] = ((area1 + area2) / 16)
 
 		/* Adding my areas to the fullArea */
 		fullArea += ((area1 + area2) / 16)
 	}
-
-	/* For debugging purposes. */
-	fmt.Println(fullArea)
 
 	/* Return the [16]float64 arry that we created */
 	return area
