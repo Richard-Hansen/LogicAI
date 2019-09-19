@@ -35,7 +35,7 @@ class startScreen {
     this.nameInput.style('margin-top', -1 * this.inpHeight / 2 + 'px')
     this.loginUser();
     this.button = createButton('play');
-    this.button.mousePressed(this.playGame.bind(this));
+    this.button.mousePressed(this.playGame(this));
     this.button.position(100, windowHeight / 1.1)
     this.button.center('horizontal')
     this.nameInput.hide()
@@ -60,12 +60,14 @@ class startScreen {
   /*
   * playGame - checks if username has been entered and sets username then switches page
   */
-  playGame() {
-    if (!this.nameInput.elt.value) {
-      alert("Please enter a username")
-    } else {
-      this.callAuthRoute()
-      this.switch()
+  playGame(that) {
+    return function () {
+      if (!that.nameInput.elt.value) {
+        alert("Please enter a username")
+      } else {
+        that.callAuthRoute()
+        that.switch()
+      }
     }
   }
 
@@ -80,7 +82,7 @@ class startScreen {
       this.nameInput.elt.value = window.localStorage.getItem("userName");
     }
   }
-
+  
   /*
   * callAuthRoute - Sets username
   */
