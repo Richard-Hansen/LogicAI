@@ -16,5 +16,20 @@ environment.create_envy_states()
 # Agent X86
 agentX86 = AgentX86(environment)
 
+def take_action(verticies):
+	
+	agentX86.X_take_action()
+
 # have an agent with its agentlings connected to the environment
-# when the game is getting played
+# when the game is getting played for the reinforcement learning agents, the agents will play against each other
+# create the state hash and values for each of the states and map them to specific values
+
+# WHEN PLAYING AGAINST ANOTHER AGENT
+# each agent alternatively makes the moves
+# each agent will have its own value functions for each of the states
+# keep track of the state histories for each of the agents
+# update the values for each of the agents based on the state histories
+
+# WHEN PLAYING AGAINST HUMAN
+# in the game play logic, when it is the player's turn, they can pick a move, which gets updated in the environment
+# after the player's move, the AI makes the move, which gets updated in the environment
