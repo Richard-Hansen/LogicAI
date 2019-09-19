@@ -141,7 +141,7 @@ class AgentX86:
 		for agent, edge in self.big_to_tiny[action]
 			self.agentlings[agent].update_state_history()
 
-	# update all the state values for every agent in 
+	# update all the state values for every agent in agneltings list
 	def update(self):
 		# for every agentling in agentX86
 		for a in agentlings:
