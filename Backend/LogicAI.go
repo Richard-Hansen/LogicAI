@@ -56,6 +56,8 @@ func serve() {
 
 	http.HandleFunc("/auth", routes.AuthHandler)
 
+	http.HandleFunc("/squareData", routes.SquareData)
+
 	http.HandleFunc("/hiscores", routes.ScoreHandler)
 	/* Default route, should send to game (i.e index.html) */
 	http.Handle("/", http.FileServer(http.Dir("./Fractal-AI-Game/game/")))
