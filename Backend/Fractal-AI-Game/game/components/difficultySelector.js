@@ -1,5 +1,10 @@
-class difficultySelector {
+class DifficultySelector {
     constructor() {
+        // Retrieve difficulty from local storage
+        difficulty = window.localStorage.getItem("difficulty") || 'easy'
+    }
+
+    createInputs() {
         this.difficultyContainer = createDiv()
         this.difficultyContainer.style('position', 'absolute')
         this.difficultyContainer.style('width', '400px')
@@ -34,8 +39,6 @@ class difficultySelector {
         this.mediumButton.mousePressed(this.changeDifficulty('medium'))
         this.hardButton.mousePressed(this.changeDifficulty('hard'))
         this.extremeButton.mousePressed(this.changeDifficulty('impossible'))
-        // Retrieve difficulty from local storage
-        difficulty = window.localStorage.getItem("difficulty")
         // Calling curried functions requires calling the second function hence ()()
         this.changeDifficulty(difficulty)()
     }
@@ -47,34 +50,36 @@ class difficultySelector {
                 return
             difficulty = e
             window.localStorage.setItem("difficulty", e)
-            switch (e) {
-                case 'easy':
-                    that.easyButton.style('background-color', 'rgba(255,0,0,0.6)')
-                    that.mediumButton.style('background-color', 'rgba(255,0,0,0.1)')
-                    that.hardButton.style('background-color', 'rgba(255,0,0,0.1)')
-                    that.extremeButton.style('background-color', 'rgba(255,0,0,0.1)')
-                    break;
-                case 'medium':
-                    that.easyButton.style('background-color', 'rgba(255,0,0,0.1)')
-                    that.mediumButton.style('background-color', 'rgba(255,0,0,0.6)')
-                    that.hardButton.style('background-color', 'rgba(255,0,0,0.1)')
-                    that.extremeButton.style('background-color', 'rgba(255,0,0,0.1)')
-                    break;
-                case 'hard':
-                    that.easyButton.style('background-color', 'rgba(255,0,0,0.1)')
-                    that.mediumButton.style('background-color', 'rgba(255,0,0,0.1)')
-                    that.hardButton.style('background-color', 'rgba(255,0,0,0.6)')
-                    that.extremeButton.style('background-color', 'rgba(255,0,0,0.1)')
-                    break;
-                case 'impossible':
-                    that.easyButton.style('background-color', 'rgba(255,0,0,0.1)')
-                    that.mediumButton.style('background-color', 'rgba(255,0,0,0.1)')
-                    that.hardButton.style('background-color', 'rgba(255,0,0,0.1)')
-                    that.extremeButton.style('background-color', 'rgba(255,0,0,0.6)')
-                    break;
-                default:
-                    break;
-            }
+            try {
+                switch (e) {
+                    case 'easy':
+                        that.easyButton.style('background-color', 'rgba(255,0,0,0.6)')
+                        that.mediumButton.style('background-color', 'rgba(255,0,0,0.1)')
+                        that.hardButton.style('background-color', 'rgba(255,0,0,0.1)')
+                        that.extremeButton.style('background-color', 'rgba(255,0,0,0.1)')
+                        break;
+                    case 'medium':
+                        that.easyButton.style('background-color', 'rgba(255,0,0,0.1)')
+                        that.mediumButton.style('background-color', 'rgba(255,0,0,0.6)')
+                        that.hardButton.style('background-color', 'rgba(255,0,0,0.1)')
+                        that.extremeButton.style('background-color', 'rgba(255,0,0,0.1)')
+                        break;
+                    case 'hard':
+                        that.easyButton.style('background-color', 'rgba(255,0,0,0.1)')
+                        that.mediumButton.style('background-color', 'rgba(255,0,0,0.1)')
+                        that.hardButton.style('background-color', 'rgba(255,0,0,0.6)')
+                        that.extremeButton.style('background-color', 'rgba(255,0,0,0.1)')
+                        break;
+                    case 'impossible':
+                        that.easyButton.style('background-color', 'rgba(255,0,0,0.1)')
+                        that.mediumButton.style('background-color', 'rgba(255,0,0,0.1)')
+                        that.hardButton.style('background-color', 'rgba(255,0,0,0.1)')
+                        that.extremeButton.style('background-color', 'rgba(255,0,0,0.6)')
+                        break;
+                    default:
+                        break;
+                }
+            } catch (err) { /* probably testing */ }
         }
     }
 
@@ -86,3 +91,5 @@ class difficultySelector {
         this.difficultyContainer.show()
     }
 }
+
+module.exports = DifficultySelector;
