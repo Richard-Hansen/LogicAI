@@ -31,6 +31,8 @@ class gameScreen {
     /* Scores of the AI and player */
     this.scoreAI = 0;
     this.scorePlayer = 0;
+    /* Create the gameLogic varible */
+    this.gameLogic = new gameLogic();
   }
 
   /* draw function that will be called at 60fps once gameState has been moved to 1. */
