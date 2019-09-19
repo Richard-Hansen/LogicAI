@@ -284,10 +284,10 @@ class gameScreen {
         vertices[i].connections = temp[i].split(",");
       }
       /* Prints the metadata obtained from this post request */
-      console.log(mapName);
-      console.log(size);
-      console.log(sizeName);
-      console.log(vertices);
+      // console.log(mapName);
+      // console.log(size);
+      // console.log(sizeName);
+      // console.log(vertices);
     });
   }
 }
@@ -311,6 +311,11 @@ function mouseClicked() {
        we no longer check that line when clicking */
     vertices[res[0]].connections.splice(res[1], 1);
     /* We now need to check if the square has been taken by the person that clicked */
-    mgameLogic.checkSquareTaken(vertices)
+    add = mgameLogic.checkSquareTaken(vertices)
+    if(add != undefined){
+      mgameScreen.scorePlayer += (100 * add);
+      // console.log(mgameScreen.scorePlayer);
+    }
+
   }
 }
