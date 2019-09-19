@@ -27,6 +27,7 @@ class Environment:
 		for (envy_index, edge) in envy_tuples:
 			self.envys[envy_index].update_state(player, edge)
 
+
 # environment for the 2x2 board
 class Envy:
 	def __init__(self, areas=[0.25]*4):
@@ -104,13 +105,16 @@ class Envy:
 
 
 	# gets the current state after it has been hashed into an integer
-	def get_hash(self, state_info):
+	def get_hash(self, state_info = None):
+		if state_info == None:
+			(self.edges + self.squares)
 		h = 0
-		
-		for i in range(len(state_info)):
+		k = 0
+		for i in range(len(state_info) - 1, -1, -1):
 			# the first 12 numbers can either be 0, 1, or 2 - for the edges
 			# last 4 numbers are to denote who has taken each edge
-			h += (3 ** i) * state_info[i]
+			h += (3 ** k) * state_info[i]
+			k += 1
 		return h
 
 
@@ -128,8 +132,45 @@ class Envy:
 		self.edges[edge_chosen_index] = player
 
 
+	# finds the value of the ternary
+	def ternary(self, hash_code):
+	    if hash_code == 0:
+	        return 0
+	    nums = []
+	    while hash_code:
+	        hash_code, remainder = divmod(hash_code, 3)
+	        nums.append(remainder)
+	    return nums
+
+
+	# get the value of the state given the player and returns the values of the state corresponding to that hash
+	def get_state_value(self, player, hash_key):
+		if player == self.p1:
+			value = self.hash_to_values[hash_key]
+			return value
+		else:
+			# change the hash to ternary and then calculate the value for the other player
+			state_translated = self.ternary(hash_key)
+			state_translated.reverse()
+			if len(state_translated) < 16:
+				state_translated = ([0] * (16 - len(state_translated))) + state_translated
+			print("STATES IS", hash_key, state_translated)
+			# look at calcluating the value for player 2
+			value = self.calculate_values(state_translated, self.p2)
+			return value
+
+			# get the hash key for the new value
+			# new_hash_key = self.get_hash([1 if i == 2 else 2 if i == 1 else 0 for i in state])
+			# print("OLD HASH", state, hash_key, new_hash_key)
+			# state = self.hash_to_values[new_hash_key]
+			
+
 	# calcuate the value for each the states
-	def calculate_values(self, state_info):
+	def calculate_values(self, state_info, player = None):
+		# calclulate the use of the values with player 1's values
+		if player == None:
+			player = self.p1
+
 		# player value functions
 		value = 0
 
@@ -157,9 +198,15 @@ class Envy:
 				value += 0.25 * self.areas[edges_needed_for_side_index]
 			elif edges_needed[edges_needed_for_side_index] == 1:
 				value += 0.9 * self.areas[edges_needed_for_side_index]
+			elif edges_needed[edges_needed_for_side_index] == 0:
+				if state_info[edges_needed_for_side_index + 12] == player:
+					if player == self.p2:
+						print("HERE", value)
+					value += self.areas[edges_needed_for_side_index]
 
 		# print("VALUES", value)
 		return value
+
 
 	# gets the state value
 	def state_value_for_choosing_edge(self, player, edge_to_consider_index):
@@ -182,25 +229,65 @@ class Envy:
 		TERNARY = 3
 		# Written in coordination with Richard 
 		# please don't judge us, it had to be done for the sake of the project
-		for a in range(TERNARY):
-			for b in range(TERNARY):
-				for c in range(TERNARY):
-					for d in range(TERNARY):
-						for e in range(TERNARY):
-							for f in range(TERNARY):
-								for g in range(TERNARY):
-									for h in range(TERNARY):
-										for i in range(TERNARY):
-											for j in range(TERNARY):
-												for k in range(TERNARY):
-													for l in range(TERNARY):
-														state_info = [a,b,c,d,e,f,g,h,i,j,k,l]
-														h = self.get_hash(state_info)
-														value = self.calculate_values(state_info)
-														self.hash_to_values[h] = value
+		for a in range(TERNARY): # 0
+			for b in range(TERNARY): # 1
+				for c in range(TERNARY): # 2
+					for d in range(TERNARY): # 3
+						for e in range(TERNARY): # 4
+							for f in range(TERNARY): # 5
+								for g in range(TERNARY): # 6
+									for h in range(TERNARY): # 7
+										for i in range(TERNARY): # 8
+											for j in range(TERNARY): # 9
+												for k in range(TERNARY): # 10
+													for l in range(TERNARY): # 11
+														for m in range(TERNARY): # 12
+															for n in range(TERNARY): # 13
+																for o in range(TERNARY): # 14
+																	for p in range(TERNARY): # 15
+																		state_info = [a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p]
+
+																		# if there is an empty edge, then the square cannot be owned
+																		if (a == 0 or c == 0 or g == 0 or h == 0) and m != 0:
+																			continue
+																		if (b == 0 or d == 0 or h == 0 or i == 0) and n != 0:
+																			continue
+																		if (c == 0 or e == 0 or j == 0 or k == 0) and o != 0:
+																			continue
+																		if (d == 0 or f == 0 or k == 0 or l == 0) and p != 0:
+																			continue
+
+																		# if all edges are taken then the square must be owned
+																		if (a != 0 and c != 0 and g != 0 and h != 0) and m == 0:
+																			continue
+																		if (b != 0 and d != 0 and h != 0 and i != 0) and n == 0:
+																			continue
+																		if (c != 0 and e != 0 and j != 0 and k != 0) and o == 0:
+																			continue
+																		if (d != 0 and f != 0 and k != 0 and l != 0) and p == 0:
+																			continue
 
 
-		# print(self.hash_to_values)
+																		# the number of moves made by each player must be within a distance of 1 of eachother
+																		# count_1 = 0
+																		# count_2 = 0
+																		# for v in state_info:
+																		# 	if v == 1:
+																		# 		count_1 += 1
+																		# 	elif v == 2:
+																		# 		count_2 += 1
 
-m = Envy(areas=[0.05, 0.25, 0.4, 0.1])
+																		# if abs(count_1 - count_2) > 1:
+																		# 	continue
+
+																		hash_key = self.get_hash(state_info)
+																		value = self.calculate_values(state_info)
+																		self.hash_to_values[hash_key] = value
+
+		print(len(self.hash_to_values))
+
+m = Envy(areas=[0.05, 0.45, 0.4, 0.1])
 m.create_state_hash_and_values()
+
+print("STATE", m.get_state_value(1, m.get_hash([1,0,1,0,0,0,2,2,0,1,2,0,2,0,0,0])))
+print("STATE", m.get_state_value(-1, m.get_hash([1,0,1,0,0,0,2,2,0,1,2,0,2,0,0,0])))
