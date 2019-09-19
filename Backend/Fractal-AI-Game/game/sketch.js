@@ -20,11 +20,10 @@ function setup() {
   mgameScreen = new gameScreen();
   /* Making an instance of the start screen, this is where you will make your
      username and what not */
-  mstartScreen = new startScreen();
-  mstartScreen.createInputs()
-  mstartScreen.hide()
+  mstartScreen = new StartScreen();
+  mstartScreen.start()
   /* Set the gameState */
-  gameState = 0;
+  gameState = 1;
 }
 
 function draw() {

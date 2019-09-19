@@ -1,7 +1,7 @@
 class BoardSelector {
     constructor() {
         // Retrieve board from local storage
-        board = window.localStorage.getItem("board")
+        board = window.localStorage.getItem("board") || 0
         // Calling curried functions requires calling the second function hence ()()
         this.buttons = []
     }
