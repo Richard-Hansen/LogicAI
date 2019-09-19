@@ -11,7 +11,7 @@ describe('DifficultySelector tests', function () {
     let difficultySelector;
 
     beforeEach(function () {
-        global.difficulty = 'hard'
+        global.difficulty = undefined
         difficultySelector = new DifficultySelector();
     })
 
@@ -20,7 +20,31 @@ describe('DifficultySelector tests', function () {
         done()
     })
 
-    it('should change the board', function (done) {
+    it('should select the easy difficulty', function (done) {
+        difficultySelector.changeDifficulty('easy')()
+        expect(difficulty).to.equal('easy')
+        done()
+    })
+
+    it('should select the medium difficulty', function (done) {
+        difficultySelector.changeDifficulty('medium')()
+        expect(difficulty).to.equal('medium')
+        done()
+    })
+
+    it('should select the hard difficulty', function (done) {
+        difficultySelector.changeDifficulty('hard')()
+        expect(difficulty).to.equal('hard')
+        done()
+    })
+
+    it('should select the impossible difficulty', function (done) {
+        difficultySelector.changeDifficulty('impossible')()
+        expect(difficulty).to.equal('impossible')
+        done()
+    })
+
+    it('should change the difficulty', function (done) {
         difficultySelector.changeDifficulty('easy')()
         difficultySelector.changeDifficulty('medium')()
         expect(difficulty).to.equal('medium');
@@ -34,5 +58,10 @@ describe('DifficultySelector tests', function () {
         let newDifficulty = window.localStorage.getItem("difficulty")
         expect(oldDifficulty).to.not.equal(newDifficulty)
         done();
+    })
+
+    it('should default to zero', function (done) {
+        expect(difficulty).to.equal('easy')
+        done()
     })
 })
