@@ -16,3 +16,5 @@ environment.create_envy_states()
 # Agent X86
 agentX86 = AgentX86(environment)
 
+# have an agent with its agentlings connected to the environment
+# when the game is getting played
