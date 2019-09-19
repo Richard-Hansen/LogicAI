@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
   http "net/http"
+	"gameLogic"
   // "os"
 	// "math"
 	// "strconv"
@@ -38,6 +39,16 @@ func SquareData(w http.ResponseWriter, r *http.Request) {
 
   _ = json.Unmarshal([]byte(file), &data);
 
+	ret := data.Squares + " "
+	areaArray := gameLogic.FindArea("Map1")
+	for i := 0; i < len(areaArray); i++ {
+
+		if i == len(areaArray)-1 {
+			ret += fmt.Sprintf("%0.2f", areaArray[i])
+		} else {
+			ret += fmt.Sprintf("%0.2f", areaArray[i]) + ","
+		}
+	}
 	/* Forming a response */
-	fmt.Fprintf(w, "%s", data.Squares)
+	fmt.Fprintf(w, "%s", ret)
 }
