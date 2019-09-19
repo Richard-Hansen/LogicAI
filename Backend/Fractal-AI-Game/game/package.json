@@ -1,0 +1,26 @@
+{
+  "name": "game",
+  "version": "1.0.0",
+  "description": "",
+  "main": "p5.dom.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "babel": "^6.23.0",
+    "babel-register": "^6.26.0",
+    "chai": "^4.2.0",
+    "jsdom": "^15.1.1",
+    "jsdom-global": "^3.0.2",
+    "mock-local-storage": "^1.1.8",
+    "nodemon": "^1.19.2"
+  },
+  "devDependencies": {
+    "mocha": "^6.2.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "",
+  "license": "ISC"
+}
