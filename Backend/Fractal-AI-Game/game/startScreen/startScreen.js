@@ -11,24 +11,30 @@
  */
 
 
-class startScreen {
+class StartScreen {
   constructor() {
+    /* This is the state of the start screen we are in */
+    this.startScreenState = 0;
+  }
+
+  start() {
+    this.buildScreen()
+    this.createInputs()
+    this.hide()
+  }
+
+  buildScreen() {
     /* Position of the title X and Y. It will start in the center of the screen */
     this.titleX = windowWidth / 2;
     this.titleY = windowHeight / 2;
     /* The size of the title, this will be decreased by 1 per frame until it gets to the top */
     this.titleSize = 200;
-    /* This is the state of the start screen we are in */
-    this.startScreenState = 0;
-    this.callScoresRoute()
     this.boxAlpha = 0;
+    this.callScoresRoute()
     this.inpWidth = windowWidth / 3.5
     this.inpHeight = windowHeight / 15
     this.ds = new DifficultySelector()
     this.bs = new BoardSelector()
-    //this.createInputs()
-    // this.bs.hide()
-    // this.ds.hide()
   }
 
   createInputs() {
@@ -60,7 +66,7 @@ class startScreen {
   /*
   * switch - hides inputs and switches gameState
   */
-  switch() {
+  switchState() {
     this.hide()
     gameState = 1;
   }
@@ -72,9 +78,14 @@ class startScreen {
     return function () {
       if (!that.nameInput.elt.value) {
         alert("Please enter a username")
+        return 'NOUSERNAME'
+      } else if (that.nameInput.elt.value.length > 30) {
+        alert("Please enter a username less than 30 characters")
+        return 'LONGUSERNAME'
       } else {
         that.callAuthRoute()
-        that.switch()
+        that.switchState()
+        return 'OK'
       }
     }
   }
@@ -198,3 +209,5 @@ class startScreen {
 function keyPressed() {
   mstartScreen.checkKeyPress(keyCode);
 }
+
+module.exports = StartScreen
