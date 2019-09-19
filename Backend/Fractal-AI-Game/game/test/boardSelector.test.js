@@ -21,14 +21,14 @@ describe('BoardSelector tests', function () {
     })
 
     it('should change the board', function (done) {
-        boardSelector.changeBoard(4)
+        boardSelector.changeBoard(4)()
         expect(board).to.equal(4);
         done();
     })
 
     it('should save the board', function (done) {
         let oldBoard = window.localStorage.getItem("board")
-        boardSelector.changeBoard(20)
+        boardSelector.changeBoard(20)()
         let newBoard = window.localStorage.getItem("board")
         expect(oldBoard).to.not.equal(newBoard)
         done();
