@@ -21,6 +21,8 @@ function setup() {
   /* Making an instance of the start screen, this is where you will make your
      username and what not */
   mstartScreen = new startScreen();
+  mstartScreen.createInputs()
+  mstartScreen.hide()
   /* Set the gameState */
   gameState = 0;
 }

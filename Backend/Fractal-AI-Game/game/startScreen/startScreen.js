@@ -24,6 +24,14 @@ class startScreen {
     this.boxAlpha = 0;
     this.inpWidth = windowWidth / 3.5
     this.inpHeight = windowHeight / 15
+    this.ds = new DifficultySelector()
+    this.bs = new BoardSelector()
+    //this.createInputs()
+    // this.bs.hide()
+    // this.ds.hide()
+  }
+
+  createInputs() {
     this.nameInput = createInput();
     this.nameInput.size(windowWidth / 3.5, windowHeight / 15)
     this.nameInput.style('font-size', '30px');
@@ -38,22 +46,22 @@ class startScreen {
     this.button.mousePressed(this.playGame(this));
     this.button.position(100, windowHeight / 1.1)
     this.button.center('horizontal')
-    this.nameInput.hide()
-    this.button.hide()
-    this.ds = new difficultySelector()
-    this.bs = new BoardSelector()
+    this.ds.createInputs()
+    this.bs.createInputs()
+  }
+
+  hide() {
     this.bs.hide()
     this.ds.hide()
+    this.nameInput.hide()
+    this.button.hide()
   }
 
   /*
   * switch - hides inputs and switches gameState
   */
   switch() {
-    this.bs.hide()
-    this.ds.hide()
-    this.nameInput.hide()
-    this.button.hide()
+    this.hide()
     gameState = 1;
   }
 
@@ -82,7 +90,7 @@ class startScreen {
       this.nameInput.elt.value = window.localStorage.getItem("userName");
     }
   }
-  
+
   /*
   * callAuthRoute - Sets username
   */
