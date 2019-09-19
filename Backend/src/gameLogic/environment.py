@@ -5,7 +5,7 @@ class Environment:
 	def __init__(self, areas=[0.25]*16, environment_id=0):
 		self.areas = areas
 		self.envys = self.__create_envys()
-		self.environment_id = map_id 
+		self.environment_id = environment_id 
 
 	# creates the smaller environments based on the big environment provided
 	def __create_envys(self):
