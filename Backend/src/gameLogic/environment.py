@@ -146,20 +146,31 @@ class Envy:
 	# get the value of the state given the player and returns the values of the state corresponding to that hash
 	def get_state_value(self, player, hash_key):
 		if player == self.p1:
-			state = self.hash_to_values[hash_key]
-			return state
+			value = self.hash_to_values[hash_key]
+			return value
 		else:
 			# change the hash to ternary and then calculate the value for the other player
-			state = self.ternary(hash_key)
-			# get the hash key for the new value
-			new_hash_key = self.get_hash([1 if i == 2 else 2 if i == 1 else 0 for i in state])
-			print("OLD HASH", state, hash_key, new_hash_key)
-			state = self.hash_to_values[new_hash_key]
-			return state
+			state_translated = self.ternary(hash_key)
+			state_translated.reverse()
+			if len(state_translated) < 16:
+				state_translated = ([0] * (16 - len(state_translated))) + state_translated
+			print("STATES IS", hash_key, state_translated)
+			# look at calcluating the value for player 2
+			value = self.calculate_values(state_translated, self.p2)
+			return value
 
+			# get the hash key for the new value
+			# new_hash_key = self.get_hash([1 if i == 2 else 2 if i == 1 else 0 for i in state])
+			# print("OLD HASH", state, hash_key, new_hash_key)
+			# state = self.hash_to_values[new_hash_key]
+			
 
 	# calcuate the value for each the states
-	def calculate_values(self, state_info):
+	def calculate_values(self, state_info, player = None):
+		# calclulate the use of the values with player 1's values
+		if player == None:
+			player = self.p1
+
 		# player value functions
 		value = 0
 
@@ -188,7 +199,9 @@ class Envy:
 			elif edges_needed[edges_needed_for_side_index] == 1:
 				value += 0.9 * self.areas[edges_needed_for_side_index]
 			elif edges_needed[edges_needed_for_side_index] == 0:
-				if state_info[edges_needed_for_side_index + 12] == 0:
+				if state_info[edges_needed_for_side_index + 12] == player:
+					if player == self.p2:
+						print("HERE", value)
 					value += self.areas[edges_needed_for_side_index]
 
 		# print("VALUES", value)
@@ -271,10 +284,10 @@ class Envy:
 																		value = self.calculate_values(state_info)
 																		self.hash_to_values[hash_key] = value
 
-
 		print(len(self.hash_to_values))
 
 m = Envy(areas=[0.05, 0.45, 0.4, 0.1])
 m.create_state_hash_and_values()
 
-print("STATE", m.get_state_value(1, m.get_hash([0,0,0,0,0,0,0,0,0,1,2,0,0,0,0,0])))
+print("STATE", m.get_state_value(1, m.get_hash([1,0,1,0,0,0,2,2,0,1,2,0,2,0,0,0])))
+print("STATE", m.get_state_value(-1, m.get_hash([1,0,1,0,0,0,2,2,0,1,2,0,2,0,0,0])))
