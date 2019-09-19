@@ -4,6 +4,10 @@ var vertices;
 var size;
 /* This will tell us if they are logining in, in game, or in score screen */
 var gameState;
+var mgameScreen;
+var userID;
+var difficulty;
+var board;
 
 function setup() {
   /* Create our canvas with the max windowWidth and windowHeight */
@@ -17,8 +21,10 @@ function setup() {
   /* Making an instance of the start screen, this is where you will make your
      username and what not */
   mstartScreen = new startScreen();
+  mstartScreen.createInputs()
+  mstartScreen.hide()
   /* Set the gameState */
-  gameState = 1;
+  gameState = 0;
 }
 
 function draw() {
