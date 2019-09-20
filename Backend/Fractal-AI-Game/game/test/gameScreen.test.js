@@ -4,6 +4,7 @@ const expect = require('chai').expect;
 const mock = require('./mock-localstorage')
 
 const GameScreen = require('../gameScreen/gameScreen.js')
+const GameLogic = require('../gameScreen/gameLogic.js')
 /* p5js functions and certain DOM functions don't work with mocha
  * resulting in a lot of weird code
  */
@@ -14,6 +15,8 @@ describe('GameScreen tests', function () {
         // alert not defined for chai so pass it trash
         global.alert = function (val) { }
         global.httpPost = function (val) { }
+        // what in tarnation
+        global.GameLogic = GameLogic.constructor
         gameScreen = new GameScreen();
     })
 
