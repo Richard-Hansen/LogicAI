@@ -2,11 +2,12 @@ from callDatabases import set_hash_value, get_hash_value_and_state_by_hash_code
 
 # creates the big environment 
 class Environment:
-	def __init__(self, areas=[0.25]*16, environment_id=0):
+	def __init__(self, areas=[0.25]*16, environment_id=0, writeToDB=True):
 		self.areas = areas
 		self.environment_id = environment_id 
 		self.envys = self.__create_envys()
 		self.big_board = [0] * 40
+		self.writeToDB = writeToDB
 		
 		self.tiny_to_big = {
 							0:[0,1,4,5,8,9,20,21,22,25,26,27],
@@ -26,7 +27,7 @@ class Environment:
 		for i in range(9):
 			mini_areas = self.areas[i:i+2]
 			mini_areas += self.areas[i+4:i+6]
-			envys.append(Envy(mini_areas, self.environment_id, i))
+			envys.append(Envy(mini_areas, self.environment_id, i, self.writeToDB))
 		return envys
 
 	# gets the smaller environment with the parts
@@ -55,7 +56,7 @@ class Environment:
 
 # environment for the 2x2 board
 class Envy:
-	def __init__(self, areas=[0.25]*4, environment_id=0, envy_id=0):
+	def __init__(self, areas=[0.25]*4, environment_id=0, envy_id=0, writeToDB=True):
 
 		# edge representation value for each player
 		self.p1 = 1
@@ -64,6 +65,9 @@ class Envy:
 		# stores teh environment and the envy id for use in the database
 		self.envy_id = envy_id
 		self.environment_id	= environment_id
+
+		# writing again to the db
+		self.writeToDB = writeToDB
 
 		# ended for the entire game
 		self.ended = False
@@ -198,7 +202,7 @@ class Envy:
 	# get the hash to values and functions
 	def get_hash_to_state_and_values(self):
 		return self.hash_to_values_and_state
-			
+
 
 	# calcuate the value for each the states
 	def calculate_values(self, state_info):
@@ -280,7 +284,7 @@ class Envy:
 
 
 	# gets the current state based on the hash and the value stored
-	def create_state_hash_and_values(self, writeToDB = True):
+	def create_state_hash_and_values(self):
 		self.hash_to_values_and_state = {}
 
 		count = 0
@@ -349,7 +353,7 @@ class Envy:
 																		self.hash_to_values_and_state[hash_key] = (value, state_info)
 
 																		# if there are enough hash to values and states, then can place in the database
-																		if len(self.hash_to_values_and_state) == 900 and writeToDB == True:
+																		if len(self.hash_to_values_and_state) == 900 and self.writeToDB == True:
 																			print(count)
 																			count += 1
 																			# hash_to_values_and_state is ready to be put in the database and then clear the local dictionary - local caching mechanism
@@ -357,12 +361,12 @@ class Envy:
 																			self.hash_to_values_and_state = {}
 
 		# at the end of the loop when the states have all been already generated - need to say that it needs to have the different values in the db
-		if len(self.hash_to_values_and_state) > 0 and writeToDB == True:
+		if len(self.hash_to_values_and_state) > 0 and self.writeToDB == True:
 			set_hash_value(self.hash_to_values_and_state, self.environment_id, self.envy_id)
 			self.hash_to_values_and_state = {}
 
-# m = Envy(areas=[0.05, 0.45, 0.4, 0.1])
-# m.create_state_hash_and_values(writeToDB = False)
+# m = Envy(areas=[0.05, 0.45, 0.4, 0.1], writeToDB = False)
+# m.create_state_hash_and_values()
 
 # print("STATE P1", m.get_state_value(1, m.get_hash([1,0,2,1,1,1,2,1,1,1,1,1,1,0,1,1]))) 
 # print("STATEE 1!!", m.calculate_values([1,0,2,0,0,0,2,1,0,0,0,0,1,0,0,0]))
