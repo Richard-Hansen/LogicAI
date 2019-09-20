@@ -40,31 +40,37 @@ class GameLogic {
       var tempValue = 0;
       for (var j = 0; j < squares[i].length - 1; j++) {
         var shouldBeTwo = 0;
-        if (vert[squares[i][j]].clickedConnections.includes(squares[i][0])) {
-          shouldBeTwo++
-          tempValue++
-        }
-        if (vert[squares[i][j]].clickedConnections.includes(squares[i][1])) {
-          shouldBeTwo++
-          tempValue++
-        }
-        if (vert[squares[i][j]].clickedConnections.includes(squares[i][2])) {
-          shouldBeTwo++
-          tempValue++
-        }
-        if (vert[squares[i][j]].clickedConnections.includes(squares[i][3])) {
-          shouldBeTwo++
-          tempValue++
-        }
-        if (shouldBeTwo == 0) {
-          break;
+        if(squares[i][j] != -1) {
+          if(vert[squares[i][j]].clickedConnections.includes(squares[i][0])){
+            shouldBeTwo++
+            tempValue++
+          }
+          if(vert[squares[i][j]].clickedConnections.includes(squares[i][1])){
+            shouldBeTwo++
+            tempValue++
+          }
+          if(vert[squares[i][j]].clickedConnections.includes(squares[i][2])){
+            shouldBeTwo++
+            tempValue++
+          }
+          if(vert[squares[i][j]].clickedConnections.includes(squares[i][3])){
+            shouldBeTwo++
+            tempValue++
+          }
+          if(shouldBeTwo == 0){
+            break;
+          }
         }
       }
       if (tempValue == 4) {
         this.fillQuads.push([squares[i][0], squares[i][1], squares[i][2], squares[i][3]]);
-        squares.splice(i, 1);
+        // squares.splice(i,1);
+        squares[i][0] = -1;
+        squares[i][1] = -1;
+        squares[i][2] = -1;
+        squares[i][3] = -1;
         var ret = squaresAreas[i]
-        squaresAreas.splice(i, 1);
+        // squaresAreas.splice(i,1);
         return [ret, i];
       }
     }

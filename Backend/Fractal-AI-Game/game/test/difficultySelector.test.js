@@ -60,7 +60,7 @@ describe('DifficultySelector tests', function () {
         done();
     })
 
-    it('should default to zero', function (done) {
+    it('should default to easy', function (done) {
         expect(difficulty).to.equal('easy')
         done()
     })

@@ -13,6 +13,8 @@ describe('StartScreen tests', function () {
     beforeEach(function () {
         // alert not defined for chai so pass it trash
         global.alert = function (val) { }
+        global.gameState = 0
+        global.this = {}
         startScreen = new StartScreen();
     })
 
@@ -33,6 +35,24 @@ describe('StartScreen tests', function () {
         done()
     })
 
+    it('should cache correct usernames', function (done) {
+        window.localStorage.setItem("userName", "notbillbert")
+        let trash = { nameInput: { elt: { value: 'billbert' } }, callAuthRoute: function () { return true }, switchState: function () { } }
+        startScreen.playGame(trash)()
+        let username = window.localStorage.getItem("userName")
+        expect(username).to.equal('billbert')
+        done()
+    })
+
+    it('should not cache incorrect usernames', function (done) {
+        window.localStorage.setItem("userName", "billbert")
+        let trash = { nameInput: { elt: { value: 'verylongusernamethatisverylongandstuffyeah' } }, callAuthRoute: function () { return true }, switchState: function () { } }
+        let username = window.localStorage.getItem("userName")
+        startScreen.playGame(trash)()
+        expect(username).to.not.equal('verylongusernamethatisverylongandstuffyeah')
+        done()
+    })
+
     it('should allow numbered usernames', function (done) {
         let trash = { nameInput: { elt: { value: '123' } }, callAuthRoute: function () { return true }, switchState: function () { } }
         expect(startScreen.playGame(trash)()).to.equal('OK')
@@ -48,6 +68,12 @@ describe('StartScreen tests', function () {
     it('should accept 30 character usernames', function (done) {
         let trash = { nameInput: { elt: { value: 'abcdefghijklmnopqrstuvwxyz1234' } }, callAuthRoute: function () { return true }, switchState: function () { } }
         expect(startScreen.playGame(trash)()).to.equal('OK')
+        done()
+    })
+
+    it('should start the game upon press', function (done) {
+        startScreen.switchState(true)
+        expect(gameState).to.equal(1)
         done()
     })
 })

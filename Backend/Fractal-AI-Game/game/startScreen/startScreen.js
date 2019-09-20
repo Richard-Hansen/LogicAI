@@ -66,15 +66,17 @@ class StartScreen {
   /*
   * switch - hides inputs and switches gameState
   */
-  switchState() {
-    this.hide()
+  switchState(test = false) {
+    // smoke and mirrors
+    if (!test)
+      this.hide()
     gameState = 1;
   }
 
   /*
   * playGame - checks if username has been entered and sets username then switches page
   */
-  playGame(that) {
+  playGame(that, test = false) {
     return function () {
       if (!that.nameInput.elt.value) {
         alert("Please enter a username")
@@ -83,8 +85,10 @@ class StartScreen {
         alert("Please enter a username less than 30 characters")
         return 'LONGUSERNAME'
       } else {
-        if (that.callAuthRoute())
-          that.switchState()
+        if (that.callAuthRoute()) {
+          window.localStorage.setItem("userName", that.nameInput.elt.value)          
+          that.switchState(test)
+        }
         else return 'NOTOK'
         return 'OK'
       }
@@ -111,7 +115,6 @@ class StartScreen {
     var isokay = true
     httpPost("http://localhost:8080/auth", { user: userID, username: that.nameInput.elt.value }, function (res) {
       console.log("RES:", res)
-      window.localStorage.setItem("userName", that.nameInput.elt.value)
     }, function (err) {
       // deal with this better in the future
       alert("Username taken")
