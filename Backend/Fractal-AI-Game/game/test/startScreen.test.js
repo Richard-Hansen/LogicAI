@@ -13,6 +13,8 @@ describe('StartScreen tests', function () {
     beforeEach(function () {
         // alert not defined for chai so pass it trash
         global.alert = function (val) { }
+        global.gameState = 0
+        global.this = {}
         startScreen = new StartScreen();
     })
 
@@ -48,6 +50,12 @@ describe('StartScreen tests', function () {
     it('should accept 30 character usernames', function (done) {
         let trash = { nameInput: { elt: { value: 'abcdefghijklmnopqrstuvwxyz1234' } }, callAuthRoute: function () { return true }, switchState: function () { } }
         expect(startScreen.playGame(trash)()).to.equal('OK')
+        done()
+    })
+
+    it('should start the game upon press', function (done) {
+        startScreen.switchState(true)
+        expect(gameState).to.equal(1)
         done()
     })
 })
