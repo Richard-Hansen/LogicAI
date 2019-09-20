@@ -83,8 +83,9 @@ class StartScreen {
         alert("Please enter a username less than 30 characters")
         return 'LONGUSERNAME'
       } else {
-        that.callAuthRoute()
-        that.switchState()
+        if (that.callAuthRoute())
+          that.switchState()
+        else return 'NOTOK'
         return 'OK'
       }
     }
@@ -107,9 +108,16 @@ class StartScreen {
   */
   callAuthRoute() {
     var that = this
+    var isokay = true
     httpPost("http://localhost:8080/auth", { user: userID, username: that.nameInput.elt.value }, function (res) {
+      console.log("RES:", res)
       window.localStorage.setItem("userName", that.nameInput.elt.value)
+    }, function (err) {
+      // deal with this better in the future
+      alert("Username taken")
+      isokay = false
     })
+    return isokay
   }
 
   /*
