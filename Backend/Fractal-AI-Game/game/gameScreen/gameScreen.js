@@ -40,9 +40,7 @@ class gameScreen {
     /* Scores of the AI and player */
     this.scoreAI = 0;
     this.scorePlayer = 0;
-    mgameLogic = new gameLogic();
-    /* Call the ctor for gameLogic function */
-    mgameLogic.constructor();
+    mgameLogic = new GameLogic()
     /* Set player move */
     WHoTheFuckMoves = 1;
   }
@@ -64,19 +62,19 @@ class gameScreen {
   /**
    * drawScoreBoard - This function will show the score of the AI and of the player
    */
-  drawScoreBoard(ai, player){
+  drawScoreBoard(ai, player) {
     /* push all my settings */
     push();
     /* Setting fontSize to windowHeight/13 */
-    textSize(windowHeight/13);
+    textSize(windowHeight / 13);
     /* Setting style to Georgia because it looks good */
     textFont('Georgia');
     /* Translate back to 0,0 (so the top left corner is the (0,0) coordinate) */
-    translate(0,0);
+    translate(0, 0);
     /* Set my textAlign to the left so they get lined up correctly */
     textAlign(LEFT);
     /* Drawing 'AI' in the left top corner of the screen */
-    text('AI: ' + ai + '\nYou: ' + player, windowWidth/40, windowHeight/9);
+    text('AI: ' + ai + '\nYou: ' + player, windowWidth / 40, windowHeight / 9);
     /* popping all my settings so other functions dont have to deal with them */
     pop();
   }
@@ -93,20 +91,20 @@ class gameScreen {
     fill(0);
     /* translateing my coordinate plane to the center of the screen, this will help
        when we start drawing our circles. The center of the screen will be (0,0) */
-    translate(windowWidth/2, windowHeight/2);
+    translate(windowWidth / 2, windowHeight / 2);
     /* Runs through every index of vertices, this function will draw the circles, and
        draw the lines that connect them */
-    for(let i = 0; i < vertices.length; i++){
+    for (let i = 0; i < vertices.length; i++) {
       /* Draws all the dotted lines */
       this.drawDottedLines(vertices[i]);
       /* Draws all the lines that either the AI or the person have clicked on */
       this.drawClickedLines(vertices[i]);
       /* Set my screenX and screenY for each vertice. Note: This prob does not need
          to be recalculated everytime... could be moved to callMapRoute or in the ctor  */
-      vertices[i].screenX = (vertices[i].x*2)*windowWidth/20 - 4*windowWidth/20;
-      vertices[i].screenY = (vertices[i].y*2)*windowWidth/20 - 3.5*windowWidth/20;
+      vertices[i].screenX = (vertices[i].x * 2) * windowWidth / 20 - 4 * windowWidth / 20;
+      vertices[i].screenY = (vertices[i].y * 2) * windowWidth / 20 - 3.5 * windowWidth / 20;
       /* Draw my circle!!!! */
-      circle(vertices[i].screenX, vertices[i].screenY, windowWidth/80);
+      circle(vertices[i].screenX, vertices[i].screenY, windowWidth / 80);
     }
     /* Check the mouse location for each edge */
     this.checkMouse();
@@ -121,15 +119,15 @@ class gameScreen {
    */
   checkMouse() {
     /* Loop through each vertex in the vertices array */
-    for(var i = 0; i < vertices.length; i++) {
+    for (var i = 0; i < vertices.length; i++) {
       /* Set a vertex varible, makes things look a little bit nicer */
       var vertex = vertices[i];
       /* Loop through all the connections this vertex has */
       for (var j = 0; j < vertex.connections.length; j++) {
         /* Set x0 and y0 to the mouse location. I had to offset this location to make sure
            the translated position and the mouse position are on the same coordinate plane */
-        var x0 = mouseX - (windowWidth/2);
-        var y0 = mouseY - (windowHeight/2);
+        var x0 = mouseX - (windowWidth / 2);
+        var y0 = mouseY - (windowHeight / 2);
         /* Setting x1 and y1 to the screen locations of the vertex */
         var x1 = vertex.screenX;
         var y1 = vertex.screenY;
@@ -177,7 +175,7 @@ class gameScreen {
         var dx = x0 - xx;
         var dy = y0 - yy;
         /* Sqrt'ing it to find the distance from my line segment */
-        if(Math.sqrt(dx * dx + dy * dy) < 10){
+        if (Math.sqrt(dx * dx + dy * dy) < 10) {
           /* Set the dashedline to a solid line */
           drawingContext.setLineDash([]);
           /* Set strokeWeight to 2 */
@@ -198,11 +196,11 @@ class gameScreen {
    *                    all the lines that have already been clicked on by the player or
    *                    the AI. This function loops through clickedConnections of each vertex.
    */
-  drawClickedLines(vertex){
+  drawClickedLines(vertex) {
     /* push all my settings */
     push();
     /* Setting my stroke to a solid black with full opacity */
-    stroke(0,0,0,255)
+    stroke(0, 0, 0, 255)
     /* Set a strokeWeight of 3 */
     strokeWeight(3);
     /* Setting my dotted line to a solid line */
@@ -229,7 +227,7 @@ class gameScreen {
     /* Setting strokeWeight to 2 so you can see the dotted lines */
     strokeWeight(2);
     /* Setting the line color to black and the opacity to 100/255 */
-    stroke(0,0,0,100);
+    stroke(0, 0, 0, 100);
     /* Loops through all the vertices connected to our vertex by a dotted line */
     for (var i = 0; i < vertex.connections.length; i++) {
       /* Draws the dotted line */
@@ -242,7 +240,7 @@ class gameScreen {
   /**
    * drawTitle - This function draws the title of our game onto the screen.
    */
-  drawTitle(){
+  drawTitle() {
     /* push all my settings */
     push();
     /* Setting fontSize to 70 */
@@ -250,7 +248,7 @@ class gameScreen {
     /* Setting style to Georgia because it looks good */
     textFont('Georgia');
     /* Drawing 'LogicAI' in the middle of the screen at the top */
-    text('LogicAI', windowWidth/2, windowHeight/9);
+    text('LogicAI', windowWidth / 2, windowHeight / 9);
     /* popping all my settings so other functions dont have to deal with them */
     pop();
   }
@@ -262,11 +260,11 @@ class gameScreen {
    */
   callMapRoute() {
     /* A post method to the map route with a json containing the map name */
-    httpPost("http://localhost:8080/map", {map: "Map1"}, function(res) {
+    httpPost("http://localhost:8080/map", { map: "Map1" }, function (res) {
       /* Splits the response by spaces and places it back into res */
       res = res.split(" ");
       /* Iterate through all indices, except for the last one, and removed '[' and ']' */
-      for(let i = 0; i < res.length-1; i++){
+      for (let i = 0; i < res.length - 1; i++) {
         /* Regex to globally replace the two chars talked about above */
         res[i] = res[i].replace(/\[/g, "");
         res[i] = res[i].replace(/\]/g, "");
@@ -278,13 +276,13 @@ class gameScreen {
       /* Setting sizeName */
       sizeName = res[2]
       /* splitting the last array element by '-' dashes */
-      let temp = res[res.length-1].split("-");
+      let temp = res[res.length - 1].split("-");
       /* Iterates through res from [4, (res.length-1)] */
-      for(let i = 4; i < res.length-1; i++){
+      for (let i = 4; i < res.length - 1; i++) {
         /* So we can place both x and y into the new vertice */
-        if(i % 2 == 0){
+        if (i % 2 == 0) {
           /* Pushes the new coordinates onto our vertices array */
-          vertices.push(new vertice(res[i-1], res[i]));
+          vertices.push(new vertice(res[i - 1], res[i]));
         }
       }
       /* Loops through all the elements in Temp, this data contains all the connections */
@@ -306,7 +304,7 @@ function mouseClicked() {
   var res = mgameScreen.checkMouse();
   /* If we get a -1, we know it was not over a dotted line and nothing should happen, if
      we get a number that is not equal to -1 we know that they clicked on a line */
-  if(res[0] != -1){
+  if (res[0] != -1) {
     takenEdges.push([res[0], int(vertices[res[0]].connections[res[1]]), WHoTheFuckMoves])
 
     /* Pushes the dotted line clicked into clickConnections so we can display it as clicked */
@@ -317,20 +315,19 @@ function mouseClicked() {
     /* We now need to check if the square has been taken by the person that clicked */
     addAndMore = mgameLogic.checkSquareTaken(vertices)
     console.log(addAndMore);
-    console.log("FFFFFFF" + squaresAreas.length);
-    if(addAndMore[0] != undefined){ 
+    if (addAndMore[0] != undefined) {
       mgameScreen.scorePlayer += (100 * addAndMore[0]);
       takenSquare.push([addAndMore[1], WHoTheFuckMoves])
     }
     /* Change player turn */
-    if(WHoTheFuckMoves == 1) { WHoTheFuckMoves = 2 } else { WHoTheFuckMoves = 1 }
+    if (WHoTheFuckMoves == 1) { WHoTheFuckMoves = 2 } else { WHoTheFuckMoves = 1 }
 
-    httpPost("http://localhost:8080/move", {"edgesSquare": takenEdges, "ownerSquare": takenSquare}, function(res) {
+    httpPost("http://localhost:8080/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare }, function (res) {
       // var move = res.split(" ");
       // var vertexWithConnection = Math.min(move[0], move[1]);
       // var vertexWithoutConnection = Math.max(move[0], move[1]);
       // for (var i = 0; i < vertices[vertexWithConnection].connections.length; i++) {
-      //   if(vertices[vertexWithConnection].connections[i] == vertexWithoutConnection) {
+      //   if (vertices[vertexWithConnection].connections[i] == vertexWithoutConnection) {
       //     vertices[vertexWithConnection].clickedConnections.push(vertexWithoutConnection);
       //     vertices[vertexWithConnection].connections.splice(i, 1);
       //   }

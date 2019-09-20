@@ -15,12 +15,13 @@ class BoardSelector {
         this.boardContainer.style('display', 'flex')
         this.boardContainer.style('flex-direction', 'column')
         this.boardContainer.style('justify-content', 'space-between')
-        this.boardContainer.style('overflow', 'scroll')
+        // only need this if you have more than 10 boards
+        // this.boardContainer.style('overflow', 'scroll')
         this.boardContainer.style('top', '30%')
         this.boardContainer.style('left', '65%')
         this.boardContainer.style('margin-left', -1 * 400 / 2 + 'px')
         var that = this
-        for (var i = 0; i < 20; i += 1) {
+        for (var i = 0; i < 3; i += 1) {
             var c = createButton((i + 1).toString())
             c.parent(that.boardContainer)
             c.style('width', '100%')
