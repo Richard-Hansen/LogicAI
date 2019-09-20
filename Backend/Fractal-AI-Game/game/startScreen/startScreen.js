@@ -66,8 +66,10 @@ class StartScreen {
   /*
   * switch - hides inputs and switches gameState
   */
-  switchState() {
-    this.hide()
+  switchState(test = false) {
+    // smoke and mirrors
+    if (!test)
+      this.hide()
     gameState = 1;
   }
 
