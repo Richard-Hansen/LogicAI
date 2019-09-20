@@ -1,7 +1,7 @@
 /* define this file as part of the pacakge `routes` */
 package routes
 
-//package main
+// package main
 
 import (
 	"C"
@@ -12,6 +12,7 @@ import (
 	"io/ioutil"
 	"math"
 	http "net/http"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 /* Everything is going to be put into these two 2d int arrays. */
@@ -45,13 +46,21 @@ func MoveHandler(w http.ResponseWriter, r *http.Request) {
 	/* Printing what we got! */
 	fmt.Println(mapData)
 	/* Forming a response */
-	fmt.Fprintf(w, "%s", TakeAction(mapData))
-
+	actionChosen := TakeAction(mapData)
+	fmt.Fprintf(w, "%s", actionChosen)
 }
+
+
+func CheckAction(edgeChosen int) bool{
+	if edgeChosen >= 0 && edgeChosen < 40 {
+		return true
+	}
+	return false
+}
+
 
 func TakeAction(mapData MoveDataType) string {
 	p1 = 1
-	fmt.Println("Hello1")
 	/*maps a pair a vertices to an edge on the 4x4 board.*/
 	vertices_to_edges := map[[2]int]int{
 		[2]int{0, 5}:   0,
@@ -95,7 +104,6 @@ func TakeAction(mapData MoveDataType) string {
 		[2]int{18, 19}: 38,
 		[2]int{23, 24}: 39,
 	}
-	fmt.Println("Hello2")
 
 	/* maps all vertices into the big_board_edges array, the index in the array corresponds to which player owns the edge */
 	var big_board_edges [40]int
@@ -155,7 +163,6 @@ func TakeAction(mapData MoveDataType) string {
 		38: [][]int{{7, 11}, {8, 10}},
 		39: [][]int{{8, 11}},
 	}
-	fmt.Println("Hello3")
 
 	/* Calculate all 9 2x2 environments for the agentlings*/
 	var tiny_envys [9][16]int
@@ -195,18 +202,16 @@ func TakeAction(mapData MoveDataType) string {
 			tiny_envys[agentling][12+agentling_square] = big_board_squares[i]
 		}
 	}
-	fmt.Println("Hello4")
-	ret := calc_action(tiny_envys);
-	fmt.Println("Hello5")
+	ret := calc_action(tiny_envys)
 	rett := fmt.Sprintf("%d %d", ret[0], ret[1])
-	_ = rett;
-	return "0 1";
+	_ = rett
+
+	return rett
 }
 
 // hash the value for the state for the database
 func HashCode(stateInfo [16]int) string {
 	h := 0
-	fmt.Println("Wut1")
 	var k float64 //Needs to be float64.
 	// reverse and change the info for the state
 	for i := len(stateInfo) - 1; i >= 0; i-- {
@@ -217,15 +222,12 @@ func HashCode(stateInfo [16]int) string {
 		h = h + (int(math.Pow(3, k)) * stateInfo[i])
 		k += 1
 	}
-	fmt.Println("Wut2")
 	return fmt.Sprintf("%d", int(h))
 }
 
 // get the value of the hash from the database
 func GetValue(stateInfo [16]int) int {
-	fmt.Println("Goodbye1")
 	hashCode := HashCode(stateInfo)
-	fmt.Println("Goodbye2")
 	// make the call to the database
 	db, err := sql.Open("mysql", "Richard:SteveIsTheBest@tcp(198.199.121.101:3306)/logic")
 	defer db.Close()
@@ -233,7 +235,6 @@ func GetValue(stateInfo [16]int) int {
 	if err != nil {
 		panic(err.Error())
 	}
-	fmt.Println("Goodbye3")
 	selectStatement := `SELECT Value FROM hashes WHERE HashCode = ` + hashCode + " LIMIT 1;"
 	rows, errs := db.Query(selectStatement)
 	defer rows.Close()
@@ -249,7 +250,7 @@ func GetValue(stateInfo [16]int) int {
 	return 0
 }
 
-func get_action_list(curr_state [16]int) [12]int {
+func Get_action_list(curr_state [16]int) [12]int {
 	var action_list [12]int
 
 	for i := 0; i < 12; i++ {
@@ -289,7 +290,6 @@ func get_edge_value_runner(curr_state [16]int, edge int) int {
 	if curr_state[3] != 0 && curr_state[5] != 0 && curr_state[10] != 0 && curr_state[11] != 0 && check_if_in_list(bottom_right_square, edge) {
 		curr_state[15] = p1
 	}
-
 	return GetValue(curr_state)
 }
 
@@ -318,11 +318,10 @@ func calc_action(tiny_envys [9][16]int) [2]int {
 		8: {10, 11, 14, 15, 18, 19, 32, 33, 34, 37, 38, 39},
 	}
 
-	fmt.Println("Hello6")
 	// 'a' represents the agentling index
 	for a := 0; a < 9; a++ {
 		// contains all the values
-		tiny_board_values := get_action_list(tiny_envys[a])
+		tiny_board_values := Get_action_list(tiny_envys[a])
 
 		for j := 0; j < 12; j++ {
 			// if edge not avaliable, skip
@@ -338,7 +337,6 @@ func calc_action(tiny_envys [9][16]int) [2]int {
 			big_board_counts[big_board_label] += 1
 		}
 	}
-	fmt.Println("Hello7")
 
 	// find the max average value in the big board
 	max_value := -1
@@ -358,7 +356,6 @@ func calc_action(tiny_envys [9][16]int) [2]int {
 			action = k
 		}
 	}
-	fmt.Println("Hello8")
 
 	big_to_vertex := map[int][2]int{
 		0:  {0, 5},
@@ -402,6 +399,17 @@ func calc_action(tiny_envys [9][16]int) [2]int {
 		38: {18, 19},
 		39: {23, 24},
 	}
-	fmt.Println("Hello9")
-	return big_to_vertex[action]
+
+	if CheckAction(action) == true {
+		return big_to_vertex[action]
+	} 
+	return [...]int{-1,-1}
 }
+
+// func main() {
+// 	curr_state := [...]int{1,0,1,0,0,0,2,2,0,0,0,0,1,0,0,0}
+
+// 	recieved_actions := Get_action_list(curr_state)
+
+// 	fmt.Println(recieved_actions)
+// }
