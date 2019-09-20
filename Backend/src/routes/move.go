@@ -19,6 +19,9 @@ type MoveDataType struct {
 	OwnerSquare     [][]int      `json: "ownerSquare"`
 }
 
+var p1 int
+p1 = 1
+
 /**
  * Should be called when the play makes a move.
  */
@@ -238,3 +241,102 @@ func GetValue(stateInfo [16]int) int {
 	}
 	return 0
 }
+
+func get_action_list(curr_state [16]int) [12]int {
+	var action_list [12]int
+
+	for i:=0;i<12;i++ {
+		action_list[i] = -1
+	}
+
+	for i:=0;i<12;i++ {
+		if curr_state[i] == 0 {
+			action_list[i] = get_edge_value_runner(curr_state, i)
+		}
+	}
+
+	return action_list	
+}
+
+
+func get_edge_value_runner(curr_state [16]int, edge int) int {
+	//set array as if I had chosen the edge
+	curr_state[edge] = p1
+
+	top_left_square := [4]int{0,2,6,7}
+	top_right_square := [4]int{1,3,7,8}
+	bottom_left_square := [4]int{2,4,9,10}
+	bottom_right_square := [4]int{3,5,10,11}
+
+	if curr_state[0] != 0 && curr_state[2] != 0 && curr_state[6] != 0 && curr_state[7] != 0 && check_if_in_list(top_left_square,edge){
+		curr_state[12] = p1
+	}
+
+	if curr_state[1] != 0 && curr_state[3] != 0 && curr_state[7] != 0 && curr_state[8] != 0 && check_if_in_list(top_right_square,edge){
+		curr_state[13] = p1
+	} 
+
+	if curr_state[2] != 0 && curr_state[4] != 0 && curr_state[9] != 0 && curr_state[10] != 0 && check_if_in_list(bottom_left_square,edge){
+		curr_state[14] = p1
+	} 
+
+	if curr_state[3] != 0 && curr_state[5] != 0 && curr_state[10] != 0 && curr_state[11] != 0 && check_if_in_list(bottom_right_square,edge){
+		curr_state[15] = p1
+	}
+
+	return GetValue(curr_state)
+}
+
+func check_if_in_list(list [4]int, v int) bool {
+	for i:=0;i<4;i++ {
+		if list[i] == v {
+			return true
+		}
+	}
+	return false
+}
+
+func take_action(tiny_envys):
+		var big_board_sums [40]int
+		var big_board_counts [40]int
+
+		// 'a' represents the agentling index
+		for a := 0; a < 9; a++ {
+			// contains all the values
+			tiny_board_values := tiny[a].get_action_list(tiny_envys[a])
+
+			for j:= 0; j < 12; j++ {
+				// if edge not avaliable, skip
+				if tiny_board_values[j] == -1 {
+					continue
+				}
+
+				// 1 find corresponding edge in big board
+				big_board_label = tiny_to_big[a][j]
+
+				// update the sum of the values and the count of the number of values contributing to the sum
+				big_board_sums[big_board_label] += tiny_board_values[j]
+				big_board_counts[big_board_label] += 1
+			}
+
+
+			// find the max average value in the big board
+			max_value = -1
+			action = -1
+			for k:=0;k<40;k++{
+				// if there are no counts for the chosen edge, then the chosen edge cant be a valid option
+				if big_board_counts[k] == 0:
+					continue
+
+				// calculate average value of taking edge k on the big board	
+				temp_value := (big_board_sums[k] * 1.00) / big_board_counts[k]
+
+				// set max edge value, and the the corresponding edge choice
+				if temp_value > max_value{
+					max_value = temp_value
+					action = k
+				}
+			}		
+		}
+
+		return self.X_env.get_environment()
