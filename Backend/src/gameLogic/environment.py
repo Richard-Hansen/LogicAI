@@ -4,8 +4,21 @@ from callDatabases import set_hash_value, get_hash_value_and_state_by_hash_code
 class Environment:
 	def __init__(self, areas=[0.25]*16, environment_id=0):
 		self.areas = areas
-		self.envys = self.__create_envys()
 		self.environment_id = environment_id 
+		self.envys = self.__create_envys()
+		self.big_board = [0] * 40
+		
+		self.tiny_to_big = {
+							0:[0,1,4,5,8,9,20,21,22,25,26,27],
+							1:[1,2,5,6,9,10,21,22,23,26,27,28],
+							2:[2,3,6,7,10,11,22,23,24,27,28,29],
+							3:[4,5,8,9,12,13,25,26,27,30,31,32],
+							4:[5,6,9,10,13,14,26,27,28,31,32,33],
+							5:[6,7,10,11,14,15,27,28,29,32,33,34],
+							6:[8,9,12,13,16,17,30,31,32,35,36,37],
+							7:[9,10,13,14,17,18,31,32,33,36,37,38],
+							8:[10,11,14,15,18,19,32,33,34,37,38,39],
+							}
 
 	# creates the smaller environments based on the big environment provided
 	def __create_envys(self):
@@ -13,7 +26,7 @@ class Environment:
 		for i in range(9):
 			mini_areas = self.areas[i:i+2]
 			mini_areas += self.areas[i+4:i+6]
-			envys.append(Envy(mini_areas, self.envionment_id, i))
+			envys.append(Envy(mini_areas, self.environment_id, i))
 		return envys
 
 	# gets the smaller environment with the parts
@@ -22,13 +35,22 @@ class Environment:
 
 	# creates the states for the environment
 	def create_envy_states(self):
-		for envy in envys:
+		for envy in self.envys:
 			envy.create_state_hash_and_values()
 
 	# update the smaller environment based on the agent's actions
 	def update_envys(self, player, envy_tuples):
+		#set the edge in the big board to the chosen player
+		tiny_env = envy_tuples[0][0]
+		tiny_edge = envy_tuples[0][1]
+		big_board[tiny_to_big[tiny_env][tiny_edge]] = player
+
 		for (envy_index, edge) in envy_tuples:
 			self.envys[envy_index].update_state(player, edge)
+
+	# gets the current environment
+	def get_environment(self):
+		return self.big_board 
 
 
 # environment for the 2x2 board
@@ -232,6 +254,8 @@ class Envy:
 	def create_state_hash_and_values(self):
 		self.hash_to_values_and_state = {}
 
+		count = 0
+
 		TERNARY = 3
 		# Written in coordination with Richard 
 		# please don't judge us, it had to be done for the sake of the project
@@ -295,12 +319,10 @@ class Envy:
 																		# save the hash code, value, and the state information
 																		self.hash_to_values_and_state[hash_key] = (value, state_info)
 
-																		if state_info == [1,0,2,0,0,0,2,1,0,0,0,0,1,0,0,0] or state_info == [2, 0,  1, 0, 0, 0, 1, 2, 0, 0, 0, 0, 2, 0, 0, 0]:
-																			print("VLAUES", value, hash_key, state_info)
-
-
 																		# if there are enough hash to values and states, then can place in the database
 																		if len(self.hash_to_values_and_state) == 900:
+																			print(count)
+																			count += 1
 																			# hash_to_values_and_state is ready to be put in the database and then clear the local dictionary - local caching mechanism
 																			set_hash_value(self.hash_to_values_and_state, self.environment_id, self.envy_id)
 																			self.hash_to_values_and_state = {}
