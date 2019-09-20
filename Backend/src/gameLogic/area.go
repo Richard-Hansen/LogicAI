@@ -42,7 +42,7 @@ func FindArea(mapName string) [16]float64 {
 	file, err := ioutil.ReadFile(mapName)
 
 	if err != nil {
-		area[0] = -1;
+		area[0] = -1
 		return area
 	}
 	fmt.Println(err)

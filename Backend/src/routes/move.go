@@ -7,8 +7,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"html"
+	"database/sql"
 	"io/ioutil"
 	http "net/http"
+	"math"
 )
 
 /* Everything is going to be put into these two 2d int arrays. */
@@ -35,7 +37,7 @@ func MoveHandler(w http.ResponseWriter, r *http.Request) {
 	/* Marshal data into a the struct from above */
 	_ = json.Unmarshal(reqBody, &mapData)
 	
-	ftm.Println(TakeAction(mapData))
+	fmt.Println(TakeAction(mapData))
 
 	/* Printing what we got! */
 	fmt.Println(mapData)
@@ -85,33 +87,40 @@ func TakeAction(mapData MoveDataType) [2]int {
 		[2]int{8, 9}: 36,
 		[2]int{13, 14}: 37,
 		[2]int{18, 19}: 38,
-		[2]int{23, 24}: 39
+		[2]int{23, 24}: 39,
 	}
 
 	var big_board_edges [40]int
-	edges := mapData[0]
+	edges := mapData.EdgesSquare
 	for i:=0; i < len(edges); i++ {
-		ind = vertices_to_edges[[2]int{edges[i][0],edges[i][1]}]
+		ind := vertices_to_edges[[2]int{edges[i][0],edges[i][1]}]
 		big_board_edges[ind] = edges[i][2]
 	}
 
 	var big_board_squares [16]int
-	squares := mapData[1]
+	squares := mapData.OwnerSquare
 	for i:=0; i < len(squares); i++ {
 		big_board_squares[squares[i][0]] = squares[i][1]
 	}
 
 	var tiny_envys [9][16]int
+	_ = tiny_envys //Why do we not use tiny_envys?
+
+	return [2]int{1,2}
 }
 
 
 // hash the value for the state for the database
 func HashCode(stateInfo [16]int) string {
-	h = 0
-	k = 0
+	h := 0
+	var k float64 //Needs to be float64.  
 	// reverse and change the info for the state
 	for i:= len(stateInfo); i >= 0; i-- {
-		h += (3 ** k) * state_info[i]
+		/** 
+		 * math.Pow returns a float64. Float 64's cannot be * to int's. 
+		 * So we can either cast the math.Pow to an int, or cast stateInfo to a float64
+		 */
+		h = h + (int(math.Pow(3, k)) * stateInfo[i])
 		k += 1
 	}
 	return fmt.Sprintf("%d", h)
@@ -119,7 +128,7 @@ func HashCode(stateInfo [16]int) string {
 
 // get the value of the hash from the database
 func GetValue(stateInfo [16]int) int {
-	hashCode = HashCode(stateInfo)
+	hashCode := HashCode(stateInfo)
 
 	// make the call to the database
 	db, err := sql.Open("mysql", "Richard:SteveIsTheBest@tcp(198.199.121.101:3306)/logic")
@@ -130,7 +139,7 @@ func GetValue(stateInfo [16]int) int {
 	}
 
 	selectStatement := `SELECT Value FROM hashes WHERE HashCode = ` + hashCode + ";"
-	ows, errs := db.Query(selectStatement)
+	rows, errs := db.Query(selectStatement)
 	defer rows.Close()
 
 	for rows.Next() {
@@ -141,6 +150,7 @@ func GetValue(stateInfo [16]int) int {
 		}
 		return i
 	}
+	return 0
 }
 
 // func main() {
