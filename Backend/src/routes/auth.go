@@ -37,7 +37,11 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	res, rerr := stmt.Exec(raw["user"], raw["username"], raw["username"])
 	if rerr != nil {
-		panic(rerr.Error())
+		// panic(rerr.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+    	w.Write([]byte("500 - Something bad happened!"))
+		fmt.Fprintf(w, rerr.Error())
+		return
 	}
 	fmt.Println(res)
 
