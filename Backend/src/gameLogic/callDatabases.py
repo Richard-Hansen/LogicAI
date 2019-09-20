@@ -71,7 +71,6 @@ def get_hash_value_and_state_by_hash_code(hash_code, environment_id, envy_id):
                 state = row[1]
                 state_as_list = [int(i) for i in state]
                 
-                print("RETURNING", value, state_as_list)
                 return (value, state_as_list)
 
             raise Exception("Error with selecting from database")
