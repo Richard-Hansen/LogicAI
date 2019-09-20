@@ -193,6 +193,11 @@ class Envy:
 			# look at calcluating the value for player 2
 			(new_value, new_state) = get_hash_value_and_state_by_hash_code(new_hash_key, self.environment_id, self.envy_id)
 			return new_value
+
+
+	# get the hash to values and functions
+	def get_hash_to_state_and_values(self):
+		return self.hash_to_values_and_state
 			
 
 	# calcuate the value for each the states
@@ -245,19 +250,19 @@ class Envy:
 			changed_squares = [0] * 4
 
 			# top left
-			if self.edges[0] != 0 and self.edges[2] != 0 and self.edges[6] != 0 and self.edges[7] != 0 and edge_to_consider_index is in self.top_left_square:
+			if self.edges[0] != 0 and self.edges[2] != 0 and self.edges[6] != 0 and self.edges[7] != 0 and edge_to_consider_index in self.top_left_square:
 				self.edges[12] = player
 				changed_squares[0] = 1
 			# top right
-			if self.edges[1] != 0 and self.edges[3] != 0 and self.edges[7] != 0 and self.edges[8] != 0 and edge_to_consider_index is in self.top_right_square:
+			if self.edges[1] != 0 and self.edges[3] != 0 and self.edges[7] != 0 and self.edges[8] != 0 and edge_to_consider_index in self.top_right_square:
 				self.edges[13] = player
 				changed_squares[1] = 1
 			# bottom left
-			if self.edges[2] != 0 and self.edges[4] != 0 and self.edges[9] != 0 and self.edges[10] != 0 and edge_to_consider_index is in self.bottom_left_square:
+			if self.edges[2] != 0 and self.edges[4] != 0 and self.edges[9] != 0 and self.edges[10] != 0 and edge_to_consider_index in self.bottom_left_square:
 				self.edges[14] = player
 				changed_squares[2] = 1
 			# bottom right
-			if self.edges[3] != 0 and self.edges[5] != 0 and self.edges[10] != 0 and self.edges[11] != 0 and edge_to_consider_index is in self.bottom_right_square:
+			if self.edges[3] != 0 and self.edges[5] != 0 and self.edges[10] != 0 and self.edges[11] != 0 and edge_to_consider_index in self.bottom_right_square:
 				self.edges[15] = player
 				changed_squares[3] = 1
 
@@ -275,7 +280,7 @@ class Envy:
 
 
 	# gets the current state based on the hash and the value stored
-	def create_state_hash_and_values(self):
+	def create_state_hash_and_values(self, writeToDB = True):
 		self.hash_to_values_and_state = {}
 
 		count = 0
@@ -344,7 +349,7 @@ class Envy:
 																		self.hash_to_values_and_state[hash_key] = (value, state_info)
 
 																		# if there are enough hash to values and states, then can place in the database
-																		if len(self.hash_to_values_and_state) == 900:
+																		if len(self.hash_to_values_and_state) == 900 and writeToDB == True:
 																			print(count)
 																			count += 1
 																			# hash_to_values_and_state is ready to be put in the database and then clear the local dictionary - local caching mechanism
@@ -352,12 +357,12 @@ class Envy:
 																			self.hash_to_values_and_state = {}
 
 		# at the end of the loop when the states have all been already generated - need to say that it needs to have the different values in the db
-		if len(self.hash_to_values_and_state) > 0:
+		if len(self.hash_to_values_and_state) > 0 and writeToDB == True:
 			set_hash_value(self.hash_to_values_and_state, self.environment_id, self.envy_id)
 			self.hash_to_values_and_state = {}
 
 # m = Envy(areas=[0.05, 0.45, 0.4, 0.1])
-# m.create_state_hash_and_values()
+# m.create_state_hash_and_values(writeToDB = False)
 
 # print("STATE P1", m.get_state_value(1, m.get_hash([1,0,2,1,1,1,2,1,1,1,1,1,1,0,1,1]))) 
 # print("STATEE 1!!", m.calculate_values([1,0,2,0,0,0,2,1,0,0,0,0,1,0,0,0]))

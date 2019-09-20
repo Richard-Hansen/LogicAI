@@ -114,6 +114,22 @@ func TestNonExistantEdges(t *testing.T) {
 	if allowed_edge == true {
 		t.Errorf("Recieved the existing edge as a move, Expected new edge as move")
 	}
-	
-
 }
+
+
+/**
+ * Test Type: Verification Test
+ * What it is testing: Successfully enumerates all the states
+ * Expected output: I expect that all the states are enumerated without exceeding limits
+ */
+func TestEnumerateStates(t *testing.T) {
+
+	allowed_edge := CheckAction(edge_chosen)
+	
+	if allowed_edge == true {
+		t.Errorf("Recieved the existing edge as a move, Expected new edge as move")
+	}
+}
+
+
+
