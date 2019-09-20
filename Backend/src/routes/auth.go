@@ -39,7 +39,7 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
 	if rerr != nil {
 		// panic(rerr.Error())
 		w.WriteHeader(http.StatusInternalServerError)
-    	w.Write([]byte("500 - Something bad happened!"))
+		w.Write([]byte("500 - Something bad happened!"))
 		fmt.Fprintf(w, rerr.Error())
 		return
 	}

@@ -10,7 +10,7 @@ class GameLogic {
   constructor() {
     /* Make my HTTP request to squareData with the current map */
     this.fillQuads = [];
-    httpPost("http://localhost:8080/squareData", { map: "Map1" }, function (res) {
+    httpPost("http://localhost:8080/squareData", { Mapname: "Map1" }, function (res) {
       /* Splits the response by spaces and places it back into res */
       res = res.split(" ");
       /* Iterate through all indices */

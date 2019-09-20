@@ -131,5 +131,81 @@ func TestEnumerateStates(t *testing.T) {
 	}
 }
 
+/**
+ * Test Type: Verification Test
+ * What it is testing: Check that difficulty changes the randomization factor eps
+ * Expected output: I expect the agent to use a different eps for a different difficulty
+ */
+func TestAgentDifficulty(t *testing.T) {
 
+	set_difficulty(1)
+	d1 := check_difficulty()
 
+	set_difficulty(2)
+	d2 := check_difficulty()
+	
+	if d1 != d2 {
+		t.Errorf("Difficulty not changing epsilon")
+	}
+}
+
+/**
+ * Test Type: Verification Test
+ * What it is testing: Check that difficulty changes are kept 
+ * Expected output: I expect to only be using the most recent set difficulty
+ */
+func TestAgentCurrentDifficulty(t *testing.T) {
+
+	set_difficulty(1)
+	if check_difficulty() != 1 {
+		t.Errorf("Difficulty not updating to 1")
+	}
+	
+	set_difficulty(2)
+	if check_difficulty() != 2 {
+		t.Errorf("Difficulty not updating to 2")
+	}
+
+	set_difficulty(3)
+	if check_difficulty() != 3 {
+		t.Errorf("Difficulty not updating to 3")
+	}
+
+	set_difficulty(4)
+	if check_difficulty() != 4 {
+		t.Errorf("Difficulty not updating to 4")
+	}
+}
+
+/**
+ * Test Type: Verification Test
+ * What it is testing: Check that difficulty cannot be set to an invalid input
+ * Expected output: I expect the difficulty to be 1 if an invalid input is sent
+ */
+func TestValidDifficulty(t *testing.T) {
+
+	set_difficulty(-10)
+	d1 := check_difficulty()
+
+	set_difficulty(10)
+	d2 := check_difficulty()
+	
+	if d1 != 1 && d2 != 1 {
+		t.Errorf("Difficulty incorrectly handling invalid inputs")
+	}
+}
+
+/**
+ * Test Type: Verification Test
+ * What it is testing: Check that difficulty is 1 if not set previously set
+ * Expected output: I expect the difficulty to be 1 set_difficulty is not called
+ */
+func TestNoDifficultySet(t *testing.T) {
+
+	d1 := check_difficulty()
+	
+	if d1 != 1 {
+		t.Errorf("Difficulty incorrectly handling invalid inputs")
+	}
+}
+>>>>>>> 2043c8f2bf1dadae305563907470283865e58e1a

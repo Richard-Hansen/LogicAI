@@ -11,6 +11,7 @@ import (
 	// "html"
 	"io/ioutil"
 	"math"
+	"math/rand"
 	http "net/http"
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -21,7 +22,9 @@ type MoveDataType struct {
 	OwnerSquare [][]int `json: "ownerSquare"`
 }
 
-var p1 int
+var p1 int //player id
+var difficulty int //difficulty of game
+var eps float64 //randomization factor related to difficulty
 
 /**
  * Should be called when the play makes a move.
@@ -58,9 +61,30 @@ func CheckAction(edgeChosen int) bool{
 	return false
 }
 
+func check_difficulty() int {
+	if difficulty == 0 {
+		difficulty = 1
+	}
+	return difficulty
+}
+
+func set_difficulty(diff int) {
+	if diff > 0 && diff < 5 {
+		difficulty = diff
+	} else {
+		difficulty = 1
+	}
+
+	eps = 1 - (0.2 * float64(difficulty))
+}
+
 
 func TakeAction(mapData MoveDataType) string {
 	p1 = 1
+	
+	if difficulty == 0 {
+		set_difficulty(1)
+	}
 	/*maps a pair a vertices to an edge on the 4x4 board.*/
 	vertices_to_edges := map[[2]int]int{
 		[2]int{0, 5}:   0,
@@ -202,7 +226,7 @@ func TakeAction(mapData MoveDataType) string {
 			tiny_envys[agentling][12+agentling_square] = big_board_squares[i]
 		}
 	}
-	ret := calc_action(tiny_envys)
+	ret := calc_action(tiny_envys, eps)
 	rett := fmt.Sprintf("%d %d", ret[0], ret[1])
 	_ = rett
 
@@ -302,7 +326,7 @@ func check_if_in_list(list [4]int, v int) bool {
 	return false
 }
 
-func calc_action(tiny_envys [9][16]int) [2]int {
+func calc_action(tiny_envys [9][16]int, eps float64) [2]int {
 	var big_board_sums [40]int
 	var big_board_counts [40]int
 
@@ -398,6 +422,16 @@ func calc_action(tiny_envys [9][16]int) [2]int {
 		37: {13, 14},
 		38: {18, 19},
 		39: {23, 24},
+	}
+
+	// take random action chance
+	if rand.Float64() < eps {
+		for {
+			guess_ind := rand.Intn(40)
+			if big_board_counts[guess_ind] != 0 {
+				return big_to_vertex[guess_ind]
+			}
+		}
 	}
 
 	if CheckAction(action) == true {
