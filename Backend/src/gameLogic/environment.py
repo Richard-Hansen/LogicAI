@@ -30,6 +30,10 @@ class Environment:
 			envys.append(Envy(mini_areas, self.environment_id, i, self.writeToDB))
 		return envys
 
+	# get the envys
+	def get_envys(self):
+		return self.envys
+
 	# gets the smaller environment with the parts
 	def get_envy(self, envy_index):
 		return self.envys[envy_index]
