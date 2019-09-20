@@ -35,6 +35,24 @@ describe('StartScreen tests', function () {
         done()
     })
 
+    it('should cache correct usernames', function (done) {
+        window.localStorage.setItem("userName", "notbillbert")
+        let trash = { nameInput: { elt: { value: 'billbert' } }, callAuthRoute: function () { return true }, switchState: function () { } }
+        startScreen.playGame(trash)()
+        let username = window.localStorage.getItem("userName")
+        expect(username).to.equal('billbert')
+        done()
+    })
+
+    it('should not cache incorrect usernames', function (done) {
+        window.localStorage.setItem("userName", "billbert")
+        let trash = { nameInput: { elt: { value: 'verylongusernamethatisverylongandstuffyeah' } }, callAuthRoute: function () { return true }, switchState: function () { } }
+        let username = window.localStorage.getItem("userName")
+        startScreen.playGame(trash)()
+        expect(username).to.not.equal('verylongusernamethatisverylongandstuffyeah')
+        done()
+    })
+
     it('should allow numbered usernames', function (done) {
         let trash = { nameInput: { elt: { value: '123' } }, callAuthRoute: function () { return true }, switchState: function () { } }
         expect(startScreen.playGame(trash)()).to.equal('OK')
