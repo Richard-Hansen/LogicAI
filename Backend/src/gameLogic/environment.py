@@ -5,9 +5,9 @@ class Environment:
 	def __init__(self, areas=[0.25]*16, environment_id=0, writeToDB=True):
 		self.areas = areas
 		self.environment_id = environment_id 
+		self.writeToDB = writeToDB
 		self.envys = self.__create_envys()
 		self.big_board = [0] * 40
-		self.writeToDB = writeToDB
 		
 		self.tiny_to_big = {
 							0:[0,1,4,5,8,9,20,21,22,25,26,27],
