@@ -32,7 +32,7 @@ func ScoreHandler(w http.ResponseWriter, r *http.Request) {
 
 	/* Reading the body of the request, r */
 
-	db, err := sql.Open("mysql", "root:mysql@tcp(198.199.121.101:3306)/logic")
+	db, err := sql.Open("mysql", "Richard:SteveIsTheBest@tcp(198.199.121.101:3306)/logic")
 	defer db.Close()
 	if err != nil {
 		panic(err.Error())

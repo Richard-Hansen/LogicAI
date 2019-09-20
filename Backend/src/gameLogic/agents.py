@@ -2,10 +2,11 @@ class AgentX86:
 	# X_'variablename' indicates that the variable is present in both the AgentX86 class and the Agentling class. 
 	# Indicates this variable is for the AgentX86 class.
 	def __init__(self, X_env, player, eps = 0.1, alpha = 0.5):
+		self.X_env = X_env
 		self.player = player # player id
 		self.X_eps = eps # determines rate at which a random edge is chosed
 		self.X_alpha = alpha # determines learning rate
-		self.agentlings = self.__build_agentlings(X_env) # build agentlings on each section of the board
+		self.agentlings = self.__build_agentlings(self.X_env) # build agentlings on each section of the board
 
 		#big board labels
 		# * 0 *  1 *  2 *  3 *
@@ -141,15 +142,17 @@ class AgentX86:
 		for agent, edge in self.big_to_tiny[action]:
 			self.agentlings[agent].update_state_history()
 
-	# # update all the state values for every agent in agneltings list
-	# def update(self):
-	# 	# for every agentling in agentX86
-	# 	for a in agentlings:
-	# 		# get the final reward for 
-	# 		reward = a.env.reward(a.player)
+		return self.X_env.get_environment()
 
-	# 		for prev in reversed(a.state_history):
-	# 			 value = a.env.
+	# update all the state values for every agent in agneltings list
+	def update(self):
+		# for every agentling in agentX86
+		for a in agentlings:
+			# get the final reward for 
+			reward = a.env.reward(a.player)
+
+			for prev in reversed(a.state_history):
+				 value = a.env.
 
 
 #AgentX86 is made up of 9 agentlings. Each agentling will contribute it's value for all it's visible edges, depending on the current game state

@@ -26,7 +26,7 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
 	in := []byte(reqBody)
 	var raw map[string]interface{}
 	json.Unmarshal(in, &raw)
-	db, err := sql.Open("mysql", "root:mysql@tcp(198.199.121.101:3306)/logic")
+	db, err := sql.Open("mysql", "Richard:SteveIsTheBest@tcp(198.199.121.101:3306)/logic")
 	defer db.Close()
 	if err != nil {
 		panic(err.Error())
@@ -37,7 +37,11 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	res, rerr := stmt.Exec(raw["user"], raw["username"], raw["username"])
 	if rerr != nil {
-		panic(rerr.Error())
+		// panic(rerr.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+    	w.Write([]byte("500 - Something bad happened!"))
+		fmt.Fprintf(w, rerr.Error())
+		return
 	}
 	fmt.Println(res)
 
