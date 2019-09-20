@@ -1,9 +1,9 @@
 package gameLogic
 
 import (
-// http "net/http"
-// httptest "net/http/httptest"
-"testing"
+	// http "net/http"
+	// httptest "net/http/httptest"
+	"testing"
 )
 
 /* This will make sure that 0, 1, 2, 13, 14, 15 areas are correct for map1. */
