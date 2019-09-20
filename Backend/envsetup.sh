@@ -30,6 +30,8 @@ if test -f "auth_test.go"; then
     rm nulltime_test.go auth_test.go benchmark_test.go conncheck_test.go driver_go110_test.go driver_test.go dsn_test.go errors_test.go packets_test.go statement_test.go utils_test.go
 fi
 cd -
+pip3 install pymysql
+pip install pymysql
 echo -e "${GREEN}Success\n${NC}"
 
 
@@ -59,8 +61,6 @@ fi
 echo -e "${BLUE}Formatting all .go files${NC}"
 go fmt ./...
 echo -e "${GREEN}Success\n${NC}"
-
-
 
 
 # For fun.
