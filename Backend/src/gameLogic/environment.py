@@ -241,9 +241,33 @@ class Envy:
 		if self.edges[edge_to_consider_index] == 0:
 			self.edges[edge_to_consider_index] = player
 
+			# squares that have been changed
+			changed_squares = [0] * 4
+
+			# top left
+			if self.edges[0] != 0 and self.edges[2] != 0 and self.edges[6] != 0 and self.edges[7] != 0 and edge_to_consider_index is in self.top_left_square:
+				self.edges[12] = player
+				changed_squares[0] = 1
+			# top right
+			if self.edges[1] != 0 and self.edges[3] != 0 and self.edges[7] != 0 and self.edges[8] != 0 and edge_to_consider_index is in self.top_right_square:
+				self.edges[13] = player
+				changed_squares[1] = 1
+			# bottom left
+			if self.edges[2] != 0 and self.edges[4] != 0 and self.edges[9] != 0 and self.edges[10] != 0 and edge_to_consider_index is in self.bottom_left_square:
+				self.edges[14] = player
+				changed_squares[2] = 1
+			# bottom right
+			if self.edges[3] != 0 and self.edges[5] != 0 and self.edges[10] != 0 and self.edges[11] != 0 and edge_to_consider_index is in self.bottom_right_square:
+				self.edges[15] = player
+				changed_squares[3] = 1
+
 			(value, state) = get_hash_value_and_state(self.get_hash(self.edges))
 
 			self.edges[edge_to_consider_index] = 0
+
+			for i in range(len(changed_squares)):
+				if changed_squares[i] == 1:
+					edges[12 + i] = 0
 
 			return value
 
