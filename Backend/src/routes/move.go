@@ -19,6 +19,8 @@ type MoveDataType struct {
 	OwnerSquare     [][]int      `json: "ownerSquare"`
 }
 
+var p1 int
+
 /**
  * Should be called when the play makes a move.
  */
@@ -47,6 +49,7 @@ func MoveHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func TakeAction(mapData MoveDataType) [2]int {
+	p1 = 1
 	/*maps a pair a vertices to an edge on the 4x4 board.*/
 	vertices_to_edges := map[[2]int]int {
 		[2]int{0, 5}: 0,
@@ -189,10 +192,7 @@ func TakeAction(mapData MoveDataType) [2]int {
 		}
 	}
 
-	fmt.Println(tiny_envys)
-
-	return [2]int{2,3}
-
+	return calc_action(tiny_envys)
 }
 
 
@@ -238,3 +238,166 @@ func GetValue(stateInfo [16]int) int {
 	}
 	return 0
 }
+
+func get_action_list(curr_state [16]int) [12]int {
+	var action_list [12]int
+
+	for i:=0;i<12;i++ {
+		action_list[i] = -1
+	}
+
+	for i:=0;i<12;i++ {
+		if curr_state[i] == 0 {
+			action_list[i] = get_edge_value_runner(curr_state, i)
+		}
+	}
+
+	return action_list	
+}
+
+
+func get_edge_value_runner(curr_state [16]int, edge int) int {
+	//set array as if I had chosen the edge
+	curr_state[edge] = p1
+
+	top_left_square := [4]int{0,2,6,7}
+	top_right_square := [4]int{1,3,7,8}
+	bottom_left_square := [4]int{2,4,9,10}
+	bottom_right_square := [4]int{3,5,10,11}
+
+	if curr_state[0] != 0 && curr_state[2] != 0 && curr_state[6] != 0 && curr_state[7] != 0 && check_if_in_list(top_left_square,edge){
+		curr_state[12] = p1
+	}
+
+	if curr_state[1] != 0 && curr_state[3] != 0 && curr_state[7] != 0 && curr_state[8] != 0 && check_if_in_list(top_right_square,edge){
+		curr_state[13] = p1
+	} 
+
+	if curr_state[2] != 0 && curr_state[4] != 0 && curr_state[9] != 0 && curr_state[10] != 0 && check_if_in_list(bottom_left_square,edge){
+		curr_state[14] = p1
+	} 
+
+	if curr_state[3] != 0 && curr_state[5] != 0 && curr_state[10] != 0 && curr_state[11] != 0 && check_if_in_list(bottom_right_square,edge){
+		curr_state[15] = p1
+	}
+
+	return GetValue(curr_state)
+}
+
+func check_if_in_list(list [4]int, v int) bool {
+	for i:=0;i<4;i++ {
+		if list[i] == v {
+			return true
+		}
+	}
+	return false
+}
+
+func calc_action(tiny_envys [9][16]int) [2]int {
+		var big_board_sums [40]int
+		var big_board_counts [40]int
+
+		tiny_to_big := map[int][]int {
+						0:{0,1,4,5,8,9,20,21,22,25,26,27},
+						1:{1,2,5,6,9,10,21,22,23,26,27,28},
+						2:{2,3,6,7,10,11,22,23,24,27,28,29},
+						3:{4,5,8,9,12,13,25,26,27,30,31,32},
+						4:{5,6,9,10,13,14,26,27,28,31,32,33},
+						5:{6,7,10,11,14,15,27,28,29,32,33,34},
+						6:{8,9,12,13,16,17,30,31,32,35,36,37},
+						7:{9,10,13,14,17,18,31,32,33,36,37,38},
+						8:{10,11,14,15,18,19,32,33,34,37,38,39},
+						}
+
+		// 'a' represents the agentling index
+		for a := 0; a < 9; a++ {
+			// contains all the values
+			tiny_board_values := get_action_list(tiny_envys[a])
+
+			for j:= 0; j < 12; j++ {
+				// if edge not avaliable, skip
+				if tiny_board_values[j] == -1 {
+					continue
+				}
+
+				// 1 find corresponding edge in big board
+				big_board_label := tiny_to_big[a][j]
+
+				// update the sum of the values and the count of the number of values contributing to the sum
+				big_board_sums[big_board_label] += tiny_board_values[j]
+				big_board_counts[big_board_label] += 1
+			}			
+		}
+
+		// find the max average value in the big board
+		max_value := -1
+		action := -1
+		for k:=0;k<40;k++{
+			// if there are no counts for the chosen edge, then the chosen edge cant be a valid option
+			if big_board_counts[k] == 0{
+				continue
+			}
+
+			// calculate average value of taking edge k on the big board	
+			temp_value := (big_board_sums[k] * 1.00) / big_board_counts[k]
+
+			// set max edge value, and the the corresponding edge choice
+			if temp_value > max_value{
+				max_value = temp_value
+				action = k
+			}
+		}
+
+		big_to_vertex := map[int][2]int {
+						0: {0, 5},
+						1: {5, 10},
+						2: {10, 15},
+						3: {15, 20},
+						4: {1, 6},
+						5: {6, 11},
+						6: {11, 16},
+						7: {16, 21},
+						8: {2, 7},
+						9: {7, 12},
+						10: {12, 17},
+						11: {17, 22},
+						12: {3, 8},
+						13: {8, 13},
+						14: {13, 18},
+						15: {18, 23},
+						16: {4, 9},
+						17: {9, 14},
+						18: {14, 19},
+						19: {19, 24},
+						20: {0, 1},
+						21: {5, 6},
+						22: {10, 11},
+						23: {15, 16},
+						24: {20, 21},
+						25: {1, 2},
+						26: {6, 7},
+						27: {11, 12},
+						28: {16, 17},
+						29: {21, 22},
+						30: {2, 3},
+						31: {7, 8},
+						32: {12, 13},
+						33: {17, 18},
+						34: {22, 23},
+						35: {3, 4},
+						36: {8, 9},
+						37: {13, 14},
+						38: {18, 19},
+						39: {23, 24},
+						}
+
+		return big_to_vertex[action]
+}
+
+
+
+
+
+
+
+

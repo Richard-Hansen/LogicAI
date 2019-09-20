@@ -323,15 +323,15 @@ function mouseClicked() {
     if (WHoTheFuckMoves == 1) { WHoTheFuckMoves = 2 } else { WHoTheFuckMoves = 1 }
 
     httpPost("http://localhost:8080/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare }, function (res) {
-      var move = res.split(" ");
-      var vertexWithConnection = Math.min(move[0], move[1]);
-      var vertexWithoutConnection = Math.max(move[0], move[1]);
-      for (var i = 0; i < vertices[vertexWithConnection].connections.length; i++) {
-        if (vertices[vertexWithConnection].connections[i] == vertexWithoutConnection) {
-          vertices[vertexWithConnection].clickedConnections.push(vertexWithoutConnection);
-          vertices[vertexWithConnection].connections.splice(i, 1);
-        }
-      }
+      // var move = res.split(" ");
+      // var vertexWithConnection = Math.min(move[0], move[1]);
+      // var vertexWithoutConnection = Math.max(move[0], move[1]);
+      // for (var i = 0; i < vertices[vertexWithConnection].connections.length; i++) {
+      //   if (vertices[vertexWithConnection].connections[i] == vertexWithoutConnection) {
+      //     vertices[vertexWithConnection].clickedConnections.push(vertexWithoutConnection);
+      //     vertices[vertexWithConnection].connections.splice(i, 1);
+      //   }
+      // }
     });
   }
   console.log(takenEdges);
