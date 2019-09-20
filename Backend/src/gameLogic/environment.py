@@ -5,9 +5,9 @@ class Environment:
 	def __init__(self, areas=[0.25]*16, environment_id=0, writeToDB=True):
 		self.areas = areas
 		self.environment_id = environment_id 
+		self.writeToDB = writeToDB
 		self.envys = self.__create_envys()
 		self.big_board = [0] * 40
-		self.writeToDB = writeToDB
 		
 		self.tiny_to_big = {
 							0:[0,1,4,5,8,9,20,21,22,25,26,27],
@@ -274,7 +274,7 @@ class Envy:
 				self.edges[15] = player
 				changed_squares[3] = 1
 
-			(value, state) = get_hash_value_and_state(self.get_hash(self.edges))
+			(value, state) = self.get_hash_value_and_state_by_hash_code(self.get_hash(self.edges))
 
 			self.edges[edge_to_consider_index] = 0
 
