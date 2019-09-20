@@ -23,7 +23,7 @@ function setup() {
   mstartScreen = new StartScreen();
   mstartScreen.start()
   /* Set the gameState */
-  gameState = 0;
+  gameState = 1;
 }
 
 function draw() {

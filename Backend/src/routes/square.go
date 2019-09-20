@@ -31,22 +31,23 @@ func SquareData(w http.ResponseWriter, r *http.Request) {
 	var mapData map[string]interface{}
 	json.Unmarshal(reqBody, &mapData)
 
+	fmt.Println(mapData["Mapname"])
 	/* Open map json file */
-	file, _ := ioutil.ReadFile("gameBoards/" + mapData["map"].(string) + ".json")
+	file, _ := ioutil.ReadFile("gameBoards/" + mapData["Mapname"].(string) + ".json")
 	_ = file
 
 	data := MapData{}
 
 	_ = json.Unmarshal([]byte(file), &data)
-
+	fmt.Println(data)
 	ret := data.Squares + " "
 	areaArray := gameLogic.FindArea("gameBoards/Map1.json")
 	for i := 0; i < len(areaArray); i++ {
 
 		if i == len(areaArray)-1 {
-			ret += fmt.Sprintf("%0.2f", areaArray[i])
+			ret += fmt.Sprintf("%f", areaArray[i])
 		} else {
-			ret += fmt.Sprintf("%0.2f", areaArray[i]) + ","
+			ret += fmt.Sprintf("%f", areaArray[i]) + ","
 		}
 	}
 	/* Forming a response */
