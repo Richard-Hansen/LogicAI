@@ -102,7 +102,45 @@ func TakeAction(mapData MoveDataType) [2]int {
 	}
 
 	var tiny_envys [9][16]int
+}
 
+
+// hash the value for the state for the database
+func HashCode(stateInfo [16]int) string {
+	h = 0
+	k = 0
+	// reverse and change the info for the state
+	for i:= len(stateInfo); i >= 0; i-- {
+		h += (3 ** k) * state_info[i]
+		k += 1
+	}
+	return fmt.Sprintf("%d", h)
+}
+
+// get the value of the hash from the database
+func GetValue(stateInfo [16]int) int {
+	hashCode = HashCode(stateInfo)
+
+	// make the call to the database
+	db, err := sql.Open("mysql", "Richard:SteveIsTheBest@tcp(198.199.121.101:3306)/logic")
+	defer db.Close()
+
+	if err != nil {
+		panic(err.Error())
+	}
+
+	selectStatement := `SELECT Value FROM hashes WHERE HashCode = ` + hashCode + ";"
+	ows, errs := db.Query(selectStatement)
+	defer rows.Close()
+
+	for rows.Next() {
+		var i int
+		errs = rows.Scan(&i)
+		if errs != nil {
+			panic(err)
+		}
+		return i
+	}
 }
 
 // func main() {
