@@ -90,7 +90,7 @@ class AgentX86:
 	def __build_agentlings(self,X_env):
 		agentling_list = []
 		for i in range(9):
-			new_agentling = Agentling(player, x_env.get_envy(i))
+			new_agentling = Agentling(self.player, self.X_env.get_envy(i))
 			agentling_list.append(new_agentling)
 
 		return agentling_list
@@ -143,16 +143,6 @@ class AgentX86:
 			self.agentlings[agent].update_state_history()
 
 		return self.X_env.get_environment()
-
-	# update all the state values for every agent in agneltings list
-	def update(self):
-		# for every agentling in agentX86
-		for a in agentlings:
-			# get the final reward for 
-			reward = a.env.reward(a.player)
-
-			for prev in reversed(a.state_history):
-				 value = a.env.
 
 
 #AgentX86 is made up of 9 agentlings. Each agentling will contribute it's value for all it's visible edges, depending on the current game state
