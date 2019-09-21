@@ -78,7 +78,6 @@ func TestAllPossibleEdges(t *testing.T) {
 	}
 }
 
-
 /**
  * Test Type: Verification Test
  * What it is testing: Does not send back the current edge as a possibility
@@ -95,7 +94,7 @@ func TestExistingEdges(t *testing.T) {
 			found_existing = true
 		}
 	}
-	
+
 	if found_existing == true {
 		t.Errorf("Recieved the existing edge as a move, Expected new edge as move")
 	}
@@ -110,7 +109,7 @@ func TestNonExistantEdges(t *testing.T) {
 	edge_chosen := 41
 
 	allowed_edge := CheckAction(edge_chosen)
-	
+
 	if allowed_edge == true {
 		t.Errorf("Recieved the existing edge as a move, Expected new edge as move")
 	}
@@ -128,7 +127,7 @@ func TestAgentDifficulty(t *testing.T) {
 
 	set_difficulty(2)
 	d2 := check_difficulty()
-	
+
 	if d1 != d2 {
 		t.Errorf("Difficulty not changing epsilon")
 	}
@@ -136,7 +135,7 @@ func TestAgentDifficulty(t *testing.T) {
 
 /**
  * Test Type: Verification Test
- * What it is testing: Check that difficulty changes are kept 
+ * What it is testing: Check that difficulty changes are kept
  * Expected output: I expect to only be using the most recent set difficulty
  */
 func TestAgentCurrentDifficulty(t *testing.T) {
@@ -145,7 +144,7 @@ func TestAgentCurrentDifficulty(t *testing.T) {
 	if check_difficulty() != 1 {
 		t.Errorf("Difficulty not updating to 1")
 	}
-	
+
 	set_difficulty(2)
 	if check_difficulty() != 2 {
 		t.Errorf("Difficulty not updating to 2")
@@ -174,7 +173,7 @@ func TestValidDifficulty(t *testing.T) {
 
 	set_difficulty(10)
 	d2 := check_difficulty()
-	
+
 	if d1 != 1 && d2 != 1 {
 		t.Errorf("Difficulty incorrectly handling invalid inputs")
 	}
@@ -188,7 +187,7 @@ func TestValidDifficulty(t *testing.T) {
 func TestNoDifficultySet(t *testing.T) {
 
 	d1 := check_difficulty()
-	
+
 	if d1 != 1 {
 		t.Errorf("Difficulty incorrectly handling invalid inputs")
 	}
