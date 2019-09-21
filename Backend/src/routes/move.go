@@ -9,11 +9,11 @@ import (
 	"encoding/json"
 	"fmt"
 	// "html"
+	_ "github.com/go-sql-driver/mysql"
 	"io/ioutil"
 	"math"
 	"math/rand"
 	http "net/http"
-	_ "github.com/go-sql-driver/mysql"
 )
 
 /* Everything is going to be put into these two 2d int arrays. */
@@ -22,9 +22,9 @@ type MoveDataType struct {
 	OwnerSquare [][]int `json: "ownerSquare"`
 }
 
-var p1 int //player id
+var p1 int         //player id
 var difficulty int //difficulty of game
-var eps float64 //randomization factor related to difficulty
+var eps float64    //randomization factor related to difficulty
 
 /**
  * Should be called when the play makes a move.
@@ -53,8 +53,7 @@ func MoveHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "%s", actionChosen)
 }
 
-
-func CheckAction(edgeChosen int) bool{
+func CheckAction(edgeChosen int) bool {
 	if edgeChosen >= 0 && edgeChosen < 40 {
 		return true
 	}
@@ -78,10 +77,9 @@ func set_difficulty(diff int) {
 	eps = 1 - (0.2 * float64(difficulty))
 }
 
-
 func TakeAction(mapData MoveDataType) string {
 	p1 = 1
-	
+
 	if difficulty == 0 {
 		set_difficulty(1)
 	}
@@ -436,8 +434,8 @@ func calc_action(tiny_envys [9][16]int, eps float64) [2]int {
 
 	if CheckAction(action) == true {
 		return big_to_vertex[action]
-	} 
-	return [...]int{-1,-1}
+	}
+	return [...]int{-1, -1}
 }
 
 // func main() {
