@@ -127,9 +127,9 @@ func TestAgentDifficulty(t *testing.T) {
 
 	set_difficulty(2)
 	d2 := check_difficulty()
-
-	if d1 != d2 {
-		t.Errorf("Difficulty not changing epsilon")
+	
+	if d1 == d2 {
+		t.Errorf("Difficulty not changing difficulty")
 	}
 }
 

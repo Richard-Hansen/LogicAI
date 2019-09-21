@@ -103,6 +103,7 @@ class AgentX86:
 		# 'a' represents the agentling index
 		for a in range(len(self.agentlings)):
 			tiny_board_values = self.agentlings[a].get_action_list()
+			#print("AGENTS: ", tiny_board_values)
 
 			# 'j' represents the edge value index for the agentling
 			for j in range(len(tiny_board_values)):
@@ -136,7 +137,7 @@ class AgentX86:
 				action = k
 
 		#return the mapping of the chosen big board edge in the form of the tiny board edge choices
-		self.X_env.update_envys(player, self.big_to_tiny[action])
+		self.X_env.update_envys(self.player, self.big_to_tiny[action])
 
 		#update the state history for each agentling who's state changed based on the above move
 		for agent, edge in self.big_to_tiny[action]:
@@ -153,12 +154,12 @@ class Agentling:
 		self.state_history = [] # all states this agent has participated in
 
 	def get_action_list(self):
-		unfilled_edges = env.get_unfilled_edges() # get all edges that are available 
+		unfilled_edges = self.env.get_unfilled_edges() # get all edges that are available 
 		edge_values = [-1] * 12 #if an edge value is -1, that means that it is already taken, and not an option to choose again
 
 		#fill list of edge values
 		for e in unfilled_edges:
-			edge_values[e] = env.state_value_for_choosing_edge(player, e)
+			edge_values[e] = self.env.state_value_for_choosing_edge(self.player, e)
 
 		return edge_values
 
