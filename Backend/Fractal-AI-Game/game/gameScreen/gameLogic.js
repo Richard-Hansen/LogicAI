@@ -5,17 +5,17 @@ var squaresAreas = [];
  * the AI or the player.
  */
 class GameLogic {
-
   /* Constructor that will send the HTTP request to get the square data */
   constructor() {
     /* Make my HTTP request to squareData with the current map */
     this.fillQuads = [];
-    httpPost("http://localhost:8080/squareData", { Mapname: "Map1" }, function (res) {
-      httpPostSquareData(res);
-    });
+    /* Sending HTTP request to the squareData route. Need to populate the squares/squaresArea array */
+    httpPost("http://localhost:8080/squareData", { Mapname: "Map1" }, this.httpPostSquareData)
   }
 
   httpPostSquareData(res) {
+    console.log("ressssss");
+    console.log(res)
     /* Splits the response by spaces and places it back into res */
     res = res.split(" ");
     /* Iterate through all indices */
@@ -39,7 +39,6 @@ class GameLogic {
      I really do not like the way this is coded and I would love to
      go back and fix this if I have time @TODO */
   checkSquareTaken(vert) {
-    if (this.playerTurn == 1) { this.playerTurn = 2 } else { this.playerTurn = 1 }
     for (var i = 0; i < squares.length; i++) {
       var tempValue = 0;
       for (var j = 0; j < squares[i].length - 1; j++) {
