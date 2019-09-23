@@ -277,20 +277,46 @@ func GetValue(stateInfo [16]int) int {
 func Get_action_list(curr_state [16]int) [12]int {
 	var action_list [12]int
 
-	for i := 0; i < 12; i++ {
-		action_list[i] = -1
-	}
+	// var empty_list []
 
-	for i := 0; i < 12; i++ {
-		if curr_state[i] == 0 {
-			action_list[i] = get_edge_value_runner(curr_state, i)
+	// for i := 0; i < 12; i++ {
+	// 	action_list[i] = -1
+	// }
+
+	// var temp_action_list = get_edge_value_runner(curr_state, i)
+
+	// for i := 0; i < 12; i++ {
+	// 	action_list[i] = temp_action_list[i]
+	// }
+
+	// initialize variable to call value function with
+	var arr_to_pass [12][16]int
+
+	// initialize all values to -1
+	for i:=0; i<12; i++ {
+		for h:=0; j<16: j++ {
+			arr_to_pass[i][j] = -1
 		}
 	}
+
+	// arr_to_fill is set to the state of length 16
+	var arr_to_fill [16]int
+	for i:=0; i<12; i++ {
+		// get state thats length 16
+		if curr_state[i] == 0 {
+			arr_to_fill = get_edge_states(curr_state, i)
+			for j:=0;j<16;j++ {
+				arr_to_pass[i][j] = arr_to_fill[j]
+			}
+		}
+	}
+
+	action_list = GetValue(arr_to_pass)
 
 	return action_list
 }
 
-func get_edge_value_runner(curr_state [16]int, edge int) int {
+func get_edge_states(curr_state [16]int, edge int) int {
 	//set array as if I had chosen the edge
 	curr_state[edge] = p1
 
@@ -314,7 +340,8 @@ func get_edge_value_runner(curr_state [16]int, edge int) int {
 	if curr_state[3] != 0 && curr_state[5] != 0 && curr_state[10] != 0 && curr_state[11] != 0 && check_if_in_list(bottom_right_square, edge) {
 		curr_state[15] = p1
 	}
-	return GetValue(curr_state)
+
+	return curr_state
 }
 
 func check_if_in_list(list [4]int, v int) bool {
@@ -439,11 +466,3 @@ func calc_action(tiny_envys [9][16]int, eps float64) [2]int {
 	} 
 	return [...]int{-1,-1}
 }
-
-// func main() {
-// 	curr_state := [...]int{1,0,1,0,0,0,2,2,0,0,0,0,1,0,0,0}
-
-// 	recieved_actions := Get_action_list(curr_state)
-
-// 	fmt.Println(recieved_actions)
-// }
