@@ -248,18 +248,47 @@ func HashCode(stateInfo [16]int) string {
 }
 
 // get the value of the hash from the database
-func GetValue(stateInfo [16]int) int {
-	hashCode := HashCode(stateInfo)
+func GetValue(stateInfos [][]int, n int) []int {
+
+	// has all the hash codes for the values that we need to find
+	hashCodes := ""
+	// has all the values for each of the hash codes from the database
+	var values [12] int
+
+	// gets the number for the number of rows
+	for i := 0; i < 12; i++ {
+		// gets the value for each of the arrays
+		stateInfo := stateInfos[i]
+
+		// continue when it is not a valid state info
+		if stateInfo[0] == -1 {
+			values[i] = -1
+			continue
+		}
+
+		hashCode := HashCode(stateInfo)
+		if i == 0 {
+			hashCodes = hashCode
+		} else {
+			hashCodes = hashCodes + "," + hashCode
+		} 
+		values[i] = -2
+	}
+
 	// make the call to the database
 	db, err := sql.Open("mysql", "Richard:SteveIsTheBest@tcp(198.199.121.101:3306)/logic")
 	defer db.Close()
 
+	// unable to open the database
 	if err != nil {
 		panic(err.Error())
 	}
-	selectStatement := `SELECT Value FROM hashes WHERE HashCode = ` + hashCode + " LIMIT 1;"
+
+	selectStatement := `SELECT Value FROM hashes WHERE HashCode = ` + hashCodes + ';'
 	rows, errs := db.Query(selectStatement)
 	defer rows.Close()
+
+	count := 0
 
 	for rows.Next() {
 		var i int
@@ -267,9 +296,35 @@ func GetValue(stateInfo [16]int) int {
 		if errs != nil {
 			panic(err)
 		}
-		return i
+		while values[count] == -1 {
+			count += 1
+		}
+		values[count] = i
+		count += 1
 	}
-	return 0
+	
+	return values
+
+	// // make the call to the database
+	// db, err := sql.Open("mysql", "Richard:SteveIsTheBest@tcp(198.199.121.101:3306)/logic")
+	// defer db.Close()
+
+	// if err != nil {
+	// 	panic(err.Error())
+	// }
+	// selectStatement := `SELECT Value FROM hashes WHERE HashCode = ` + hashCode + " LIMIT 1;"
+	// rows, errs := db.Query(selectStatement)
+	// defer rows.Close()
+
+	// for rows.Next() {
+	// 	var i int
+	// 	errs = rows.Scan(&i)
+	// 	if errs != nil {
+	// 		panic(err)
+	// 	}
+	// 	return i
+	// }
+	// return 0
 }
 
 func Get_action_list(curr_state [16]int) [12]int {
