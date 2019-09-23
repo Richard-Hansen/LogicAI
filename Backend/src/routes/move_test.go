@@ -103,7 +103,7 @@ func TestExistingEdges(t *testing.T) {
 /**
  * Test Type: Verification Test
  * What it is testing: Does not send back an inexistant edge
- * Expected output: I expect the agent to send back an edge that does not exist
+ * Expected output: I expect the agent to not send back an edge that does not exist
  */
 func TestNonExistantEdges(t *testing.T) {
 	edge_chosen := 41
@@ -111,9 +111,26 @@ func TestNonExistantEdges(t *testing.T) {
 	allowed_edge := CheckAction(edge_chosen)
 
 	if allowed_edge == true {
-		t.Errorf("Recieved the existing edge as a move, Expected new edge as move")
+		t.Errorf("Recieved the nonexisting edge as a move, Expected existing as move")
 	}
 }
+
+
+/**
+ * Test Type: Verification Test
+ * What it is testing: Sends that an edge is valid if it is valid edge
+ * Expected output: I expect the agent to send back the edge if it does exist
+ */
+func TestExistsEdge(t *testing.T) {
+	edge_chosen := 5
+
+	edge_exists := CheckAction(edge_chosen)
+
+	if edge_exists == false {
+		t.Errorf("Recieved that edge does not exist on board, Expected edge exists")
+	}
+}
+
 
 /**
  * Test Type: Verification Test
