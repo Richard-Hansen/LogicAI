@@ -74,14 +74,15 @@ func set_difficulty(diff int) {
 		difficulty = 1
 	}
 
-	eps = 1 - (0.2 * float64(difficulty))
+	//eps = 1 - (0.2 * float64(difficulty))
+	eps = 0
 }
 
 func TakeAction(mapData MoveDataType) string {
 	p1 = 1
 
 	if difficulty == 0 {
-		set_difficulty(1)
+		set_difficulty(4)
 	}
 	/*maps a pair a vertices to an edge on the 4x4 board.*/
 	vertices_to_edges := map[[2]int]int{
