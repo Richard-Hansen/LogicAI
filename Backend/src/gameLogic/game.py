@@ -17,9 +17,11 @@ class Game:
 
 			# current player takes an action
 			self.game_board = self.current_player.take_action()
+			print("Completed turn for player: ", self.current_player)
 
 		#if update_after_game flag is set to True, update agent weights after each game ends
 		if update_after_game:
+			print("Updating agents")
 			self.p1.update()
 			self.p2.update()
 

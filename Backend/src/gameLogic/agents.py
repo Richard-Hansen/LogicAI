@@ -5,7 +5,7 @@ class AgentX86:
 		self.X_env = X_env
 		self.player = player # player id
 		self.X_eps = eps # determines rate at which a random edge is chosed
-		self.X_alpha = alpha # determines learning rate
+		self.alpha = alpha # determines learning rate
 		self.agentlings = self.__build_agentlings(self.X_env) # build agentlings on each section of the board
 
 		#big board labels
@@ -169,19 +169,16 @@ class AgentX86:
 			# iterate over the reversed state history list, as we will update values through back propogation
 			for prev in reversed(a.state_history):
 				# calculate new value for prev state
-            	value = value_dictionary[prev] + a.alpha * (reward - value_dictionary[prev])
+				value = value_dictionary[prev] + a.alpha * (reward - value_dictionary[prev])
 
-            	# store value in dictionary
-            	value_list[i][prev] = value
+				# store value in dictionary
+				value_list[i][prev] = value
 
-            # reset the state_history of the agentling. This allows us to easily continue training
-        	a.reset_history()
+			# reset the state_history of the agentling. This allows us to easily continue training
+			a.reset_history()
 
-        # list of dictionaries. Each index has a dictionary corresponding to the agentling at that idnex in self.agentlings.
-        return value_list
-
-
-
+		# list of dictionaries. Each index has a dictionary corresponding to the agentling at that idnex in self.agentlings.
+		return value_list
 
 #AgentX86 is made up of 9 agentlings. Each agentling will contribute it's value for all it's visible edges, depending on the current game state
 class Agentling:

@@ -67,12 +67,14 @@ for i in range(0,4):
 	areas.append(a[i+12])
 
 # Environment - creates the environment and creates all the states for the environment
-environment = Environment(areas)
-environment.create_envy_states()
+environment = Environment(areas, writeToDB=False)
+# environment.create_envy_states()
+print("Environment created")
 
 # Agent X86 - creates the agent for the environment
-agentX86P1 = AgentX86(environment)
-agentX86P2 = AgentX86(environment)
+agentX86P1 = AgentX86(environment,1)
+agentX86P2 = AgentX86(environment,2)
+print("Agents created")
 
 game = Game(agentX86P1, agentX86P2)
 
