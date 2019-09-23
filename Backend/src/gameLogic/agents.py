@@ -90,7 +90,7 @@ class AgentX86:
 	def __build_agentlings(self,X_env):
 		agentling_list = []
 		for i in range(9):
-			new_agentling = Agentling(self.player, self.X_env.get_envy(i))
+			new_agentling = Agentling(self.player, self.X_env.get_envy(i), self.alpha)
 			agentling_list.append(new_agentling)
 
 		return agentling_list
@@ -145,12 +145,50 @@ class AgentX86:
 
 		return self.X_env.get_environment()
 
+	# update the values of states for each agentling
+	def update(self):
+
+		# dictionary of the updated values for a hash that need to be sent to the database
+		value_list = []
+
+		# for every agentling, we want to update it's values based off of the state history
+		for i in range(9):
+
+			# get current agentling
+			a = self.agentlings[i]
+
+			# create dictionary in the value list
+			value_list.append({})
+
+			# get the reward for the final state (end of game state) of the game that was played
+			reward = a.env.reward(a.player, a.state_history[len(a.state_history)-1])
+
+			# get the current values for each hash code in the state_history list
+			value_dictionary = a.env.get_values(a.state_history)
+
+			# iterate over the reversed state history list, as we will update values through back propogation
+			for prev in reversed(a.state_history):
+				# calculate new value for prev state
+            	value = value_dictionary[prev] + a.alpha * (reward - value_dictionary[prev])
+
+            	# store value in dictionary
+            	value_list[i][prev] = value
+
+            # reset the state_history of the agentling. This allows us to easily continue training
+        	a.reset_history()
+
+        # list of dictionaries. Each index has a dictionary corresponding to the agentling at that idnex in self.agentlings.
+        return value_list
+
+
+
 
 #AgentX86 is made up of 9 agentlings. Each agentling will contribute it's value for all it's visible edges, depending on the current game state
 class Agentling:
-	def __init__(self, player, env):
+	def __init__(self, player, env, alpha):
 		self.player = player # player id
 		self.env = env # environment attached to an agent
+		self.alpha = alpha # learning rate of the agent
 		self.state_history = [] # all states this agent has participated in
 
 	def get_action_list(self):
