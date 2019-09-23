@@ -277,18 +277,6 @@ func GetValue(stateInfo [16]int) int {
 func Get_action_list(curr_state [16]int) [12]int {
 	var action_list [12]int
 
-	// var empty_list []
-
-	// for i := 0; i < 12; i++ {
-	// 	action_list[i] = -1
-	// }
-
-	// var temp_action_list = get_edge_value_runner(curr_state, i)
-
-	// for i := 0; i < 12; i++ {
-	// 	action_list[i] = temp_action_list[i]
-	// }
-
 	// initialize variable to call value function with
 	var arr_to_pass [12][16]int
 
