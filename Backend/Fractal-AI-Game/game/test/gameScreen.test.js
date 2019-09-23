@@ -26,6 +26,13 @@ describe('GameScreen tests', function () {
         done()
     })
 
+    // it('should say that the move is invalid when given an invalid move', function (done) {
+    //     let move = "0 3";
+    //     let move_result = gameScreen.checkMove(move);
+    //     expect(move_result);
+    //     done();
+    // })
+
     // it('should require a username', function (done) {
     //     let trash = { nameInput: { elt: { value: '' } } }
     //     expect(startScreen.playGame(trash)()).to.equal('NOUSERNAME')

@@ -302,8 +302,10 @@ class gameScreen {
       if (vertices[vertexWithConnection].connections[i] == vertexWithoutConnection) {
         vertices[vertexWithConnection].clickedConnections.push(vertexWithoutConnection);
         vertices[vertexWithConnection].connections.splice(i, 1);
+        return true;
       }
     }
+    return false;
   }
 }
 
