@@ -248,7 +248,7 @@ func HashCode(stateInfo [16]int) string {
 }
 
 // get the value of the hash from the database
-func GetValue(stateInfos [12][16]int) [12]float64 {
+func GetValue(stateInfos [12][16]int, idd int) [12]float64 {
 
 	// has all the hash codes for the values that we need to find
 	hashCodes := ""
@@ -268,9 +268,9 @@ func GetValue(stateInfos [12][16]int) [12]float64 {
 
 		hashCode := HashCode(stateInfo)
 		if len(hashCodes) == 0 {
-			hashCodes = `'0_0_` + hashCode + `'`
+			hashCodes = `'0_` + idd + `_` + hashCode + `'`
 		} else {
-			hashCodes = hashCodes + " OR HashCode = '0_0_" + hashCode + `'`;
+			hashCodes = hashCodes + " OR HashCode = '0_" + idd + "0_" + hashCode + `'`;
 		} 
 		values[i] = -2
 	}
@@ -337,7 +337,7 @@ func GetValue(stateInfos [12][16]int) [12]float64 {
 }
 
 
-func Get_action_list(curr_state [16]int) [12]float64 {
+func get_action_list(curr_state [16]int, idd int) [12]float64 {
 	// initialize variable to call value function with
 	var arr_to_pass [12][16]int
 
@@ -361,9 +361,7 @@ func Get_action_list(curr_state [16]int) [12]float64 {
 	}
 
 	// gets list of action values of length 12
-	action_list := GetValue(arr_to_pass)
-
-	fmt.Println("WE GOT THE VALUES MYD DUIIID --------------------------------------------------------------------------------")
+	action_list := GetValue(arr_to_pass, idd)
 
 	return action_list
 }
@@ -424,7 +422,7 @@ func calc_action(tiny_envys [9][16]int, eps float64) [2]int {
 	// 'a' represents the agentling index
 	for a := 0; a < 9; a++ {
 		// contains all the values
-		tiny_board_values := Get_action_list(tiny_envys[a])
+		tiny_board_values := get_action_list(tiny_envys[a], a)
 
 		for j := 0; j < 12; j++ {
 			// if edge not avaliable, skip
