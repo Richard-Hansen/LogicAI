@@ -268,9 +268,9 @@ func GetValue(stateInfos [12][16]int, idd int) [12]float64 {
 
 		hashCode := HashCode(stateInfo)
 		if len(hashCodes) == 0 {
-			hashCodes = `'0_` + idd + `_` + hashCode + `'`
+			hashCodes = `'0_` + fmt.Sprintf("%d",idd) + `_` + hashCode + `'`
 		} else {
-			hashCodes = hashCodes + " OR HashCode = '0_" + idd + "0_" + hashCode + `'`;
+			hashCodes = hashCodes + " OR HashCode = '0_" + fmt.Sprintf("%d",idd) + "0_" + hashCode + `'`;
 		} 
 		values[i] = -2
 	}
