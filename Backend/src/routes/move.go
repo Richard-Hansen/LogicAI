@@ -248,47 +248,18 @@ func HashCode(stateInfo [16]int) string {
 }
 
 // get the value of the hash from the database
-func GetValue(stateInfos [][]int, n int) []int {
-
-	// has all the hash codes for the values that we need to find
-	hashCodes := ""
-	// has all the values for each of the hash codes from the database
-	var values [12] int
-
-	// gets the number for the number of rows
-	for i := 0; i < 12; i++ {
-		// gets the value for each of the arrays
-		stateInfo := stateInfos[i]
-
-		// continue when it is not a valid state info
-		if stateInfo[0] == -1 {
-			values[i] = -1
-			continue
-		}
-
-		hashCode := HashCode(stateInfo)
-		if i == 0 {
-			hashCodes = hashCode
-		} else {
-			hashCodes = hashCodes + "," + hashCode
-		} 
-		values[i] = -2
-	}
-
+func GetValue(stateInfo [16]int) int {
+	hashCode := HashCode(stateInfo)
 	// make the call to the database
 	db, err := sql.Open("mysql", "Richard:SteveIsTheBest@tcp(198.199.121.101:3306)/logic")
 	defer db.Close()
 
-	// unable to open the database
 	if err != nil {
 		panic(err.Error())
 	}
-
-	selectStatement := `SELECT Value FROM hashes WHERE HashCode = ` + hashCodes + ';'
+	selectStatement := `SELECT Value FROM hashes WHERE HashCode = ` + hashCode + " LIMIT 1;"
 	rows, errs := db.Query(selectStatement)
 	defer rows.Close()
-
-	count := 0
 
 	for rows.Next() {
 		var i int
@@ -296,54 +267,43 @@ func GetValue(stateInfos [][]int, n int) []int {
 		if errs != nil {
 			panic(err)
 		}
-		while values[count] == -1 {
-			count += 1
-		}
-		values[count] = i
-		count += 1
+		return i
 	}
-	
-	return values
-
-	// // make the call to the database
-	// db, err := sql.Open("mysql", "Richard:SteveIsTheBest@tcp(198.199.121.101:3306)/logic")
-	// defer db.Close()
-
-	// if err != nil {
-	// 	panic(err.Error())
-	// }
-	// selectStatement := `SELECT Value FROM hashes WHERE HashCode = ` + hashCode + " LIMIT 1;"
-	// rows, errs := db.Query(selectStatement)
-	// defer rows.Close()
-
-	// for rows.Next() {
-	// 	var i int
-	// 	errs = rows.Scan(&i)
-	// 	if errs != nil {
-	// 		panic(err)
-	// 	}
-	// 	return i
-	// }
-	// return 0
+	return 0
 }
 
 func Get_action_list(curr_state [16]int) [12]int {
 	var action_list [12]int
 
-	for i := 0; i < 12; i++ {
-		action_list[i] = -1
-	}
+	// initialize variable to call value function with
+	var arr_to_pass [12][16]int
 
-	for i := 0; i < 12; i++ {
-		if curr_state[i] == 0 {
-			action_list[i] = get_edge_value_runner(curr_state, i)
+	// initialize all values to -1
+	for i:=0; i<12; i++ {
+		for h:=0; j<16: j++ {
+			arr_to_pass[i][j] = -1
 		}
 	}
+
+	// arr_to_fill is set to the state of length 16
+	var arr_to_fill [16]int
+	for i:=0; i<12; i++ {
+		// get state thats length 16
+		if curr_state[i] == 0 {
+			arr_to_fill = get_edge_states(curr_state, i)
+			for j:=0;j<16;j++ {
+				arr_to_pass[i][j] = arr_to_fill[j]
+			}
+		}
+	}
+
+	// gets list of action values of length 12
+	action_list = GetValue(arr_to_pass)
 
 	return action_list
 }
 
-func get_edge_value_runner(curr_state [16]int, edge int) int {
+func get_edge_states(curr_state [16]int, edge int) int {
 	//set array as if I had chosen the edge
 	curr_state[edge] = p1
 
@@ -367,7 +327,8 @@ func get_edge_value_runner(curr_state [16]int, edge int) int {
 	if curr_state[3] != 0 && curr_state[5] != 0 && curr_state[10] != 0 && curr_state[11] != 0 && check_if_in_list(bottom_right_square, edge) {
 		curr_state[15] = p1
 	}
-	return GetValue(curr_state)
+
+	return curr_state
 }
 
 func check_if_in_list(list [4]int, v int) bool {
@@ -492,11 +453,3 @@ func calc_action(tiny_envys [9][16]int, eps float64) [2]int {
 	}
 	return [...]int{-1, -1}
 }
-
-// func main() {
-// 	curr_state := [...]int{1,0,1,0,0,0,2,2,0,0,0,0,1,0,0,0}
-
-// 	recieved_actions := Get_action_list(curr_state)
-
-// 	fmt.Println(recieved_actions)
-// }
