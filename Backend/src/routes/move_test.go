@@ -115,7 +115,6 @@ func TestNonExistantEdges(t *testing.T) {
 	}
 }
 
-
 /**
  * Test Type: Verification Test
  * What it is testing: Sends that an edge is valid if it is valid edge
@@ -131,7 +130,6 @@ func TestExistsEdge(t *testing.T) {
 	}
 }
 
-
 /**
  * Test Type: Verification Test
  * What it is testing: Check that difficulty changes the randomization factor eps
@@ -144,7 +142,7 @@ func TestAgentDifficulty(t *testing.T) {
 
 	set_difficulty(2)
 	d2 := check_difficulty()
-	
+
 	if d1 == d2 {
 		t.Errorf("Difficulty not changing difficulty")
 	}
