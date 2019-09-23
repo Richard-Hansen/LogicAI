@@ -311,6 +311,7 @@ func Get_action_list(curr_state [16]int) [12]int {
 		}
 	}
 
+	// gets list of action values of length 12
 	action_list = GetValue(arr_to_pass)
 
 	return action_list
