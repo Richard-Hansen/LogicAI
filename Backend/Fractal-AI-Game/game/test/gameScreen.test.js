@@ -21,7 +21,6 @@ describe('GameScreen tests', function () {
     })
 
     it('should be an object', function (done) {
-
         // expect(gameScreen).to.be.a('object');
         // gameScreen.drawScoreBoard(50,50)
         done()
