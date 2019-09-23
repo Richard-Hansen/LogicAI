@@ -80,6 +80,87 @@ def get_hash_value_and_state_by_hash_code(hash_code, environment_id, envy_id):
         # close the connection after it is done
         connection.close()
 
+
+# gets all the values of the state and the values for the list of states from the db
+def get_hash_values_and_by_hash_codes(hash_codes, environment_id, envy_id):
+    try:
+        hash_codes_and_values = {}
+
+        # open the connecton
+        connection = pymysql.connect('198.199.121.101', 'Richard', pwd, 'logic')
+
+        # connection is established
+        with connection.cursor() as cursor:
+
+            hash_code_string = "','".join(hash_codes)
+            hash_code_string = ',' + hash_code_string + ','
+
+            # select query for the db by the hash value
+            primary_key = str(environment_id) + "_" + str(envy_id) + "_" + str(hash_code)
+
+            # get the state and the value for the state
+            select_statement_for_value_and_state = "SELECT `Value` FROM hashes WHERE HashCode in (" + hash_code_string + ")"
+
+            # execute the select statement
+            cursor.execute(select_statement_for_value_and_state, primary_key)
+            connection.commit()
+
+            rows = cursor.fetchall()
+
+            code_index = 0
+
+            # for each of the row
+            for row in rows:
+                # value found
+                value = row[0]
+                hash_codes_and_values[code_index] = value
+
+                code_index += 1
+                
+            if len(hash_codes_and_values) != len(hash_codes):
+                raise Exception("Error with selecting from database")
+
+            return hash_codes_and_values
+    except:
+        print("Error with selecting from database")
+    finally:
+        # close the connection after it is done
+        connection.close()
+
+
+# puts all the values of the state with the hashes
+def put_values(values_to_update_by_hash, environment_id, envy_id):
+    try:
+        hash_codes_and_values = {}
+
+        # open the connecton
+        connection = pymysql.connect('198.199.121.101', 'Richard', pwd, 'logic')
+
+        # connection is established
+        with connection.cursor() as cursor:
+
+            join_part = environment_id + "_" + envy_id  + "_"
+
+            values = ""
+
+            for i in len(values_to_update_by_hash):
+                values = "(" + join_part + values_to_update_by_hash[i][0] + "," +  values_to_update_by_hash[i][1] + ")"
+                if i < len(values_to_update_by_hash) - 1:
+                    values + ","
+
+            # hash codes
+            update_statement_for_hash_and_value = "INSERT INTO hashes (HashCode, Value) VALUES " + values + "ON DUPLICATE KEY UPDATE HashCode=VALUES(HashCode), Values=VALUES(Values);"
+
+            # execute the select statement
+            cursor.execute(select_statement_for_value_and_state, primary_key)
+            connection.commit()
+    except:
+        print("Error with selecting from database")
+    finally:
+        # close the connection after it is done
+        connection.close()
+
+
 # get_hash_value_and_state_by_hash_code(17583507, 0, 0)
 
 
