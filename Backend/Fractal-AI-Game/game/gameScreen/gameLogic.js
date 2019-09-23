@@ -11,14 +11,18 @@ class GameLogic {
     /* Make my HTTP request to squareData with the current map */
     this.fillQuads = [];
     httpPost("http://localhost:8080/squareData", { Mapname: "Map1" }, function (res) {
-      /* Splits the response by spaces and places it back into res */
-      res = res.split(" ");
-      /* Iterate through all indices */
-      for (let i = 0; i < res.length - 1; i++) {
-        squares.push(res[i].split(","));
-      }
-      squaresAreas = res[res.length - 1].split(",")
+      httpPostSquareData(res);
     });
+  }
+
+  httpPostSquareData(res) {
+    /* Splits the response by spaces and places it back into res */
+    res = res.split(" ");
+    /* Iterate through all indices */
+    for (let i = 0; i < res.length - 1; i++) {
+      squares.push(res[i].split(","));
+    }
+    squaresAreas = res[res.length - 1].split(",")
   }
 
   draw() {
@@ -64,14 +68,12 @@ class GameLogic {
       }
       if (tempValue == 4) {
         this.fillQuads.push([squares[i][0], squares[i][1], squares[i][2], squares[i][3]]);
-        // squares.splice(i,1);
         squares[i][0] = -1;
         squares[i][1] = -1;
         squares[i][2] = -1;
         squares[i][3] = -1;
         var ret = squaresAreas[i]
-        // squaresAreas.splice(i,1);
-        return [ret, i];
+        return [ret, i]
       }
     }
     return [undefined, undefined]

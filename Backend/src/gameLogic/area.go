@@ -38,7 +38,6 @@ func FindArea(mapName string) [16]float64 {
 	fullArea := 0.0
 
 	/* Reading my gameBoard json file into the varible file */
-	// file, _ := ioutil.ReadFile("gameBoards/" + mapName + ".json")
 	file, err := ioutil.ReadFile(mapName)
 
 	if err != nil {
@@ -126,9 +125,9 @@ func FindArea(mapName string) [16]float64 {
 		p2 := (b + d + e) / 2
 
 		/**
-		  * Now we can use the area function talked about above. We have a,b,c,d,e,p
-			* 			Area = sqrt(p(p-a)(p-b)(p-c))
-		*/
+		 * Now we can use the area function talked about above. We have a,b,c,d,e,p
+		 * 			Area = sqrt(p(p-a)(p-b)(p-c))
+		 */
 		area1 := math.Sqrt(p1 * (p1 - a) * (p1 - c) * (p1 - e))
 		area2 := math.Sqrt(p2 * (p2 - b) * (p2 - d) * (p2 - e))
 
