@@ -244,16 +244,16 @@ func HashCode(stateInfo [16]int) string {
 		h = h + (int(math.Pow(3, k)) * stateInfo[i])
 		k += 1
 	}
-	return fmt.Sprintf("%d", int(h))
+	return fmt.Sprintf("%d", h)
 }
 
 // get the value of the hash from the database
-func GetValue(stateInfos [][]int, n int) []int {
+func GetValue(stateInfos [12][16]int) [12]float64 {
 
 	// has all the hash codes for the values that we need to find
 	hashCodes := ""
 	// has all the values for each of the hash codes from the database
-	var values [12] int
+	var values [12] float64
 
 	// gets the number for the number of rows
 	for i := 0; i < 12; i++ {
@@ -267,13 +267,16 @@ func GetValue(stateInfos [][]int, n int) []int {
 		}
 
 		hashCode := HashCode(stateInfo)
-		if i == 0 {
-			hashCodes = hashCode
+		if len(hashCodes) == 0 {
+			hashCodes = `'0_0_` + hashCode + `'`
 		} else {
-			hashCodes = hashCodes + "," + hashCode
+			hashCodes = hashCodes + " OR HashCode = '0_0_" + hashCode + `'`;
 		} 
 		values[i] = -2
 	}
+
+	selectStatement := `SELECT Value FROM hashes WHERE HashCode = ` + hashCodes + `;`
+	fmt.Println("----------------------- ", selectStatement)
 
 	// make the call to the database
 	db, err := sql.Open("mysql", "Richard:SteveIsTheBest@tcp(198.199.121.101:3306)/logic")
@@ -281,22 +284,28 @@ func GetValue(stateInfos [][]int, n int) []int {
 
 	// unable to open the database
 	if err != nil {
+		fmt.Println("WHYjklasdjklvnsldfljkvsaljdkvklnjsdfjknvnjksdnjklfvjksdjkfvnjksdnfjkvnkjsdfjnkvsjkdfvjksndjkfnjkvnjksjnkdfnjkvsnjkdv")
 		panic(err.Error())
 	}
 
-	selectStatement := `SELECT Value FROM hashes WHERE HashCode = ` + hashCodes + ';'
+	
 	rows, errs := db.Query(selectStatement)
 	defer rows.Close()
 
 	count := 0
 
+	if errs != nil {
+		fmt.Println("2WHYjklasdjklvnsldfljkvsaljdkvklnjsdfjknvnjksdnjklfvjksdjkfvnjksdnfjkvnkjsdfjnkvsjkdfvjksndjkfnjkvnjksjnkdfnjkvsnjkdv")
+		panic(errs.Error())
+	}
+
 	for rows.Next() {
-		var i int
+		var i float64
 		errs = rows.Scan(&i)
 		if errs != nil {
-			panic(err)
+			panic(errs.Error())
 		}
-		while values[count] == -1 {
+		for values[count] == -1 {
 			count += 1
 		}
 		values[count] = i
@@ -328,15 +337,13 @@ func GetValue(stateInfos [][]int, n int) []int {
 }
 
 
-func Get_action_list(curr_state [16]int) [12]int {
-	var action_list [12]int
-
+func Get_action_list(curr_state [16]int) [12]float64 {
 	// initialize variable to call value function with
 	var arr_to_pass [12][16]int
 
 	// initialize all values to -1
 	for i:=0; i<12; i++ {
-		for h:=0; j<16: j++ {
+		for j:=0; j<16; j++ {
 			arr_to_pass[i][j] = -1
 		}
 	}
@@ -354,12 +361,14 @@ func Get_action_list(curr_state [16]int) [12]int {
 	}
 
 	// gets list of action values of length 12
-	action_list = GetValue(arr_to_pass)
+	action_list := GetValue(arr_to_pass)
+
+	fmt.Println("WE GOT THE VALUES MYD DUIIID --------------------------------------------------------------------------------")
 
 	return action_list
 }
 
-func get_edge_states(curr_state [16]int, edge int) int {
+func get_edge_states(curr_state [16]int, edge int) [16]int {
 	//set array as if I had chosen the edge
 	curr_state[edge] = p1
 
@@ -397,7 +406,7 @@ func check_if_in_list(list [4]int, v int) bool {
 }
 
 func calc_action(tiny_envys [9][16]int, eps float64) [2]int {
-	var big_board_sums [40]int
+	var big_board_sums [40]float64
 	var big_board_counts [40]int
 
 	tiny_to_big := map[int][]int{
@@ -433,7 +442,8 @@ func calc_action(tiny_envys [9][16]int, eps float64) [2]int {
 	}
 
 	// find the max average value in the big board
-	max_value := -1
+	var max_value float64
+	max_value = float64(-1)
 	action := -1
 	for k := 0; k < 40; k++ {
 		// if there are no counts for the chosen edge, then the chosen edge cant be a valid option
@@ -442,7 +452,7 @@ func calc_action(tiny_envys [9][16]int, eps float64) [2]int {
 		}
 
 		// calculate average value of taking edge k on the big board
-		temp_value := (big_board_sums[k] * 1.00) / big_board_counts[k]
+		temp_value := big_board_sums[k] / float64(big_board_counts[k])
 
 		// set max edge value, and the the corresponding edge choice
 		if temp_value > max_value {
