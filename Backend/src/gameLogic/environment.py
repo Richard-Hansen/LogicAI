@@ -110,14 +110,40 @@ class Envy:
 		#print(self.edges, areas)
 
 
-	# rewards calculated when all the game board is filled up - for each player given the player
-	def reward(self, player):
-		# calcuate the value for each of the players
-		if not self.ended():
-			return 0
+	# get all the values with the database
+	def get_values(self, state_history):
+		hash_codes_and_values = {}
 
-		# calculate the amount to give to each player
-		return sum(squares_taken_areas_p1) if player == p1 else sum(squares_taken_areas_p2)		
+		# make the db call to get all the values for the ones in the hash
+		if len(hash_codes) == 1:
+			# single value in the list
+			hash_codes_and_values[hash_codes[0]] = get_hash_value_and_state_by_hash_code(hash_codes[0], self.environment_id, self.envy_id)
+		else:
+			# has more of the hash codes so need to put all into one call
+			hash_codes_and_values = get_hash_values_and_by_hash_codes(hash_codes, self.environment_id, self.envy_id)
+
+		return hash_codes_and_values
+
+
+	# put all the values into the database it recieves - gets an array of dictionaries - where each dictionary is with the hash values to be updated
+	def put_values(self, all_values_to_update):
+		# gets all the values that need to be updated
+		for i in len(all_values_to_update.keys()):
+			# dictionary of the values that need to be updated
+			put_hash_values_and_state(values_to_update[i], self.environment, i)
+
+
+	# rewards calculated when all the game board is filled up - for each player given the player
+	def reward(self, player, state_info):
+		rew = self.calculate_values(state_info)
+		return rew if player == self.p1 else (1 - rew)
+
+		# # calcuate the value for each of the players
+		# if not self.ended():
+		# 	return 0
+
+		# # calculate the amount to give to each player
+		# return sum(squares_taken_areas_p1) if player == p1 else sum(squares_taken_areas_p2)		
 
 
 	# determines if mini board is filled completely
