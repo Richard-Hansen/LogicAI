@@ -293,7 +293,7 @@ class gameScreen {
     });
   }
 
-  checkMove(res) {
+  checkAIMove(res) {
     console.log("RES: " + res);
     var move = res.split(" ");
     var vertexWithConnection = Math.min(move[0], move[1]);
@@ -302,6 +302,15 @@ class gameScreen {
       if (vertices[vertexWithConnection].connections[i] == vertexWithoutConnection) {
         vertices[vertexWithConnection].clickedConnections.push(vertexWithoutConnection);
         vertices[vertexWithConnection].connections.splice(i, 1);
+        takenEdges.push([int(move[0]), int(move[1]), WHoTheFuckMoves])
+        addAndMore = mgameLogic.checkSquareTaken(vertices)
+        console.log(addAndMore);
+        if (addAndMore[0] != undefined) {
+          mgameScreen.scorePlayer += (100 * addAndMore[0]);
+          takenSquare.push([addAndMore[1], WHoTheFuckMoves])
+        }
+        /* Change player turn */
+        if (WHoTheFuckMoves == 1) { WHoTheFuckMoves = 2 } else { WHoTheFuckMoves = 1 }
         return true;
       }
     }
@@ -321,7 +330,6 @@ function mouseClicked() {
      we get a number that is not equal to -1 we know that they clicked on a line */
   if (res[0] != -1) {
     takenEdges.push([res[0], int(vertices[res[0]].connections[res[1]]), WHoTheFuckMoves])
-
     /* Pushes the dotted line clicked into clickConnections so we can display it as clicked */
     vertices[res[0]].clickedConnections.push(vertices[res[0]].connections[res[1]]);
     /* Splices the dotted line from the connections array for the vertex, this will make sure
@@ -337,11 +345,9 @@ function mouseClicked() {
     /* Change player turn */
     if (WHoTheFuckMoves == 1) { WHoTheFuckMoves = 2 } else { WHoTheFuckMoves = 1 }
 
-    httpPost("http://localhost:8080/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare }, function (res) {
-      mgameScreen.checkMove(res);
-    });
+    console.log(takenEdges);
+    console.log(takenSquare);
+    httpPost("http://localhost:8080/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare }, mgameScreen.checkAIMove)
   }
-  console.log(takenEdges);
-  console.log(takenSquare);
 }
 module.exports = gameScreen;
