@@ -9,7 +9,7 @@ class Environment:
 		self.envys = self.__create_envys()
 		self.big_board = [0] * 40
 		
-		self.tiny_to_big = {
+		self.tiny_to_big_edges = {
 							0:[0,1,4,5,8,9,20,21,22,25,26,27],
 							1:[1,2,5,6,9,10,21,22,23,26,27,28],
 							2:[2,3,6,7,10,11,22,23,24,27,28,29],
@@ -48,9 +48,10 @@ class Environment:
 		#set the edge in the big board to the chosen player
 		tiny_env = envy_tuples[0][0]
 		tiny_edge = envy_tuples[0][1]
-		self.big_board[self.tiny_to_big[tiny_env][tiny_edge]] = player
+		self.big_board[self.tiny_to_big_edges[tiny_env][tiny_edge]] = player
 
 		for (envy_index, edge) in envy_tuples:
+			print("UPDATING ENVYS\n\n\n\n\n")
 			self.envys[envy_index].update_state(player, edge)
 
 	# gets the current environment
@@ -195,6 +196,21 @@ class Envy:
 	def update_state(self, player, edge_chosen_index):
 		self.envy_state[edge_chosen_index] = player
 
+		print(self.envy_state[0] != 0 and self.envy_state[2] != 0 and self.envy_state[6] != 0 and self.envy_state[7] != 0 and edge_chosen_index in self.top_left_square)
+		# top left
+		if self.envy_state[0] != 0 and self.envy_state[2] != 0 and self.envy_state[6] != 0 and self.envy_state[7] != 0 and edge_chosen_index in self.top_left_square:
+			print("HEHEHEHE")
+			self.envy_state[12] = player
+		# top right
+		if self.envy_state[1] != 0 and self.envy_state[3] != 0 and self.envy_state[7] != 0 and self.envy_state[8] != 0 and edge_chosen_index in self.top_right_square:
+			self.envy_state[13] = player
+		# bottom left
+		if self.envy_state[2] != 0 and self.envy_state[4] != 0 and self.envy_state[9] != 0 and self.envy_state[10] != 0 and edge_chosen_index in self.bottom_left_square:
+			self.envy_state[14] = player
+		# bottom right
+		if self.envy_state[3] != 0 and self.envy_state[5] != 0 and self.envy_state[10] != 0 and self.envy_state[11] != 0 and edge_chosen_index in self.bottom_right_square:
+			self.envy_state[15] = player
+
 
 	# finds the value of the ternary
 	def ternary(self, hash_code):
@@ -203,7 +219,7 @@ class Envy:
 	    nums = []
 	    while hash_code:
 	        hash_code, remainder = divmod(hash_code, 3)
-	        nums.append(remainder)
+	        nums.insert(0, remainder)
 	    return nums
 
 
@@ -279,7 +295,7 @@ class Envy:
 
 			#print("Edges to get value for: ", self.edges)
 			# squares that have been changed
-			changed_squares = [0] * 4
+			changed_squares = self.envy_state[12:16]
 
 			# top left
 			if self.envy_state[0] != 0 and self.envy_state[2] != 0 and self.envy_state[6] != 0 and self.envy_state[7] != 0 and edge_to_consider_index in self.top_left_square:
@@ -314,9 +330,12 @@ class Envy:
 	def state_value_for_all_edges(self, player, edges_to_consider):
 		values_to_pass = []
 		values_to_return = []
+		print("THE EDGE TO CONSIDER", edges_to_consider, self.envy_state)
 
 		for i in range(12):
 			edge_to_consider_value = edges_to_consider[i] 
+
+			print("CONSIDERING", i)
 			# 0 means the edge is available to be taken
 			if edge_to_consider_value == 0:
 				self.envy_state[i] = player
@@ -324,7 +343,7 @@ class Envy:
 
 				#print("Edges to get value for: ", self.edges)
 				# squares that have been changed
-				changed_squares = [0] * 4
+				changed_squares = self.envy_state[12:16]
 
 				# top left
 				if self.envy_state[0] != 0 and self.envy_state[2] != 0 and self.envy_state[6] != 0 and self.envy_state[7] != 0 and i in self.top_left_square:
@@ -342,7 +361,9 @@ class Envy:
 				if self.envy_state[3] != 0 and self.envy_state[5] != 0 and self.envy_state[10] != 0 and self.envy_state[11] != 0 and i in self.bottom_right_square:
 					#self.edges[15] = player
 					changed_squares[3] = player
+					print("FILLING THE BOTTOM RIGHT", self.envy_state, changed_squares)
 
+				print("ENVY STATES", self.envy_state[:12] + changed_squares)
 				values_to_pass.append(self.get_hash(self.envy_state[:12] + changed_squares))
 
 				# 0 indicates that this value should be replaced with an actually state value
@@ -454,13 +475,14 @@ class Envy:
 			set_hash_value(self.hash_to_values_and_state, self.environment_id, self.envy_id)
 			self.hash_to_values_and_state = {}
 
-m = Envy(areas=[0.05, 0.45, 0.4, 0.1], writeToDB = False)
-(state_val) = m.ternary(29513241)
-print("VALES", state_val)
+# m = Envy(areas=[0.05, 0.45, 0.4, 0.1], writeToDB = False)
+# (state_val) = m.ternary(29513241)
+# print(m.get_hash([0, 0, 0, 0, 2, 1, 2, 0, 1, 2, 1, 1, 1, 0, 0, 2]))
+# print("VALES", state_val)
 # #m.create_state_hash_and_values()
 
-# print("STATE P1", m.get_state_value(1, m.get_hash([1,0,2,1,1,1,2,1,1,1,1,1,1,0,1,1]))) 
-# print("STATEE 1!!", m.calculate_values([1,0,2,0,0,0,2,1,0,0,0,0,1,0,0,0]))
+# print("STATE P1", m.get_state_value(1, m.get_hash([0, 0, 0, 0, 2, 1, 2, 0, 1, 2, 1, 1, 1, 0, 0, 2]))) 
+# print("STATEE 1!!", m.calculate_values([0, 0, 0, 0, 2, 1, 2, 0, 1, 2, 1, 1, 1, 0, 0, 2]))
 # print("STATEE 2!!", m.calculate_values([2, 0,  1, 0, 0, 0, 1, 2, 0, 0, 0, 0, 2, 0, 0, 0]))
 
 # print("STATE P2", m.get_state_value(2, m.get_hash([1,0,2,1,1,1,2,1,1,1,1,1,1,0,1,1]))) 
