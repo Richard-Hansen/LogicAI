@@ -196,7 +196,7 @@ class Agentling:
 		for e in unfilled_edges:
 			edge_values[e] = 0
 
-		return state_value_for_all_edges(self.player, edge_values)
+		return self.env.state_value_for_all_edges(self.player, edge_values)
 
 	# appends state hash to end of state_history
 	def update_state_history(self):
