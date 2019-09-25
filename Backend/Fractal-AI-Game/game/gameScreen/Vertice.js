@@ -17,3 +17,4 @@ function vertice(x, y) {
      been clicked */
   this.clickedConnections = [];
 }
+module.exports = vertice;

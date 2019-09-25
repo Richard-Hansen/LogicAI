@@ -27,6 +27,97 @@ var takenEdges = []
 /* Array of taken sqaures */
 var takenSquare = [];
 
+
+var squares = [];
+var squaresAreas = [];
+/**
+ * This function is going to check if any squares have been completed by either
+ * the AI or the player.
+ */
+class GameLogic {
+  /* Constructor that will send the HTTP request to get the square data */
+  constructor() {
+    /* Make my HTTP request to squareData with the current map */
+    this.fillQuads = [];
+    /* Sending HTTP request to the squareData route. Need to populate the squares/squaresArea array */
+    httpPost("http://localhost:8080/squareData", { Mapname: "Map1" }, this.httpPostSquareData)
+  }
+
+  httpPostSquareData(res) {
+    /* Splits the response by spaces and places it back into res */
+    res = res.split(" ");
+    /* Iterate through all indices */
+    for (let i = 0; i < res.length - 1; i++) {
+      squares.push(res[i].split(","));
+    }
+    squaresAreas = res[res.length - 1].split(",")
+  }
+
+  draw() {
+    push();
+    fill(0, 0, 0, 80);
+    translate(windowWidth / 2, windowHeight / 2)
+    for (var i = 0; i < this.fillQuads.length; i++) {
+      quad(vertices[this.fillQuads[i][0]].screenX, vertices[this.fillQuads[i][0]].screenY, vertices[this.fillQuads[i][2]].screenX, vertices[this.fillQuads[i][2]].screenY, vertices[this.fillQuads[i][3]].screenX, vertices[this.fillQuads[i][3]].screenY, vertices[this.fillQuads[i][1]].screenX, vertices[this.fillQuads[i][1]].screenY);
+    }
+    pop();
+  }
+
+  /* this.checkSquareTaken will check if a square has been taken.
+     I really do not like the way this is coded and I would love to
+     go back and fix this if I have time @TODO */
+  checkSquareTaken(vert) {
+    for (var i = 0; i < squares.length; i++) {
+      var tempValue = 0;
+      for (var j = 0; j < squares[i].length; j++) {
+        var shouldBeTwo = 0;
+        if(squares[i][j] != -1) {
+          if(vert[squares[i][j]].clickedConnections.includes(int(squares[i][0]))){
+            shouldBeTwo++
+            tempValue++
+          }
+          if(vert[squares[i][j]].clickedConnections.includes(int(squares[i][1]))){
+            shouldBeTwo++
+            tempValue++
+          }
+          if(vert[squares[i][j]].clickedConnections.includes(int(squares[i][2]))){
+            shouldBeTwo++
+            tempValue++
+          }
+          if(vert[squares[i][j]].clickedConnections.includes(int(squares[i][3]))){
+            shouldBeTwo++
+            tempValue++
+          }
+          if(shouldBeTwo == 0){
+            break;
+          }
+        }
+      }
+      if (tempValue == 4) {
+        this.fillQuads.push([squares[i][0], squares[i][1], squares[i][2], squares[i][3]]);
+        squares[i][0] = -1;
+        squares[i][1] = -1;
+        squares[i][2] = -1;
+        squares[i][3] = -1;
+        var ret = squaresAreas[i]
+        return [ret, i]
+      }
+    }
+    return [undefined, undefined]
+  }
+}
+
+
+
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+
+
 /**
  * This class will contain all the relevant game code for LogicalAI.
  * When we have entered gameState 1 the draw function found in this class will
@@ -36,7 +127,6 @@ var takenSquare = [];
 class gameScreen {
   /* ctor, does not require any params. Asks the backend for all mapdata */
   constructor() {
-    // this.callMapRoute();
     httpPost("http://localhost:8080/map", { map: "Map1" }, this.callMapRoute)
     /* Scores of the AI and player */
     this.scoreAI = 0;
@@ -262,7 +352,10 @@ class gameScreen {
   callMapRoute(res) {
     /* A post method to the map route with a json containing the map name */
       /* Splits the response by spaces and places it back into res */
+      // console.log("IM READY TO RES");
+      // console.log(res);
       res = res.split(" ");
+
       /* Iterate through all indices, except for the last one, and removed '[' and ']' */
       for (let i = 0; i < res.length - 1; i++) {
         /* Regex to globally replace the two chars talked about above */
@@ -278,6 +371,7 @@ class gameScreen {
       /* splitting the last array element by '-' dashes */
       let temp = res[res.length - 1].split("-");
       /* Iterates through res from [4, (res.length-1)] */
+
       for (let i = 4; i < res.length - 1; i++) {
         /* So we can place both x and y into the new vertice */
         if (i % 2 == 0) {
@@ -317,6 +411,31 @@ class gameScreen {
     }
     return false;
   }
+
+  mouseClicked(mousexx, mouseyy){
+    // /* Checks to see if the mouse is over a dotted line */
+    // var res = mgameScreen.checkMouse();
+    // /* If we get a -1, we know it was not over a dotted line and nothing should happen, if
+    //    we get a number that is not equal to -1 we know that they clicked on a line */
+    // if (res[0] != -1) {
+    //   takenEdges.push([res[0], int(vertices[res[0]].connections[res[1]]), WHoTheFuckMoves])
+    //   /* Pushes the dotted line clicked into clickConnections so we can display it as clicked */
+    //   vertices[res[0]].clickedConnections.push(int(vertices[res[0]].connections[res[1]]));
+    //   /* Splices the dotted line from the connections array for the vertex, this will make sure
+    //      we no longer check that line when clicking */
+    //   vertices[res[0]].connections.splice(res[1], 1);
+    //   /* We now need to check if the square has been taken by the person that clicked */
+    //   addAndMore = mgameLogic.checkSquareTaken(vertices)
+    //   console.log(addAndMore);
+    //   if (addAndMore[0] != undefined) {
+    //     takenSquare.push([addAndMore[1], WHoTheFuckMoves])
+    //     mgameScreen.scorePlayer += int((100 * addAndMore[0]));
+    //   }
+    //   /* Change player turn */
+    //   if (WHoTheFuckMoves == 1) { WHoTheFuckMoves = 2 } else { WHoTheFuckMoves = 1 }
+    //   httpPost("http://localhost:8080/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare }, mgameScreen.checkAIMove)
+    // }
+  }
 }
 
 /**
@@ -349,3 +468,47 @@ function mouseClicked() {
   }
 }
 module.exports = gameScreen;
+// module.exports = ;
+
+
+
+
+
+
+
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+
+
+/* This will contain ALL metadata of a single vertice. */
+function vertice(x, y) {
+  /* These are the values stored in the json. all values will be between [0,5] in
+     both this.x and this.y */
+  this.x = x;
+  this.y = y;
+  /* Screen X cord. i.e 154.5 or some pixel value */
+  this.screenX;
+  /* Screen Y cord. i.e 254.6 or some pixel value */
+  this.screenY;
+  /* Contains all the connections that have no been clicked yet. This is stored
+     as the index of the connection. i.e if you see '0' in this.connections, it means
+     this vertice is connected to the 0 vertex */
+  this.connections = [];
+  /* Same format as this.connections but instead contains all the connections that HAVE
+     been clicked */
+  this.clickedConnections = [];
+}
+
+
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
