@@ -17,7 +17,7 @@ class Game:
 
 			# current player takes an action
 			self.game_board = self.current_player.take_action()
-			print("Completed turn for player: ", self.current_player)
+			self.print_board(self.current_player.X_env.big_board)
 
 		#if update_after_game flag is set to True, update agent weights after each game ends
 		if update_after_game:
@@ -28,4 +28,14 @@ class Game:
 	#returns True if game has ended
 	def game_ended(self):
 		return 0 not in self.game_board
+
+	def print_board(self, big_env):
+		for i in range(4):
+			c = i+4*i
+			v = 5*i
+			print("  %d  %d  %d  %d  " % (big_env[c],big_env[c+1],big_env[c+2],big_env[c+3]))
+			print("%d  %d  %d  %d  %d" % (big_env[v+20],big_env[v+21],big_env[v+22],big_env[v+23],big_env[v+24]))
+		print("  %d  %d  %d  %d  " % (big_env[16],big_env[17],big_env[18],big_env[19]))
+			
+
 
