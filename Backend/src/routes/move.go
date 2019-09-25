@@ -270,12 +270,12 @@ func GetValue(stateInfos [12][16]int, idd int) [12]float64 {
 		if len(hashCodes) == 0 {
 			hashCodes = `'0_` + fmt.Sprintf("%d",idd) + `_` + hashCode + `'`
 		} else {
-			hashCodes = hashCodes + " OR HashCode = '0_" + fmt.Sprintf("%d",idd) + "0_" + hashCode + `'`;
+			hashCodes = hashCodes + ",HashCode = '0_" + fmt.Sprintf("%d",idd) + "0_" + hashCode + `'`;
 		} 
 		values[i] = -2
 	}
 
-	selectStatement := `SELECT Value FROM hashes WHERE HashCode = ` + hashCodes + `;`
+	selectStatement := `SELECT Value FROM hashes WHERE HashCode = (` + hashCodes + `) ORDER BY FIELD(HashCode,` + hashCodes + `(` + `;`
 	fmt.Println("----------------------- ", selectStatement)
 
 	// make the call to the database
@@ -284,7 +284,6 @@ func GetValue(stateInfos [12][16]int, idd int) [12]float64 {
 
 	// unable to open the database
 	if err != nil {
-		fmt.Println("WHYjklasdjklvnsldfljkvsaljdkvklnjsdfjknvnjksdnjklfvjksdjkfvnjksdnfjkvnkjsdfjnkvsjkdfvjksndjkfnjkvnjksjnkdfnjkvsnjkdv")
 		panic(err.Error())
 	}
 
@@ -295,7 +294,6 @@ func GetValue(stateInfos [12][16]int, idd int) [12]float64 {
 	count := 0
 
 	if errs != nil {
-		fmt.Println("2WHYjklasdjklvnsldfljkvsaljdkvklnjsdfjknvnjksdnjklfvjksdjkfvnjksdnfjkvnkjsdfjnkvsjkdfvjksndjkfnjkvnjksjnkdfnjkvsnjkdv")
 		panic(errs.Error())
 	}
 

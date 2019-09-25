@@ -99,7 +99,7 @@ def get_hash_values_and_by_hash_codes(hash_codes, environment_id, envy_id):
             primary_key = str(environment_id) + "_" + str(envy_id) + "_" + str(hash_code)
 
             # get the state and the value for the state
-            select_statement_for_value_and_state = "SELECT `Value` FROM hashes WHERE HashCode in (" + hash_code_string + ")"
+            select_statement_for_value_and_state = "SELECT `Value` FROM hashes WHERE HashCode in (" + hash_code_string + ") ORDER BY FIELD(HashCode," + hash_code_string + ")" 
 
             # execute the select statement
             cursor.execute(select_statement_for_value_and_state, primary_key)
