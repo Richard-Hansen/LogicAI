@@ -254,7 +254,7 @@ func GetValue(stateInfos [12][16]int) [12]float64 {
 	// has all the hash codes for the values that we need to find
 	hashCodes := ""
 	// has all the values for each of the hash codes from the database
-	var values [12] float64
+	var values [12]float64
 
 	// gets the number for the number of rows
 	for i := 0; i < 12; i++ {
@@ -271,8 +271,8 @@ func GetValue(stateInfos [12][16]int) [12]float64 {
 		if len(hashCodes) == 0 {
 			hashCodes = `'0_0_` + hashCode + `'`
 		} else {
-			hashCodes = hashCodes + " OR HashCode = '0_0_" + hashCode + `'`;
-		} 
+			hashCodes = hashCodes + " OR HashCode = '0_0_" + hashCode + `'`
+		}
 		values[i] = -2
 	}
 
@@ -289,7 +289,6 @@ func GetValue(stateInfos [12][16]int) [12]float64 {
 		panic(err.Error())
 	}
 
-	
 	rows, errs := db.Query(selectStatement)
 	defer rows.Close()
 
@@ -312,7 +311,7 @@ func GetValue(stateInfos [12][16]int) [12]float64 {
 		values[count] = i
 		count += 1
 	}
-	
+
 	return values
 
 	// // make the call to the database
@@ -337,30 +336,37 @@ func GetValue(stateInfos [12][16]int) [12]float64 {
 	// return 0
 }
 
-
 func Get_action_list(curr_state [16]int) [12]float64 {
 	// initialize variable to call value function with
 	var arr_to_pass [12][16]int
 
+	// flag to see if there are any valid states
+	flag := 0
+
 	// initialize all values to -1
-	for i:=0; i<12; i++ {
-		for j:=0; j<16; j++ {
+	for i := 0; i < 12; i++ {
+		for j := 0; j < 16; j++ {
 			arr_to_pass[i][j] = -1
 		}
 	}
 
 	// arr_to_fill is set to the state of length 16
 	var arr_to_fill [16]int
-	for i:=0; i<12; i++ {
+	for i := 0; i < 12; i++ {
 		// get state thats length 16
 		if curr_state[i] == 0 {
+			flag = 1
 			arr_to_fill = get_edge_states(curr_state, i)
-			for j:=0;j<16;j++ {
+			for j := 0; j < 16; j++ {
 				arr_to_pass[i][j] = arr_to_fill[j]
 			}
 		}
 	}
 
+	if flag == 0 {
+		err_arr := [12]float64{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}
+		return err_arr
+	}
 	// gets list of action values of length 12
 	action_list := GetValue(arr_to_pass)
 
