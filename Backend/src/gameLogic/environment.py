@@ -274,7 +274,6 @@ class Envy:
 		# print("VALUES", value)
 		return value
 
-
 	# gets the state value
 	def state_value_for_choosing_edge(self, player, edge_to_consider_index):
 		if self.edges[edge_to_consider_index] == 0:
