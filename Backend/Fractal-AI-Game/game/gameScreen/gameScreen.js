@@ -19,7 +19,7 @@ var sizeName;
 var vertices = [];
 
 /* Create the gameLogic varible */
-// var mgameLogic;
+var mgameLogic;
 /* ? */
 var WHoTheFuckMoves;
 /* Player Taken edges */
@@ -73,19 +73,19 @@ class GameLogic {
       for (var j = 0; j < squares[i].length; j++) {
         var shouldBeTwo = 0;
         if(squares[i][j] != -1) {
-          if(vert[squares[i][j]].clickedConnections.includes((squares[i][0]))){
+          if(vert[squares[i][j]].clickedConnections.includes(int(squares[i][0]))){
             shouldBeTwo++
             tempValue++
           }
-          if(vert[squares[i][j]].clickedConnections.includes((squares[i][1]))){
+          if(vert[squares[i][j]].clickedConnections.includes(int(squares[i][1]))){
             shouldBeTwo++
             tempValue++
           }
-          if(vert[squares[i][j]].clickedConnections.includes((squares[i][2]))){
+          if(vert[squares[i][j]].clickedConnections.includes(int(squares[i][2]))){
             shouldBeTwo++
             tempValue++
           }
-          if(vert[squares[i][j]].clickedConnections.includes((squares[i][3]))){
+          if(vert[squares[i][j]].clickedConnections.includes(int(squares[i][3]))){
             shouldBeTwo++
             tempValue++
           }
@@ -128,11 +128,12 @@ class GameLogic {
 class gameScreen {
   /* ctor, does not require any params. Asks the backend for all mapdata */
   constructor() {
+    // this.mgameLogic = new GameLogic()
+    mgameLogic = new GameLogic();
     httpPost("http://localhost:8080/map", { map: "Map1" }, this.callMapRoute)
     /* Scores of the AI and player */
     this.scoreAI = 0;
     this.scorePlayer = 0;
-    this.mgameLogic = new GameLogic()
     /* Set player move */
     WHoTheFuckMoves = 1;
   }
@@ -148,7 +149,7 @@ class gameScreen {
     /* Show the score of the player and AI */
     this.drawScoreBoard(int(this.scoreAI), int(this.scorePlayer));
     /* Need to draw the quads that are filled */
-    this.mgameLogic.draw();
+    mgameLogic.draw();
   }
 
   /**
@@ -397,32 +398,10 @@ class gameScreen {
         vertices[vertexWithConnection].clickedConnections.push(int(vertexWithoutConnection));
         vertices[vertexWithConnection].connections.splice(i, 1);
         takenEdges.push([int(move[0]), int(move[1]), WHoTheFuckMoves])
-        let addAndMore = this.mgameLogic.checkSquareTaken(vertices)
+        var addAndMore = mgameLogic.checkSquareTaken(vertices)
         console.log(addAndMore);
         if (addAndMore[0] != undefined) {
           mgameScreen.scoreAI += int((100 * addAndMore[0]));
-          takenSquare.push([addAndMore[1], WHoTheFuckMoves])
-        }
-        /* Change player turn */
-        if (WHoTheFuckMoves == 1) { WHoTheFuckMoves = 2 } else { WHoTheFuckMoves = 1 }
-        return true;
-      }
-    }
-    return false;
-  }
-
-  checkPlayerMove(vert1, vert2){
-    var vertexWithConnection = Math.min(vert1, vert2);
-    var vertexWithoutConnection = Math.max(vert1, vert2);
-    for (var i = 0; i < vertices[vertexWithConnection].connections.length; i++) {
-      if (vertices[vertexWithConnection].connections[i] == vertexWithoutConnection) {
-        vertices[vertexWithConnection].clickedConnections.push((vertexWithoutConnection));
-        vertices[vertexWithConnection].connections.splice(i, 1);
-        takenEdges.push([(vert1), (vert2), WHoTheFuckMoves])
-        let addAndMore = this.mgameLogic.checkSquareTaken(vertices)
-        console.log(addAndMore);
-        if (addAndMore[0] != undefined) {
-          mgameScreen.scoreAI += ((100 * addAndMore[0]));
           takenSquare.push([addAndMore[1], WHoTheFuckMoves])
         }
         /* Change player turn */
@@ -452,7 +431,7 @@ function mouseClicked() {
        we no longer check that line when clicking */
     vertices[res[0]].connections.splice(res[1], 1);
     /* We now need to check if the square has been taken by the person that clicked */
-    addAndMore = mgameScreen.mgameLogic.checkSquareTaken(vertices)
+    addAndMore = mgameLogic.checkSquareTaken(vertices)
     console.log(addAndMore);
     if (addAndMore[0] != undefined) {
       takenSquare.push([addAndMore[1], WHoTheFuckMoves])
