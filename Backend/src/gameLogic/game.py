@@ -1,3 +1,5 @@
+from callDatabases import put_values
+
 class Game:
 	def __init__(self, p1, p2):
 		self.p1 = p1 # AgentX86/human object
@@ -22,8 +24,8 @@ class Game:
 		#if update_after_game flag is set to True, update agent weights after each game ends
 		if update_after_game:
 			print("Updating agents")
-			self.p1.update()
-			self.p2.update()
+			put_values(self.p1.update())
+			put_values(self.p2.update())
 
 	#returns True if game has ended
 	def game_ended(self):
