@@ -300,13 +300,13 @@ class gameScreen {
     var vertexWithoutConnection = Math.max(move[0], move[1]);
     for (var i = 0; i < vertices[vertexWithConnection].connections.length; i++) {
       if (vertices[vertexWithConnection].connections[i] == vertexWithoutConnection) {
-        vertices[vertexWithConnection].clickedConnections.push(vertexWithoutConnection);
+        vertices[vertexWithConnection].clickedConnections.push(int(vertexWithoutConnection));
         vertices[vertexWithConnection].connections.splice(i, 1);
         takenEdges.push([int(move[0]), int(move[1]), WHoTheFuckMoves])
         addAndMore = mgameLogic.checkSquareTaken(vertices)
         console.log(addAndMore);
         if (addAndMore[0] != undefined) {
-          mgameScreen.scorePlayer += (100 * addAndMore[0]);
+          mgameScreen.scoreAI += (100 * addAndMore[0]);
           takenSquare.push([addAndMore[1], WHoTheFuckMoves])
         }
         /* Change player turn */
@@ -331,7 +331,7 @@ function mouseClicked() {
   if (res[0] != -1) {
     takenEdges.push([res[0], int(vertices[res[0]].connections[res[1]]), WHoTheFuckMoves])
     /* Pushes the dotted line clicked into clickConnections so we can display it as clicked */
-    vertices[res[0]].clickedConnections.push(vertices[res[0]].connections[res[1]]);
+    vertices[res[0]].clickedConnections.push(int(vertices[res[0]].connections[res[1]]));
     /* Splices the dotted line from the connections array for the vertex, this will make sure
        we no longer check that line when clicking */
     vertices[res[0]].connections.splice(res[1], 1);
@@ -339,14 +339,11 @@ function mouseClicked() {
     addAndMore = mgameLogic.checkSquareTaken(vertices)
     console.log(addAndMore);
     if (addAndMore[0] != undefined) {
-      mgameScreen.scorePlayer += (100 * addAndMore[0]);
       takenSquare.push([addAndMore[1], WHoTheFuckMoves])
+      mgameScreen.scorePlayer += (100 * addAndMore[0]);
     }
     /* Change player turn */
     if (WHoTheFuckMoves == 1) { WHoTheFuckMoves = 2 } else { WHoTheFuckMoves = 1 }
-
-    console.log(takenEdges);
-    console.log(takenSquare);
     httpPost("http://localhost:8080/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare }, mgameScreen.checkAIMove)
   }
 }
