@@ -287,32 +287,92 @@ class Envy:
 			# top left
 			if self.edges[0] != 0 and self.edges[2] != 0 and self.edges[6] != 0 and self.edges[7] != 0 and edge_to_consider_index in self.top_left_square:
 				#self.edges[12] = player
-				changed_squares[0] = 1
+				changed_squares[0] = player
 			# top right
 			if self.edges[1] != 0 and self.edges[3] != 0 and self.edges[7] != 0 and self.edges[8] != 0 and edge_to_consider_index in self.top_right_square:
 				#self.edges[13] = player
-				changed_squares[1] = 1
+				changed_squares[1] = player
 			# bottom left
 			if self.edges[2] != 0 and self.edges[4] != 0 and self.edges[9] != 0 and self.edges[10] != 0 and edge_to_consider_index in self.bottom_left_square:
 				#self.edges[14] = player
-				changed_squares[2] = 1
+				changed_squares[2] = player
 			# bottom right
 			if self.edges[3] != 0 and self.edges[5] != 0 and self.edges[10] != 0 and self.edges[11] != 0 and edge_to_consider_index in self.bottom_right_square:
 				#self.edges[15] = player
-				changed_squares[3] = 1
+				changed_squares[3] = player
 
 			(value, state) = get_hash_value_and_state_by_hash_code(self.get_hash(self.edges + changed_squares), self.environment_id, self.envy_id)
 
 			self.edges[edge_to_consider_index] = 0
 
 			for i in range(len(changed_squares)):
-				if changed_squares[i] == 1:
-					edges[12 + i] = 0
+				if changed_squares[i] == player:
+					self.edges[12 + i] = 0
 
 			return value
 
 		raise Exception('Edge already chosen')
 
+	# gets the state value
+	def state_value_for_all_edges(self, player, edges_to_consider):
+		values_to_pass = []
+		values_to_return = []
+
+		for i in range(12):
+			# 0 means the edge is available to be taken
+			if edges_to_consider[i] == 0:
+				self.edges[i] = player
+
+
+				#print("Edges to get value for: ", self.edges)
+				# squares that have been changed
+				changed_squares = [0] * 4
+
+				# top left
+				if self.edges[0] != 0 and self.edges[2] != 0 and self.edges[6] != 0 and self.edges[7] != 0 and i in self.top_left_square:
+					#self.edges[12] = player
+					changed_squares[0] = player
+				# top right
+				if self.edges[1] != 0 and self.edges[3] != 0 and self.edges[7] != 0 and self.edges[8] != 0 and i in self.top_right_square:
+					#self.edges[13] = player
+					changed_squares[1] = player
+				# bottom left
+				if self.edges[2] != 0 and self.edges[4] != 0 and self.edges[9] != 0 and self.edges[10] != 0 and i in self.bottom_left_square:
+					#self.edges[14] = player
+					changed_squares[2] = player
+				# bottom right
+				if self.edges[3] != 0 and self.edges[5] != 0 and self.edges[10] != 0 and self.edges[11] != 0 and i in self.bottom_right_square:
+					#self.edges[15] = player
+					changed_squares[3] = player
+
+				values_to_pass.append(self.get_hash(self.edges + changed_squares))
+
+				# 0 indicates that this value should be replaced with an actually state value
+				values_to_return.append(0)
+
+				# reset state after calculating has value
+				self.edges[i] = 0
+
+				# reset the square value if necessary
+				for j in range(len(changed_squares)):
+					if changed_squares[j] == player:
+						self.edges[12 + j] = 0
+			else:
+				# -1 indicates that this value should not be replaced with an actual value
+				values_to_return.append(-1)
+
+		hash_code_list = get_hash_values_and_by_hash_codes(values_to_pass, self.environment_id, self.envy_id)
+
+		for hv in hash_code_list:
+			for k in range(12):
+				if values_to_return[k] == 0:
+					values_to_return[k] = hv
+					break
+
+		return values_to_return
+
+
+		raise Exception('Edge already chosen')
 
 	# gets the current state based on the hash and the value stored
 	def create_state_hash_and_values(self):
