@@ -129,7 +129,7 @@ def get_hash_values_and_by_hash_codes(hash_codes, environment_id, envy_id):
 
             return hash_codes_and_values
     except Exception:
-        raise Exception()
+        raise Exception
     finally:
         # close the connection after it is done
         connection.close()

@@ -74,7 +74,12 @@ print("Environment created")
 # Agent X86 - creates the agent for the environment
 agentX86P1 = AgentX86(environment,1)
 agentX86P2 = AgentX86(environment,2)
-print("Agents created")
+
+# environment.envys[0].envy_state = [0,0,1,0,0,0,1,1,0,0,0,0,0,0,0,0]
+# environment.envys[0].update_state(1,0)
+# print(environment.envys[0].envy_state)
+
+# print("Agents created")
 
 game = Game(agentX86P1, agentX86P2)
 
