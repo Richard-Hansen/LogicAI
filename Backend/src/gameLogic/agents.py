@@ -194,9 +194,9 @@ class Agentling:
 
 		#fill list of edge values
 		for e in unfilled_edges:
-			edge_values[e] = self.env.state_value_for_choosing_edge(self.player, e)
+			edge_values[e] = 0
 
-		return edge_values
+		return state_value_for_all_edges(self.player, edge_values)
 
 	# appends state hash to end of state_history
 	def update_state_history(self):
