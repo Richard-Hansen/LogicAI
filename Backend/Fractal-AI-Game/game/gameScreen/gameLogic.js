@@ -41,22 +41,22 @@ class GameLogic {
   checkSquareTaken(vert) {
     for (var i = 0; i < squares.length; i++) {
       var tempValue = 0;
-      for (var j = 0; j < squares[i].length - 1; j++) {
+      for (var j = 0; j < squares[i].length; j++) {
         var shouldBeTwo = 0;
         if(squares[i][j] != -1) {
-          if(vert[squares[i][j]].clickedConnections.includes(squares[i][0])){
+          if(vert[squares[i][j]].clickedConnections.includes(int(squares[i][0]))){
             shouldBeTwo++
             tempValue++
           }
-          if(vert[squares[i][j]].clickedConnections.includes(squares[i][1])){
+          if(vert[squares[i][j]].clickedConnections.includes(int(squares[i][1]))){
             shouldBeTwo++
             tempValue++
           }
-          if(vert[squares[i][j]].clickedConnections.includes(squares[i][2])){
+          if(vert[squares[i][j]].clickedConnections.includes(int(squares[i][2]))){
             shouldBeTwo++
             tempValue++
           }
-          if(vert[squares[i][j]].clickedConnections.includes(squares[i][3])){
+          if(vert[squares[i][j]].clickedConnections.includes(int(squares[i][3]))){
             shouldBeTwo++
             tempValue++
           }
