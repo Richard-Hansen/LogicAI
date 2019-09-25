@@ -36,7 +36,8 @@ var takenSquare = [];
 class gameScreen {
   /* ctor, does not require any params. Asks the backend for all mapdata */
   constructor() {
-    this.callMapRoute();
+    // this.callMapRoute();
+    httpPost("http://localhost:8080/map", { map: "Map1" }, this.callMapRoute)
     /* Scores of the AI and player */
     this.scoreAI = 0;
     this.scorePlayer = 0;
@@ -54,7 +55,7 @@ class gameScreen {
     /* Draws the title onto the screen */
     this.drawTitle();
     /* Show the score of the player and AI */
-    this.drawScoreBoard(this.scoreAI, this.scorePlayer);
+    this.drawScoreBoard(int(this.scoreAI), int(this.scorePlayer));
     /* Need to draw the quads that are filled */
     mgameLogic.draw();
   }
@@ -258,9 +259,8 @@ class gameScreen {
    *                once the data has been received it will parse the response and place
    *                all the usefull data in the correct structures.
    */
-  callMapRoute() {
+  callMapRoute(res) {
     /* A post method to the map route with a json containing the map name */
-    httpPost("http://localhost:8080/map", { map: "Map1" }, function (res) {
       /* Splits the response by spaces and places it back into res */
       res = res.split(" ");
       /* Iterate through all indices, except for the last one, and removed '[' and ']' */
@@ -290,7 +290,8 @@ class gameScreen {
         /* Splits each temp[i] by ',' commas and places them into the vertice data structure */
         vertices[i].connections = temp[i].split(",");
       }
-    });
+      /* Returning all the values that I set */
+      return [mapName, size, sizeName, vertices];
   }
 
   checkAIMove(res) {
@@ -306,7 +307,7 @@ class gameScreen {
         addAndMore = mgameLogic.checkSquareTaken(vertices)
         console.log(addAndMore);
         if (addAndMore[0] != undefined) {
-          mgameScreen.scoreAI += (100 * addAndMore[0]);
+          mgameScreen.scoreAI += int((100 * addAndMore[0]));
           takenSquare.push([addAndMore[1], WHoTheFuckMoves])
         }
         /* Change player turn */
@@ -340,7 +341,7 @@ function mouseClicked() {
     console.log(addAndMore);
     if (addAndMore[0] != undefined) {
       takenSquare.push([addAndMore[1], WHoTheFuckMoves])
-      mgameScreen.scorePlayer += (100 * addAndMore[0]);
+      mgameScreen.scorePlayer += int((100 * addAndMore[0]));
     }
     /* Change player turn */
     if (WHoTheFuckMoves == 1) { WHoTheFuckMoves = 2 } else { WHoTheFuckMoves = 1 }
