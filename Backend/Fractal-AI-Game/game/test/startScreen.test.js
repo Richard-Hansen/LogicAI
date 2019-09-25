@@ -44,6 +44,12 @@ describe('StartScreen tests', function () {
         done()
     })
 
+    it('should not allow mean characters', function (done) {
+        let trash = { nameInput: { elt: { value: 'bad$$name' } } }
+        expect(startScreen.playGame(trash)()).to.equal('BADCHARS')
+        done()        
+    })
+
     it('should not cache incorrect usernames', function (done) {
         window.localStorage.setItem("userName", "billbert")
         let trash = { nameInput: { elt: { value: 'verylongusernamethatisverylongandstuffyeah' } }, callAuthRoute: function () { return true }, switchState: function () { } }
