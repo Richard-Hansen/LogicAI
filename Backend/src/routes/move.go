@@ -270,12 +270,12 @@ func GetValue(stateInfos [12][16]int, idd int) [12]float64 {
 		if len(hashCodes) == 0 {
 			hashCodes = `'0_` + fmt.Sprintf("%d",idd) + `_` + hashCode + `'`
 		} else {
-			hashCodes = hashCodes + ",HashCode = '0_" + fmt.Sprintf("%d",idd) + "0_" + hashCode + `'`;
+			hashCodes = hashCodes + ", '0_" + fmt.Sprintf("%d",idd) + "0_" + hashCode + `'`;
 		} 
 		values[i] = -2
 	}
 
-	selectStatement := `SELECT Value FROM hashes WHERE HashCode = (` + hashCodes + `) ORDER BY FIELD(HashCode,` + hashCodes + `(` + `;`
+	selectStatement := `SELECT Value FROM hashes WHERE HashCode IN (` + hashCodes + `) ORDER BY FIELD(HashCode,` + hashCodes + `)` + `;`
 	fmt.Println("----------------------- ", selectStatement)
 
 	// make the call to the database
