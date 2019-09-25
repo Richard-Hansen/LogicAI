@@ -84,7 +84,9 @@ def get_hash_value_and_state_by_hash_code(hash_code, environment_id, envy_id):
 # gets all the values of the state and the values for the list of states from the db
 def get_hash_values_and_by_hash_codes(hash_codes, environment_id, envy_id):
     try:
+        print("HASH CODES RECIEVED", hash_codes)
         hash_codes_and_values = {}
+        recieved_codes = []
 
         # open the connecton
         connection = pymysql.connect('198.199.121.101', 'Richard', pwd, 'logic')
@@ -92,17 +94,18 @@ def get_hash_values_and_by_hash_codes(hash_codes, environment_id, envy_id):
         # connection is established
         with connection.cursor() as cursor:
 
-            hash_code_string = "','".join(hash_codes)
-            hash_code_string = ',' + hash_code_string + ','
-
-            # select query for the db by the hash value
-            primary_key = str(environment_id) + "_" + str(envy_id) + "_" + str(hash_code)
+            hash_code_string = ""
+            for hash_code_index in range(len(hash_codes)):
+                hash_code = hash_codes[hash_code_index]
+                if hash_code_index == 0:
+                    hash_code_string = hash_code_string + "'" + str(environment_id) + "_" + str(envy_id) + "_" + str(hash_code) + "'" 
+                else:
+                    hash_code_string = hash_code_string + "," + "'" + str(environment_id) + "_" + str(envy_id) + "_" + str(hash_code) + "'" 
 
             # get the state and the value for the state
-            select_statement_for_value_and_state = "SELECT `Value` FROM hashes WHERE HashCode in (" + hash_code_string + ") ORDER BY FIELD(HashCode," + hash_code_string + ")" 
-
+            select_statement_for_value_and_state = "SELECT `Value`, `HashCode` FROM hashes WHERE HashCode in (" + hash_code_string + ") ORDER BY FIELD(HashCode," + hash_code_string + ")" 
             # execute the select statement
-            cursor.execute(select_statement_for_value_and_state, primary_key)
+            cursor.execute(select_statement_for_value_and_state)
             connection.commit()
 
             rows = cursor.fetchall()
@@ -115,14 +118,18 @@ def get_hash_values_and_by_hash_codes(hash_codes, environment_id, envy_id):
                 value = row[0]
                 hash_codes_and_values[code_index] = value
 
+                recieved_codes.append(row[1])
+
+
                 code_index += 1
                 
             if len(hash_codes_and_values) != len(hash_codes):
+                print("HEREHEHEHEHEHEHEE", hash_codes_and_values, hash_codes, len(hash_codes_and_values), len(hash_codes), recieved_codes)
                 raise Exception("Error with selecting from database")
 
             return hash_codes_and_values
-    except:
-        print("Error with selecting from database")
+    except Exception:
+        raise Exception()
     finally:
         # close the connection after it is done
         connection.close()
