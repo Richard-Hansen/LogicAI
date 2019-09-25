@@ -82,7 +82,7 @@ describe('GameScreen tests', function () {
     })
 
     it('Check First Square', function (done) {
-        resHttpPostSquareData = gameScreen.mgameLogic.httpPostSquareData(sentSquareRes);
+        resHttpPostSquareData = gameScreen.mmgameLogic.httpPostSquareData(sentSquareRes);
         expect(resHttpPostSquareData[0][0][0]).to.equal("0")
         expect(resHttpPostSquareData[0][0][1]).to.equal("1")
         expect(resHttpPostSquareData[0][0][2]).to.equal("5")
@@ -121,28 +121,25 @@ describe('GameScreen tests', function () {
     })
 
     it('check player make move', function (done) {
-        expect(gameScreen.checkPlayerMove(0,1)).to.equal(true)
+        expect(gameScreen.checkPlayerMove("0 1", gameScreen)).to.equal(true)
         done()
     })
 
-    // it('check duplicate move', function (done) {
-    //     expect(gameScreen.checkPlayerMove(0,1)).to.equal(false)
-    //     done()
-    // })
-    //
-    // it('check player invalid move', function (done) {
-    //     expect(gameScreen.checkPlayerMove(0,2)).to.equal(false)
-    //     done()
-    // })
-    //
+    it('check duplicate move', function (done) {
+        expect(gameScreen.checkPlayerMove("0 1", gameScreen)).to.equal(false)
+        done()
+    })
+
+    it('check player invalid move', function (done) {
+        expect(gameScreen.checkPlayerMove("0 2", gameScreen)).to.equal(false)
+        done()
+    })
+
     it('check player takes square', function (done) {
-      console.log("\n\n\n\n\n");
-        expect(gameScreen.checkPlayerMove(0,5)).to.equal(true)
-        console.log("\n\n\n\n\n");
-        expect(gameScreen.checkPlayerMove(5,6)).to.equal(true)
-        console.log("\n\n\n\n\n");
-        expect(gameScreen.checkPlayerMove(1,6)).to.equal(true)
-        console.log("\n\n\n\n\n");
+        expect(gameScreen.checkPlayerMove("0 5", gameScreen)).to.equal(true)
+        expect(gameScreen.checkPlayerMove("5 6", gameScreen)).to.equal(true)
+        expect(gameScreen.checkPlayerMove("1 6", gameScreen)).to.equal(true)
+        // expect(gameScreen.mmgameLogic.checkSquareTaken().to.equal(true)
         done()
     })
 })

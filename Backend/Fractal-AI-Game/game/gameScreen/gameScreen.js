@@ -67,25 +67,25 @@ class GameLogic {
   /* this.checkSquareTaken will check if a square has been taken.
      I really do not like the way this is coded and I would love to
      go back and fix this if I have time @TODO */
-  checkSquareTaken(vert) {
-    for (var i = 0; i < squares.length; i++) {
+  checkSquareTaken(vert, msquares) {
+    for (var i = 0; i < msquares.length; i++) {
       var tempValue = 0;
-      for (var j = 0; j < squares[i].length; j++) {
+      for (var j = 0; j < msquares[i].length; j++) {
         var shouldBeTwo = 0;
-        if(squares[i][j] != -1) {
-          if(vert[squares[i][j]].clickedConnections.includes(int(squares[i][0]))){
+        if(msquares[i][j] != -1) {
+          if(vert[msquares[i][j]].clickedConnections.includes(parseInt(msquares[i][0]))){
             shouldBeTwo++
             tempValue++
           }
-          if(vert[squares[i][j]].clickedConnections.includes(int(squares[i][1]))){
+          if(vert[msquares[i][j]].clickedConnections.includes(parseInt(msquares[i][1]))){
             shouldBeTwo++
             tempValue++
           }
-          if(vert[squares[i][j]].clickedConnections.includes(int(squares[i][2]))){
+          if(vert[msquares[i][j]].clickedConnections.includes(parseInt(msquares[i][2]))){
             shouldBeTwo++
             tempValue++
           }
-          if(vert[squares[i][j]].clickedConnections.includes(int(squares[i][3]))){
+          if(vert[msquares[i][j]].clickedConnections.includes(parseInt(msquares[i][3]))){
             shouldBeTwo++
             tempValue++
           }
@@ -95,11 +95,11 @@ class GameLogic {
         }
       }
       if (tempValue == 4) {
-        this.fillQuads.push([squares[i][0], squares[i][1], squares[i][2], squares[i][3]]);
-        squares[i][0] = -1;
-        squares[i][1] = -1;
-        squares[i][2] = -1;
-        squares[i][3] = -1;
+        this.fillQuads.push([msquares[i][0], msquares[i][1], msquares[i][2], msquares[i][3]]);
+        msquares[i][0] = -1;
+        msquares[i][1] = -1;
+        msquares[i][2] = -1;
+        msquares[i][3] = -1;
         var ret = squaresAreas[i]
         return [ret, i]
       }
@@ -130,6 +130,7 @@ class gameScreen {
   constructor() {
     // this.mgameLogic = new GameLogic()
     mgameLogic = new GameLogic();
+    this.mmgameLogic = mgameLogic;
     httpPost("http://localhost:8080/map", { map: "Map1" }, this.callMapRoute)
     /* Scores of the AI and player */
     this.scoreAI = 0;
@@ -149,7 +150,7 @@ class gameScreen {
     /* Show the score of the player and AI */
     this.drawScoreBoard(int(this.scoreAI), int(this.scorePlayer));
     /* Need to draw the quads that are filled */
-    mgameLogic.draw();
+    this.mmgameLogic.draw();
   }
 
   /**
@@ -389,7 +390,7 @@ class gameScreen {
   }
 
   checkAIMove(res) {
-    console.log("RES: " + res);
+    console.log("RES AI: " + res);
     var move = res.split(" ");
     var vertexWithConnection = Math.min(move[0], move[1]);
     var vertexWithoutConnection = Math.max(move[0], move[1]);
@@ -398,10 +399,34 @@ class gameScreen {
         vertices[vertexWithConnection].clickedConnections.push(int(vertexWithoutConnection));
         vertices[vertexWithConnection].connections.splice(i, 1);
         takenEdges.push([int(move[0]), int(move[1]), WHoTheFuckMoves])
-        var addAndMore = mgameLogic.checkSquareTaken(vertices)
+        var addAndMore = mgameScreen.mmgameLogic.checkSquareTaken(vertices, squares)
         console.log(addAndMore);
         if (addAndMore[0] != undefined) {
           mgameScreen.scoreAI += int((100 * addAndMore[0]));
+          takenSquare.push([addAndMore[1], WHoTheFuckMoves])
+        }
+        /* Change player turn */
+        if (WHoTheFuckMoves == 1) { WHoTheFuckMoves = 2 } else { WHoTheFuckMoves = 1 }
+        return true;
+      }
+    }
+    return false;
+  }
+
+  checkPlayerMove(res, fgameScreen) {
+    console.log("RES PLAYER: " + res);
+    var move = res.split(" ");
+    var vertexWithConnection = Math.min(move[0], move[1]);
+    var vertexWithoutConnection = Math.max(move[0], move[1]);
+    for (var i = 0; i < vertices[vertexWithConnection].connections.length; i++) {
+      if (vertices[vertexWithConnection].connections[i] == vertexWithoutConnection) {
+        vertices[vertexWithConnection].clickedConnections.push((vertexWithoutConnection));
+        vertices[vertexWithConnection].connections.splice(i, 1);
+        takenEdges.push([(move[0]), (move[1]), WHoTheFuckMoves])
+        var addAndMore = fgameScreen.mmgameLogic.checkSquareTaken(vertices, squares)
+        console.log(addAndMore);
+        if (addAndMore[0] != undefined) {
+          fgameScreen.scoreAI += parseInt(100 * addAndMore[0]);
           takenSquare.push([addAndMore[1], WHoTheFuckMoves])
         }
         /* Change player turn */
@@ -431,7 +456,7 @@ function mouseClicked() {
        we no longer check that line when clicking */
     vertices[res[0]].connections.splice(res[1], 1);
     /* We now need to check if the square has been taken by the person that clicked */
-    addAndMore = mgameLogic.checkSquareTaken(vertices)
+    addAndMore = mgameScreen.mmgameLogic.checkSquareTaken(vertices, squares)
     console.log(addAndMore);
     if (addAndMore[0] != undefined) {
       takenSquare.push([addAndMore[1], WHoTheFuckMoves])
