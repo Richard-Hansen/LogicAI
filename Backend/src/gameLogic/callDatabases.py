@@ -144,7 +144,7 @@ def get_hash_values_and_by_hash_codes(hash_codes, environment_id, envy_id):
 # finds the value of the ternary
 def ternary(hash_code):
     if hash_code == 0:
-        return 0
+        return ['0']
     nums = []
     while hash_code:
         hash_code, remainder = divmod(hash_code, 3)
