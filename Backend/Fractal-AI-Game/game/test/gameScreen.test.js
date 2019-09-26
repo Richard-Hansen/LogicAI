@@ -143,13 +143,37 @@ describe('GameScreen tests', function () {
         expect(GameScreen[2][0][0]).to.equal(-1)
         done()
     })
-
-    it('check AI takes square', function (done) {
-        console.log(GameScreen[2]);
+    /* 86 - The agent sends back line selections */
+    it('The agent sends back line selections', function (done) {
         expect(gameScreen.checkAIMove("1 2", gameScreen)).to.equal(true)
         expect(gameScreen.checkAIMove("2 7", gameScreen)).to.equal(true)
         expect(gameScreen.checkAIMove("6 7", gameScreen)).to.equal(true)
         expect(GameScreen[2][1][0]).to.equal(-1)
+        done()
+    })
+
+    it('check AI score increase', function (done) {
+        done()
+    })
+
+    it('check Player score increase', function (done) {
+        done()
+    })
+    /**
+     * 29 - On the game screen, all the available moves should be displayed
+     */
+    it('On the game screen, all the available moves should be displayed', function (done) {
+        expect(GameScreen[1][13].connections[0]).to.equal("14")
+        expect(GameScreen[1][13].connections[1]).to.equal("18")
+        done()
+    })
+    /**
+     * 30 - On the game screen, every vertex should have only 4 edges connect it.
+     */
+    it('On the game screen, every vertex should have only 4 edges connect it.', function (done) {
+        for(let i = 0; i < GameScreen[2].length; i++) {
+          expect(GameScreen[2][i].length).to.equal(4)
+        }
         done()
     })
 })
