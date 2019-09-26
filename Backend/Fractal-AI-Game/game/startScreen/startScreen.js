@@ -151,9 +151,12 @@ class StartScreen {
     this.drawTitle(this.titleX, this.titleY, this.titleSize);
     /* Make the title move */
     this.animateTitle();
+
     /* Checking what startscreen state we are in */
     if (this.startScreenState == 1) {
       // this.animateBoxes();
+      var pos = this.bs.getBoardPos()
+      image(activeImage, pos.x + (boardOne.width / 3.3) / 3, pos.y + 125, boardOne.width / 3.3, boardOne.height / 3.3)
     }
   }
 

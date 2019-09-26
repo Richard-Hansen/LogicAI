@@ -35,12 +35,31 @@ class BoardSelector {
         this.changeBoard(board)()
     }
 
+    getBoardPos() {
+        return this.boardContainer.elt.getBoundingClientRect()
+    }
+
     changeBoard(e) {
         var that = this // store this for scope change
         return function () {
             if (e === undefined)
                 return
+            if (e > 3 || e < 1)
+                return "NO"
             board = e
+            switch (e) {
+                case 1:
+                    activeImage = boardOne
+                    break
+                case 2:
+                    activeImage = boardTwo
+                    break
+                case 3:
+                    activeImage = boardThree
+                    break
+                default:
+                    break
+            }
             window.localStorage.setItem("board", e)
             try {
                 that.buttons.forEach(element => {
