@@ -19,11 +19,11 @@ class Game:
 
 			# current player takes an action
 			self.game_board = self.current_player.take_action()
-			self.print_board(self.current_player.X_env.big_board)
+			#self.print_board(self.current_player.X_env.big_board)
 
 		#if update_after_game flag is set to True, update agent weights after each game ends
 		if update_after_game:
-			print("Updating agents")
+			# print("Updating agents")
 			put_values(self.p1.update())
 			put_values(self.p2.update())
 

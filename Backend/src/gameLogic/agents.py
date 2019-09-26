@@ -175,7 +175,7 @@ class AgentX86:
 				value_list[i][prev] = value
 
 			# reset the state_history of the agentling. This allows us to easily continue training
-			a.reset_history()
+			a.reset_state_history()
 
 		# list of dictionaries. Each index has a dictionary corresponding to the agentling at that idnex in self.agentlings.
 		return value_list
