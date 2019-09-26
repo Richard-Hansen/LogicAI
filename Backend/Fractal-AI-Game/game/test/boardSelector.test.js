@@ -12,9 +12,9 @@ describe('BoardSelector tests', function () {
 
     beforeEach(function () {
         global.board = 5
-        global.boardOne = 1
-        global.boardTwo = 2
-        global.boardThree = 3
+        global.boardOne = "test1"
+        global.boardTwo = "test2"
+        global.boardThree = "test3"
         global.activeImage = 0
         boardSelector = new BoardSelector();
     })
@@ -22,12 +22,6 @@ describe('BoardSelector tests', function () {
     it('should be an object', function (done) {
         expect(boardSelector).to.be.a('object');
         done()
-    })
-
-    it('should change the board to 3', function (done) {
-        boardSelector.changeBoard(3)()
-        expect(board).to.equal(3);
-        done();
     })
 
     it('should change the board to 2', function (done) {
@@ -42,14 +36,26 @@ describe('BoardSelector tests', function () {
         done();
     })
 
-    it('should not change the board to boards above 3', function (done) {
-        var res = boardSelector.changeBoard(4)()
+    it('should change the board to 0', function (done) {
+        boardSelector.changeBoard(0)()
+        expect(board).to.equal(0);
+        done();
+    })
+
+    it('should change the active board image', function (done) {
+        boardSelector.changeBoard(1)()
+        expect(activeImage).to.equal("test2")
+        done()
+    })
+
+    it('should not change the board to boards above 2', function (done) {
+        var res = boardSelector.changeBoard(3)()
         expect(res).to.equal("NO");
         done();
     })
 
-    it('should not change the board to boards below 1', function (done) {
-        var res = boardSelector.changeBoard(0)()
+    it('should not change the board to boards below 0', function (done) {
+        var res = boardSelector.changeBoard(-1)()
         expect(res).to.equal("NO");
         done();
     })

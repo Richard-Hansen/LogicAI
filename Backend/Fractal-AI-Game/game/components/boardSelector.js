@@ -44,20 +44,21 @@ class BoardSelector {
         return function () {
             if (e === undefined)
                 return
-            if (e > 3 || e < 1)
+            if (e > 2 || e < 0)
                 return "NO"
             board = e
             switch (e) {
-                case 1:
+                case 0:
                     activeImage = boardOne
                     break
-                case 2:
+                case 1:
                     activeImage = boardTwo
                     break
-                case 3:
+                case 2:
                     activeImage = boardThree
                     break
                 default:
+                    console.log("error")
                     break
             }
             window.localStorage.setItem("board", e)
@@ -66,7 +67,7 @@ class BoardSelector {
                     element.style('background-color', 'rgba(255,0,0,0.1)')
                 });
                 that.buttons[e].style('background-color', 'rgba(255,0,0,0.6)')
-            } catch (err) { }
+            } catch (err) { console.log(err) }
         }
     }
 
