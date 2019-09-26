@@ -22,12 +22,13 @@ describe('GameScreen tests', function () {
         global.httpPost = function (val) { }
         // what in tarnation
         global.GameLogic = GameLogic.constructor
-        gameScreen = new GameScreen();
+        gameScreen = new GameScreen[0]();
     })
 
     it('should be an object', function (done) {
         res = gameScreen.callMapRoute(sentRes);
         expect(gameScreen).to.be.a('object');
+        // console.log(mapName);
         done()
     })
 
@@ -139,7 +140,16 @@ describe('GameScreen tests', function () {
         expect(gameScreen.checkPlayerMove("0 5", gameScreen)).to.equal(true)
         expect(gameScreen.checkPlayerMove("5 6", gameScreen)).to.equal(true)
         expect(gameScreen.checkPlayerMove("1 6", gameScreen)).to.equal(true)
-        // expect(gameScreen.mmgameLogic.checkSquareTaken().to.equal(true)
+        expect(GameScreen[2][0][0]).to.equal(-1)
+        done()
+    })
+
+    it('check AI takes square', function (done) {
+        console.log(GameScreen[2]);
+        expect(gameScreen.checkAIMove("1 2", gameScreen)).to.equal(true)
+        expect(gameScreen.checkAIMove("2 7", gameScreen)).to.equal(true)
+        expect(gameScreen.checkAIMove("6 7", gameScreen)).to.equal(true)
+        expect(GameScreen[2][1][0]).to.equal(-1)
         done()
     })
 })

@@ -389,20 +389,20 @@ class gameScreen {
       return [mapName, size, sizeName, vertices];
   }
 
-  checkAIMove(res) {
+  checkAIMove(res, fgameScreen) {
     console.log("RES AI: " + res);
     var move = res.split(" ");
     var vertexWithConnection = Math.min(move[0], move[1]);
     var vertexWithoutConnection = Math.max(move[0], move[1]);
     for (var i = 0; i < vertices[vertexWithConnection].connections.length; i++) {
       if (vertices[vertexWithConnection].connections[i] == vertexWithoutConnection) {
-        vertices[vertexWithConnection].clickedConnections.push(int(vertexWithoutConnection));
+        vertices[vertexWithConnection].clickedConnections.push(parseInt(vertexWithoutConnection));
         vertices[vertexWithConnection].connections.splice(i, 1);
-        takenEdges.push([int(move[0]), int(move[1]), WHoTheFuckMoves])
-        var addAndMore = mgameScreen.mmgameLogic.checkSquareTaken(vertices, squares)
+        takenEdges.push([parseInt(move[0]), parseInt(move[1]), WHoTheFuckMoves])
+        var addAndMore = this.mmgameLogic.checkSquareTaken(vertices, squares)
         console.log(addAndMore);
         if (addAndMore[0] != undefined) {
-          mgameScreen.scoreAI += int((100 * addAndMore[0]));
+          fgameScreen.scoreAI += parseInt((100 * addAndMore[0]));
           takenSquare.push([addAndMore[1], WHoTheFuckMoves])
         }
         /* Change player turn */
@@ -413,7 +413,7 @@ class gameScreen {
     return false;
   }
 
-  checkPlayerMove(res, fgameScreen) {
+  checkPlayerMove(res, fgameScreen = mgameScreen) {
     console.log("RES PLAYER: " + res);
     var move = res.split(" ");
     var vertexWithConnection = Math.min(move[0], move[1]);
@@ -464,10 +464,12 @@ function mouseClicked() {
     }
     /* Change player turn */
     if (WHoTheFuckMoves == 1) { WHoTheFuckMoves = 2 } else { WHoTheFuckMoves = 1 }
-    httpPost("http://localhost:8080/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare }, mgameScreen.checkAIMove)
+    httpPost("http://localhost:8080/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare }, function(res) {
+      mgameScreen.checkAIMove(res, mgameScreen);
+    })
   }
 }
-module.exports = gameScreen;
+module.exports = [gameScreen, vertices, squares];
 // module.exports = ;
 
 
