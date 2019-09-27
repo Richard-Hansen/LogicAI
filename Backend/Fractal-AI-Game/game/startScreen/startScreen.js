@@ -122,6 +122,7 @@ class StartScreen {
       // deal with this better in the future
       alert("Username taken")
       isokay = false
+      return isokay
     })
     return isokay
   }
