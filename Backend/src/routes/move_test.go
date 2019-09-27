@@ -63,7 +63,7 @@ type MoveData struct {
 func TestAllPossibleEdges(t *testing.T) {
 	curr_state := [...]int{1, 1, 1, 2, 2, 0, 2, 2, 1, 2, 1, 0, 1, 0, 0, 0}
 
-	recieved_actions := Get_action_list(curr_state)
+	recieved_actions := get_action_list(curr_state, 0)
 	possible_edges := 0
 	var edges_chosen [2]int
 
@@ -88,7 +88,7 @@ func TestAllPossibleEdges(t *testing.T) {
 func TestExistingEdges(t *testing.T) {
 	curr_state := [...]int{1, 1, 1, 2, 2, 0, 2, 2, 1, 2, 1, 0, 1, 0, 0, 0}
 
-	recieved_actions := Get_action_list(curr_state)
+	recieved_actions := get_action_list(curr_state, 0)
 
 	found_existing := false
 	for i := 0; i < 12; i++ {
@@ -208,5 +208,32 @@ func TestNoDifficultySet(t *testing.T) {
 
 	if d1 != 1 {
 		t.Errorf("Difficulty incorrectly handling invalid inputs")
+	}
+}
+
+
+/**
+ * Test Type: Regression Test
+ * What it is testing: Call made for hash code values when no new hash values are provided
+ * Expected output: I expect that get value does not crash after all the values are noted as taken and returns a value array with -1
+ */
+ func TestValueAllFull(t *testing.T) {
+
+	var stateInfos [12][16] int
+
+	for i := 0; i < 12; i++ {
+		for j := 0; j < 16; j++ {
+			stateInfos[i][j] = -1
+		}
+	}
+
+	idd := 0
+
+	values := GetValue(stateInfos, idd)
+
+	for i := 0; i < 12; i++ {
+		if values[0] != -1 {
+			t.Errorf("Difficulty incorrectly handling full squares")
+		}
 	}
 }
