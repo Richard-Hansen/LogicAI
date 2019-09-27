@@ -77,7 +77,55 @@ class TestAgents(unittest.TestCase):
 		agentx86 = AgentX86(environment,1)
 		value_list = agentx86.update()
 		self.assertEqual(value_list[0], {})
-		
 
+	#
+	# Test Type: Regression Test
+	# What it is testing: If an empty state history is passed to get it's values from the server, an empty dictionary should be returned
+	# Expected output: All 9 value dictionaries should be empty.
+	# 
+	def test_empty_value_dictionary(self):
+		environment = Environment(writeToDB=False)
+		agentx86 = AgentX86(environment,1)
+		flag = True
+		for a in agentx86.get_agentlings():
+			value_dictionary = a.env.get_values(a.state_history)
+			flag = flag and (value_dictionary == {})
+
+		self.assertEqual(flag, True)
+
+	#
+	# Test Type: Incremental Test
+	# What it is testing: If an agent makes a move, the environment should accurately reflect the move's result for the correct environments
+	# Expected output: The mapping suggested number of updated environments should be the same number updated by the environment class
+	# 
+	def test_mapping_validity(self):
+		environment = Environment(writeToDB=False)
+		agentx86 = AgentX86(environment,1)
+		big_to_tiny = agentx86.big_to_tiny
+
+		for i in range(40):
+			# recreate environment to reset update counts
+			environment = Environment(writeToDB=False)
+			agentx86 = AgentX86(environment,1)
+
+			# update the environments assuming that the action big_to_tiny[i] had been taken
+			agentx86.X_env.update_envys(agentx86.player, agentx86.big_to_tiny[i])
+
+			# count of number of environments that should have updated
+			count_true = len(big_to_tiny[i])
+
+			# counter which will hold the number of updated environment states
+			count_update = 0
+
+			for e in environment.get_envys():
+				if len([v for v in e.envy_state if v != 0]) == 1:
+					count_update += 1
+
+			if count_true != count_update:
+				self.fail("Environments incorrectly updated, expected to update %d, but updated %d. big_to_tiny[%d]" % (count_true, count_update, i))
+
+		# pass the test
+		self.assertEqual(0,0)
+		
 if __name__ == '__main__':
     unittest.main()
