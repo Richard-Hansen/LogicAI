@@ -241,7 +241,7 @@ describe('GameScreen tests', function () {
       /**
        * 38 - Have the AI capture a shape
        */
-       it('Have the player capture a shape', function (done) {
+       it('Have the AI capture a shape', function (done) {
            expect(gameScreen.checkAIMove("23 24", gameScreen)).to.equal(true)
            expect(gameScreen.checkAIMove("18 19", gameScreen)).to.equal(true)
            expect(gameScreen.checkAIMove("18 23", gameScreen)).to.equal(true)
@@ -277,9 +277,88 @@ describe('GameScreen tests', function () {
         })
 
         /**
-         * 42 - On the game screen, perform a move that will result in the AI making a move that will capture a shape
+         * 43 - Finish a game and click back to the main menu
          */
-         it('On the game screen, perform a move that will result in the AI making a move that will capture a shape', function (done) {
+         it('Finish a game and click back to the main menu', function (done) {
+             expect(gameScreen.checkBackButton(1,90,100,100)).to.equal(30);
              done();
          })
+
+         /**
+          * 43.2 - Finish a game and click back to the main menu
+          */
+          it('Finish a game and click back to the main menu - p2 (Make sure the button isnt the whole screen)', function (done) {
+              expect(gameScreen.checkBackButton(1,50,100,100)).to.equal(255);
+              done();
+          })
+
+        /**
+         * 44 - On the game screen, perform a move that will result in the AI making a move that will capture a shape
+         */
+         it('On the game screen, perform a move that will result in the AI making a move that will capture a shape', function (done) {
+             expect(gameScreen.mmgameLogic.whoTookQuad[0][0]).to.equal(216)
+             done();
+         })
+
+         /**
+          * 45 - On the game screen, perform a move that will result in capturing a square next to the AI’s previously captured shape
+          */
+          it('On the game screen, perform a move that will result in capturing a square next to the AI’s previously captured shape', function (done) {
+              expect(gameScreen.mmgameLogic.whoTookQuad[0][0]).to.equal(216)
+              expect(gameScreen.mmgameLogic.whoTookQuad[2][0]).to.equal(216)
+              done();
+          })
+
+
+        /**
+         * 47 - On the game screen, make a move that would increase the Player’s score
+         */
+         it('On the game screen, make a move that would increase the Player’s score', function (done) {
+             let trash = gameScreen.scorePlayer
+             expect(gameScreen.checkPlayerMove("5 10", gameScreen)).to.equal(true)
+             expect(gameScreen.checkPlayerMove("6 11", gameScreen)).to.equal(true)
+             expect(gameScreen.checkPlayerMove("10 11", gameScreen)).to.equal(true)
+             expect(trash).to.not.equal(gameScreen.scorePlayer)
+             done()
+         })
+
+         /**
+          * 48 - On the game screen, make a move that would increase the AI score
+          */
+          it('On the game screen, make a move that would increase the Player’s score', function (done) {
+              let trash = gameScreen.scoreAI
+              expect(gameScreen.checkAIMove("11 12", gameScreen)).to.equal(true)
+              expect(gameScreen.checkAIMove("7 12", gameScreen)).to.equal(true)
+              expect(trash).to.not.equal(gameScreen.scoreAI)
+              done()
+          })
+
+          /**
+           * 49 - On the game screen, have the player make a move that captures two squares
+           */
+           it('On the game screen, have the player make a move that captures two squares', function (done) {
+               expect(gameScreen.checkPlayerMove("12 13", gameScreen)).to.equal(true)
+               expect(gameScreen.checkPlayerMove("13 14", gameScreen)).to.equal(true)
+               expect(gameScreen.checkPlayerMove("9 14", gameScreen)).to.equal(true)
+               /* This is the line that takes two squares! */
+               expect(gameScreen.checkPlayerMove("8 13", gameScreen)).to.equal(true)
+               expect(GameScreen[2][6][0]).to.equal(-1)
+               expect(GameScreen[2][7][0]).to.equal(-1)
+               done()
+           })
+
+           /**
+            * 50 - On the game screen, have the AI make a move that captures two squares
+            */
+           it('On the game screen, have the AI make a move that captures two squares', function (done) {
+               expect(gameScreen.checkPlayerMove("10 15", gameScreen)).to.equal(true)
+               expect(gameScreen.checkPlayerMove("15 16", gameScreen)).to.equal(true)
+               expect(gameScreen.checkPlayerMove("16 17", gameScreen)).to.equal(true)
+               expect(gameScreen.checkPlayerMove("12 17", gameScreen)).to.equal(true)
+               /* This is the line that takes two squares! */
+               expect(gameScreen.checkPlayerMove("11 16", gameScreen)).to.equal(true)
+               expect(GameScreen[2][8][0]).to.equal(-1)
+               expect(GameScreen[2][9][0]).to.equal(-1)
+               done()
+           })
 })

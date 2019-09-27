@@ -187,12 +187,18 @@ class gameScreen {
     pop();
   }
 
-  checkBackButton() {
+  checkBackButton(mousex = -1, mousey = -1, windowwidth = -1, windowheight = -1) {
+    if(mousex == -1){
+      mousex = mouseX;
+      mousey = mouseY;
+      windowwidth = windowWidth;
+      windowheight = windowHeight;
+    }
     let x1 = 0;
-    let y1 = windowHeight/1.1 - windowHeight/20;
-    let x2 = windowWidth/10;
-    let y2 = windowHeight/1.1 + windowHeight/30;
-    if (((mouseX > x1) && (mouseX < x2)) && ((mouseY > y1) && (mouseY < y2))) {
+    let y1 = windowheight/1.1 - windowheight/20;
+    let x2 = windowwidth/10;
+    let y2 = windowheight/1.1 + windowheight/30;
+    if (((mousex > x1) && (mousex < x2)) && ((mousey > y1) && (mousey < y2))) {
       return 30;
     }
     return 255;
@@ -450,18 +456,20 @@ class gameScreen {
         vertices[vertexWithConnection].clickedConnections.push(parseInt(vertexWithoutConnection));
         vertices[vertexWithConnection].connections.splice(i, 1);
         takenEdges.push([parseInt(move[0]), parseInt(move[1]), WHoTheFuckMoves])
-        var addAndMore = this.mmgameLogic.checkSquareTaken(vertices, squares)
-        console.log(addAndMore);
-        if (addAndMore[0] != undefined) {
-          takenSquare.push([addAndMore[1], WHoTheFuckMoves])
-          if(takenSquare.length == 16){
-            this.scorePlayer = int(this.scorePlayer)
-            this.scoreAI = 100 - this.scorePlayer;
-          }else {
-            this.scoreAI += (100 * addAndMore[0]);
+        do {
+          var addAndMore = this.mmgameLogic.checkSquareTaken(vertices, squares)
+          console.log(addAndMore);
+          if (addAndMore[0] != undefined) {
+            takenSquare.push([addAndMore[1], WHoTheFuckMoves])
+            if(takenSquare.length == 16){
+              this.scorePlayer = int(this.scorePlayer)
+              this.scoreAI = 100 - this.scorePlayer;
+            }else {
+              this.scoreAI += (100 * addAndMore[0]);
+            }
+            // this.scoreAI += (100 * addAndMore[0]);
           }
-          // this.scoreAI += (100 * addAndMore[0]);
-        }
+        } while(addAndMore[0] != undefined)
         /* Change player turn */
         if (WHoTheFuckMoves == 1) { WHoTheFuckMoves = 2 } else { WHoTheFuckMoves = 1 }
         return true;
@@ -480,13 +488,15 @@ class gameScreen {
         vertices[vertexWithConnection].clickedConnections.push((vertexWithoutConnection));
         vertices[vertexWithConnection].connections.splice(i, 1);
         takenEdges.push([(move[0]), (move[1]), WHoTheFuckMoves])
-        var addAndMore = fgameScreen.mmgameLogic.checkSquareTaken(vertices, squares)
-        console.log(addAndMore);
-        if (addAndMore[0] != undefined) {
-          // if(takenSquare)
-          this.scorePlayer += (100 * addAndMore[0]);
-          takenSquare.push([addAndMore[1], WHoTheFuckMoves])
-        }
+        do {
+          var addAndMore = fgameScreen.mmgameLogic.checkSquareTaken(vertices, squares)
+          console.log(addAndMore);
+          if (addAndMore[0] != undefined) {
+            // if(takenSquare)
+            this.scorePlayer += (100 * addAndMore[0]);
+            takenSquare.push([addAndMore[1], WHoTheFuckMoves])
+          }
+        } while(addAndMore[0] != undefined)
         /* Change player turn */
         if (WHoTheFuckMoves == 1) { WHoTheFuckMoves = 2 } else { WHoTheFuckMoves = 1 }
         return true;
@@ -514,20 +524,21 @@ function mouseClicked() {
        we no longer check that line when clicking */
     vertices[res[0]].connections.splice(res[1], 1);
     /* We now need to check if the square has been taken by the person that clicked */
-    addAndMore = mgameScreen.mmgameLogic.checkSquareTaken(vertices, squares)
-    console.log(addAndMore);
-    if (addAndMore[0] != undefined) {
-      takenSquare.push([addAndMore[1], WHoTheFuckMoves])
-      if(takenSquare.length == 16){
-        console.log("GOES IN HERE NOW1");
-        mgameScreen.scorePlayer = 100 - mgameScreen.scoreAI;
-      }else {
-        mgameScreen.scorePlayer += (100 * addAndMore[0]);
+    do {
+      addAndMore = mgameScreen.mmgameLogic.checkSquareTaken(vertices, squares)
+      console.log(addAndMore);
+      if (addAndMore[0] != undefined) {
+        takenSquare.push([addAndMore[1], WHoTheFuckMoves])
+        if(takenSquare.length == 16){
+          mgameScreen.scorePlayer = 100 - mgameScreen.scoreAI;
+        }else {
+          mgameScreen.scorePlayer += (100 * addAndMore[0]);
+        }
       }
-    }
+    } while(addAndMore[0] != undefined)
     /* Change player turn */
     if (WHoTheFuckMoves == 1) { WHoTheFuckMoves = 2 } else { WHoTheFuckMoves = 1 }
-    httpPost("http://localhost:8080/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare }, function(res) {
+    httpPost("http://localhost:8080/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare, "difficulty": 0 }, function(res) {
       mgameScreen.checkAIMove(res, mgameScreen);
     })
   }
