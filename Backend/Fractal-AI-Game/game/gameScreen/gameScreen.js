@@ -27,7 +27,6 @@ var takenEdges = []
 /* Array of taken sqaures */
 var takenSquare = [];
 
-
 var squares = [];
 var squaresAreas = [];
 /**
@@ -39,6 +38,8 @@ class GameLogic {
   constructor() {
     /* Make my HTTP request to squareData with the current map */
     this.fillQuads = [];
+    /* Who took the square */
+    this.whoTookQuad = [];
     /* Sending HTTP request to the squareData route. Need to populate the squares/squaresArea array */
     httpPost("http://localhost:8080/squareData", { Mapname: "Map1" }, this.httpPostSquareData)
   }
@@ -56,9 +57,9 @@ class GameLogic {
 
   draw() {
     push();
-    fill(0, 0, 0, 80);
     translate(windowWidth / 2, windowHeight / 2)
     for (var i = 0; i < this.fillQuads.length; i++) {
+      fill(this.whoTookQuad[i][0],this.whoTookQuad[i][1],this.whoTookQuad[i][2], this.whoTookQuad[i][3]);
       quad(vertices[this.fillQuads[i][0]].screenX, vertices[this.fillQuads[i][0]].screenY, vertices[this.fillQuads[i][2]].screenX, vertices[this.fillQuads[i][2]].screenY, vertices[this.fillQuads[i][3]].screenX, vertices[this.fillQuads[i][3]].screenY, vertices[this.fillQuads[i][1]].screenX, vertices[this.fillQuads[i][1]].screenY);
     }
     pop();
@@ -96,11 +97,17 @@ class GameLogic {
       }
       if (tempValue == 4) {
         this.fillQuads.push([msquares[i][0], msquares[i][1], msquares[i][2], msquares[i][3]]);
+        if(WHoTheFuckMoves == 1) {
+          this.whoTookQuad.push([197,255,158,100])
+        }else {
+          this.whoTookQuad.push([216,158,255,100])
+        }
         msquares[i][0] = -1;
         msquares[i][1] = -1;
         msquares[i][2] = -1;
         msquares[i][3] = -1;
         var ret = squaresAreas[i]
+
         return [ret, i]
       }
     }
@@ -132,25 +139,24 @@ class gameScreen {
     mgameLogic = new GameLogic();
     this.mmgameLogic = mgameLogic;
     httpPost("http://localhost:8080/map", { map: "Map1" }, this.callMapRoute)
-    /* Scores of the AI and player */
-    this.scoreAI = 0;
-    this.scorePlayer = 0;
     /* Set player move */
     WHoTheFuckMoves = 1;
+    this.scoreAI = 0;
+    this.scorePlayer = 0;
   }
 
   /* draw function that will be called at 60fps once gameState has been moved to 1. */
   draw() {
     /* Setting background to white */
     background(255);
-    /* Draws the vertices onto the screen */
-    this.drawVertices();
     /* Draws the title onto the screen */
     this.drawTitle();
     /* Show the score of the player and AI */
     this.drawScoreBoard(int(this.scoreAI), int(this.scorePlayer));
     /* Need to draw the quads that are filled */
     this.mmgameLogic.draw();
+    /* Draws the vertices onto the screen */
+    this.drawVertices();
   }
 
   /**
@@ -211,7 +217,13 @@ class gameScreen {
    *              if it is hovering over a dotted line. If the mouse is over a dotted
    *              line it will make that dotted line a solid line.
    */
-  checkMouse() {
+  checkMouse(mousex = -1, mousey = -1, windowwidth = -1, windowheight = -1) {
+    if(mousex == -1){
+      mousex = mouseX;
+      mousey = mouseY;
+      windowwidth = windowWidth;
+      windowheight = windowHeight;
+    }
     /* Loop through each vertex in the vertices array */
     for (var i = 0; i < vertices.length; i++) {
       /* Set a vertex varible, makes things look a little bit nicer */
@@ -220,8 +232,8 @@ class gameScreen {
       for (var j = 0; j < vertex.connections.length; j++) {
         /* Set x0 and y0 to the mouse location. I had to offset this location to make sure
            the translated position and the mouse position are on the same coordinate plane */
-        var x0 = mouseX - (windowWidth / 2);
-        var y0 = mouseY - (windowHeight / 2);
+        var x0 = mousex - (windowwidth / 2);
+        var y0 = mousey - (windowheight / 2);
         /* Setting x1 and y1 to the screen locations of the vertex */
         var x1 = vertex.screenX;
         var y1 = vertex.screenY;
@@ -402,8 +414,14 @@ class gameScreen {
         var addAndMore = this.mmgameLogic.checkSquareTaken(vertices, squares)
         console.log(addAndMore);
         if (addAndMore[0] != undefined) {
-          fgameScreen.scoreAI += parseInt((100 * addAndMore[0]));
           takenSquare.push([addAndMore[1], WHoTheFuckMoves])
+          if(takenSquare.length == 16){
+            this.scorePlayer = int(this.scorePlayer)
+            this.scoreAI = 100 - this.scorePlayer;
+          }else {
+            this.scoreAI += (100 * addAndMore[0]);
+          }
+          // this.scoreAI += (100 * addAndMore[0]);
         }
         /* Change player turn */
         if (WHoTheFuckMoves == 1) { WHoTheFuckMoves = 2 } else { WHoTheFuckMoves = 1 }
@@ -426,7 +444,8 @@ class gameScreen {
         var addAndMore = fgameScreen.mmgameLogic.checkSquareTaken(vertices, squares)
         console.log(addAndMore);
         if (addAndMore[0] != undefined) {
-          fgameScreen.scoreAI += parseInt(100 * addAndMore[0]);
+          // if(takenSquare)
+          this.scorePlayer += (100 * addAndMore[0]);
           takenSquare.push([addAndMore[1], WHoTheFuckMoves])
         }
         /* Change player turn */
@@ -460,7 +479,12 @@ function mouseClicked() {
     console.log(addAndMore);
     if (addAndMore[0] != undefined) {
       takenSquare.push([addAndMore[1], WHoTheFuckMoves])
-      mgameScreen.scorePlayer += int((100 * addAndMore[0]));
+      if(takenSquare.length == 16){
+        console.log("GOES IN HERE NOW1");
+        mgameScreen.scorePlayer = 100 - mgameScreen.scoreAI;
+      }else {
+        mgameScreen.scorePlayer += (100 * addAndMore[0]);
+      }
     }
     /* Change player turn */
     if (WHoTheFuckMoves == 1) { WHoTheFuckMoves = 2 } else { WHoTheFuckMoves = 1 }
@@ -470,7 +494,6 @@ function mouseClicked() {
   }
 }
 module.exports = [gameScreen, vertices, squares];
-// module.exports = ;
 
 
 

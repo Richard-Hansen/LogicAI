@@ -16,11 +16,10 @@ var resHttpPostSquareData;
 describe('GameScreen tests', function () {
     let gameScreen;
 
-    beforeEach(function () {
+    before(function () {
         // alert not defined for chai so pass it trash
         global.alert = function (val) { }
         global.httpPost = function (val) { }
-        // what in tarnation
         global.GameLogic = GameLogic.constructor
         gameScreen = new GameScreen[0]();
     })
@@ -73,12 +72,6 @@ describe('GameScreen tests', function () {
     it('check last vertex', function (done) {
         expect(res[3][24].x).to.equal("4");
         expect(res[3][24].y).to.equal("4");
-        done()
-    })
-
-    it('check area is zero at start', function (done) {
-        expect(gameScreen.scoreAI).to.equal(0)
-        expect(gameScreen.scorePlayer).to.equal(0)
         done()
     })
 
@@ -136,15 +129,27 @@ describe('GameScreen tests', function () {
         done()
     })
 
-    it('check player takes square', function (done) {
+    /**
+     * 39 - The game loads and a score counter with initial value 0-0 should be visible
+     */
+    it('The game loads and a score counter with initial value 0-0 should be visible', function (done) {
+        expect(gameScreen.scoreAI).to.equal(0)
+        expect(gameScreen.scorePlayer).to.equal(0)
+        done()
+    })
+
+    /**
+     * 34 - On the game screen, complete a shape
+     */
+    it('On the game screen, complete a shape', function (done) {
         expect(gameScreen.checkPlayerMove("0 5", gameScreen)).to.equal(true)
         expect(gameScreen.checkPlayerMove("5 6", gameScreen)).to.equal(true)
         expect(gameScreen.checkPlayerMove("1 6", gameScreen)).to.equal(true)
         expect(GameScreen[2][0][0]).to.equal(-1)
         done()
     })
-    /* 86 - The agent sends back line selections */
-    it('The agent sends back line selections', function (done) {
+    /* 86 - The agent sends back line selections, 32 - On the game screen, have the AI make a move */
+    it('On the game screen, have the AI make a move', function (done) {
         expect(gameScreen.checkAIMove("1 2", gameScreen)).to.equal(true)
         expect(gameScreen.checkAIMove("2 7", gameScreen)).to.equal(true)
         expect(gameScreen.checkAIMove("6 7", gameScreen)).to.equal(true)
@@ -176,4 +181,106 @@ describe('GameScreen tests', function () {
         }
         done()
     })
+
+    /**
+     * 31 - On the game screen, hover the mouse over a dotted line
+     */
+    it('On the game screen, hover the mouse over a dotted line', function (done) {
+        let trash = false;
+        for (var i = 0; i < 100; i+=.1) {
+          for (var j = 0; j < 100; j+=.1) {
+            let rescheckMouse = gameScreen.checkMouse(i,j,100,100);
+            if(rescheckMouse[0] == "-1"){
+              trash = true;
+            }
+          }
+        }
+        expect(trash).to.equal(true)
+        done();
+    })
+    /**
+     * 33 - On the game screen, do not hover over any dotted lines
+     */
+    it('On the game screen, do not hover over any dotted lines.', function (done) {
+        for(let i = 0; i < GameScreen[2].length; i++) {
+          expect(GameScreen[2][i].length).to.equal(4)
+        }
+        done()
+    })
+
+    /**
+     * 35 - Have the player capture a shape
+     */
+    it('Have the player capture a shape', function (done) {
+        expect(gameScreen.checkPlayerMove("2 3", gameScreen)).to.equal(true)
+        expect(gameScreen.checkPlayerMove("3 8", gameScreen)).to.equal(true)
+        expect(gameScreen.checkPlayerMove("7 8", gameScreen)).to.equal(true)
+        expect(GameScreen[2][2][0]).to.equal(-1)
+        done()
+    })
+
+    /**
+     * 36 - On the game screen, select 3 sides of a shape and one side of a nearby shape with no prior sides selected
+     */
+     it('Have the player capture a shape', function (done) {
+         expect(gameScreen.checkPlayerMove("3 4", gameScreen)).to.equal(true)
+         expect(gameScreen.checkPlayerMove("4 9", gameScreen)).to.equal(true)
+         expect(GameScreen[2][3][0]).to.not.equal(-1)
+         done()
+     })
+
+     /**
+      * 37 - On the game screen, have the AI complete a shape
+      */
+      it('Have the player capture a shape', function (done) {
+          expect(gameScreen.checkPlayerMove("8 9", gameScreen)).to.equal(true)
+          expect(GameScreen[2][3][0]).to.equal(-1)
+          done()
+      })
+
+      /**
+       * 38 - Have the AI capture a shape
+       */
+       it('Have the player capture a shape', function (done) {
+           expect(gameScreen.checkAIMove("23 24", gameScreen)).to.equal(true)
+           expect(gameScreen.checkAIMove("18 19", gameScreen)).to.equal(true)
+           expect(gameScreen.checkAIMove("18 23", gameScreen)).to.equal(true)
+           expect(gameScreen.checkAIMove("19 24", gameScreen)).to.equal(true)
+           expect(GameScreen[2][15][0]).to.equal(-1)
+           done()
+       })
+
+       /**
+        * 40 - Have the AI take a square, check area increase of AI
+        */
+       it('Have the AI take a square, check area increased', function (done) {
+           expect(gameScreen.scoreAI).to.not.equal(0)
+           done();
+       })
+
+       /**
+        * 41 - Have the Player take a square, check area increase of player
+        */
+       it('Have the AI take a square, check area increased', function (done) {
+           expect(gameScreen.scorePlayer).to.not.equal(0)
+           done();
+       })
+
+       /**
+        * 42 - Have the player take 2 squares and AI take 3
+        * The AI already has 3 squares, and the Players already has 2.
+        */
+        it('Have the AI take a square, check area increased', function (done) {
+            expect(gameScreen.scoreAI).to.equal(11)
+            expect(gameScreen.scorePlayer).to.equal(23)
+            done();
+        })
+
+        /**
+         * 42 - On the game screen, perform a move that will result in the AI making a move that will capture a shape
+         */
+         it('On the game screen, perform a move that will result in the AI making a move that will capture a shape', function (done) {
+             
+             done();
+         })
 })
