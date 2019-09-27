@@ -88,6 +88,9 @@ class AgentX86:
 	
 	# creates 9 agentlings on each of their corresponding sections of the game board
 	def __build_agentlings(self,X_env):
+		if self.X_env == None:
+			raise Exception()
+
 		agentling_list = []
 		for i in range(9):
 			new_agentling = Agentling(self.player, self.X_env.get_envy(i), self.alpha)
@@ -145,9 +148,21 @@ class AgentX86:
 
 		return self.X_env.get_environment()
 
+
+	# get the history associated with each of the states
+	def get_state_histories(self):
+		history_list = []
+		for i in range(9):
+			a = self.agentlings[i]
+
+			history_list.append(a.state_history)
+
+		return history_list
+
+
 	# update the values of states for each agentling
 	def update(self):
-
+		# print("UPDATING")
 		# dictionary of the updated values for a hash that need to be sent to the database
 		value_list = []
 
@@ -159,6 +174,9 @@ class AgentX86:
 
 			# create dictionary in the value list
 			value_list.append({})
+
+			if len(a.state_history) == 0:
+				continue
 
 			# get the reward for the final state (end of game state) of the game that was played
 			reward = a.env.reward(a.player, a.state_history[len(a.state_history)-1])
@@ -200,8 +218,10 @@ class Agentling:
 
 	# appends state hash to end of state_history
 	def update_state_history(self):
+		# print("STATE HISTORY", self.state_history)
 		self.state_history.append(self.env.get_hash())
 
 	# reset state_history to an empty list
 	def reset_state_history(self):
+		# print("RESETTING")
 		self.state_history = []

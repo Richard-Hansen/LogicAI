@@ -89,7 +89,7 @@ def get_hash_value_and_state_by_hash_code(hash_code, environment_id, envy_id):
 # gets all the values of the state and the values for the list of states from the db
 def get_hash_values_and_by_hash_codes(hash_codes, environment_id, envy_id):
     try:
-        print("HASH CODES RECIEVED", hash_codes)
+        # print("HASH CODES RECIEVED", hash_codes)
         hash_codes_and_values = {}
         if len(hash_codes) == 0:
             return hash_codes_and_values

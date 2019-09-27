@@ -69,22 +69,25 @@ for i in range(0,4):
 
 # Environment - creates the environment and creates all the states for the environment
 environment = Environment(areas, writeToDB=True)
-environment.create_envy_states()
+# environment.create_envy_states()
 print("Environment created")
 
 # Agent X86 - creates the agent for the environment
-# agentX86P1 = AgentX86(environment,1)
-# agentX86P2 = AgentX86(environment,2)
+agentX86P1 = AgentX86(environment,1)
+agentX86P2 = AgentX86(environment,2)
 
-# # environment.envys[0].envy_state = [0,0,1,0,0,0,1,1,0,0,0,0,0,0,0,0]
-# # environment.envys[0].update_state(1,0)
-# # print(environment.envys[0].envy_state)
+# environment.envys[0].envy_state = [0,0,1,0,0,0,1,1,0,0,0,0,0,0,0,0]
+# environment.envys[0].update_state(1,0)
+# print(environment.envys[0].envy_state)
 
-# # print("Agents created")
+# print("Agents created")
 
-# game = Game(agentX86P1, agentX86P2)
+game = Game(agentX86P1, agentX86P2)
 
-# game.play_game(update_after_game = True)
+for i in range(1):
+	print("NEW GAME!!!", i)
+	game.play_game(update_after_game = True)
+print("TRAINED")
 
 
 # have an agent with its agentlings connected to the environment
