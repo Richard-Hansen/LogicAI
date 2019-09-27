@@ -159,6 +159,10 @@ class AgentX86:
 
 		return history_list
 
+	# returns list of agentlings
+	def get_agentlings(self):
+		return self.agentlings
+
 
 	# update the values of states for each agentling
 	def update(self):
