@@ -67,5 +67,17 @@ class TestGame(unittest.TestCase):
 			self.assertEqual(len(state_history),len(set(state_history)))
 
 
+	#
+	# Test Type: Incremental Test
+	# What it is testing: Game play with no player provided
+	# Expected output: Game must not be able to proceed
+	# 
+	def test_play_game_without_player(self):
+		# set up the big agent and environment
+		# ensure that if the agent is not provided, there is an exception
+		environment = Environment(writeToDB=False)
+		self.assertRaises(Exception, AgentX86, environment, None)
+
+
 if __name__ == '__main__':
     unittest.main()
