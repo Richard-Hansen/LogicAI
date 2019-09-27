@@ -41,7 +41,7 @@ class GameLogic {
     /* Who took the square */
     this.whoTookQuad = [];
     /* Sending HTTP request to the squareData route. Need to populate the squares/squaresArea array */
-    httpPost("http://localhost:8080/squareData", { Mapname: "Map1" }, this.httpPostSquareData)
+    httpPost("http://localhost:8080/squareData", { Mapname: "Map2" }, this.httpPostSquareData)
   }
 
   httpPostSquareData(res) {
@@ -157,6 +157,42 @@ class gameScreen {
     this.mmgameLogic.draw();
     /* Draws the vertices onto the screen */
     this.drawVertices();
+    /* Draws the backbutton onto the screen */
+    this.drawBackbutton();
+  }
+
+  drawBackbutton() {
+    /* push all my settings */
+    push();
+    /* Translate back to 0,0 (so the top left corner is the (0,0) coordinate) */
+    translate(0, 0);
+    /* Set my textAlign to the left so they get lined up correctly */
+    textAlign(CENTER);
+    /* Fill with black for now */
+    fill(0,0,0,this.checkBackButton());
+    /* Dawing the box */
+    rect(windowWidth/10/2, windowHeight/1.1, windowWidth/10,windowHeight/15);
+    /* Make the text white */
+    fill(255);
+    /* Setting fontSize to 40 */
+    textSize(windowWidth/50);
+    /* Setting style to Georgia because it looks good */
+    textFont('Georgia');
+    /* Write the back onto the box */
+    text("back", windowWidth/10/2, windowHeight/1.085);
+    /* popping all my settings so other functions dont have to deal with them */
+    pop();
+  }
+
+  checkBackButton() {
+    let x1 = 0;
+    let y1 = windowHeight/1.1 - windowHeight/20;
+    let x2 = windowWidth/10;
+    let y2 = windowHeight/1.1 + windowHeight/30;
+    if (((mouseX > x1) && (mouseX < x2)) && ((mouseY > y1) && (mouseY < y2))){
+      return 100;
+    }
+    return 255;
   }
 
   /**
@@ -491,6 +527,9 @@ function mouseClicked() {
     httpPost("http://localhost:8080/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare }, function(res) {
       mgameScreen.checkAIMove(res, mgameScreen);
     })
+  }
+  if(mgameScreen.checkBackButton() != 255){
+    gameState = 0;
   }
 }
 module.exports = [gameScreen, vertices, squares];
