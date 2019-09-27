@@ -74,15 +74,14 @@ func set_difficulty(diff int) {
 		difficulty = 1
 	}
 
-	//eps = 1 - (0.2 * float64(difficulty))
-	eps = 0
+	eps = 1 - (0.2 * float64(difficulty))
 }
 
 func TakeAction(mapData MoveDataType) string {
 	p1 = 1
 
 	if difficulty == 0 {
-		set_difficulty(4)
+		set_difficulty(1)
 	}
 	/*maps a pair a vertices to an edge on the 4x4 board.*/
 	vertices_to_edges := map[[2]int]int{
@@ -249,12 +248,12 @@ func HashCode(stateInfo [16]int) string {
 }
 
 // get the value of the hash from the database
-func GetValue(stateInfos [12][16]int) [12]float64 {
+func GetValue(stateInfos [12][16]int, idd int) [12]float64 {
 
 	// has all the hash codes for the values that we need to find
 	hashCodes := ""
 	// has all the values for each of the hash codes from the database
-	var values [12]float64
+	var values [12] float64
 
 	// gets the number for the number of rows
 	for i := 0; i < 12; i++ {
@@ -269,14 +268,14 @@ func GetValue(stateInfos [12][16]int) [12]float64 {
 
 		hashCode := HashCode(stateInfo)
 		if len(hashCodes) == 0 {
-			hashCodes = `'0_0_` + hashCode + `'`
+			hashCodes = `'0_` + fmt.Sprintf("%d",idd) + `_` + hashCode + `'`
 		} else {
-			hashCodes = hashCodes + " OR HashCode = '0_0_" + hashCode + `'`
-		}
+			hashCodes = hashCodes + ", '0_" + fmt.Sprintf("%d",idd) + "0_" + hashCode + `'`;
+		} 
 		values[i] = -2
 	}
 
-	selectStatement := `SELECT Value FROM hashes WHERE HashCode = ` + hashCodes + `;`
+	selectStatement := `SELECT Value FROM hashes WHERE HashCode IN (` + hashCodes + `) ORDER BY FIELD(HashCode,` + hashCodes + `)` + `;`
 	fmt.Println("----------------------- ", selectStatement)
 
 	// make the call to the database
@@ -285,17 +284,16 @@ func GetValue(stateInfos [12][16]int) [12]float64 {
 
 	// unable to open the database
 	if err != nil {
-		fmt.Println("WHYjklasdjklvnsldfljkvsaljdkvklnjsdfjknvnjksdnjklfvjksdjkfvnjksdnfjkvnkjsdfjnkvsjkdfvjksndjkfnjkvnjksjnkdfnjkvsnjkdv")
 		panic(err.Error())
 	}
 
+	
 	rows, errs := db.Query(selectStatement)
 	defer rows.Close()
 
 	count := 0
 
 	if errs != nil {
-		fmt.Println("2WHYjklasdjklvnsldfljkvsaljdkvklnjsdfjknvnjksdnjklfvjksdjkfvnjksdnfjkvnkjsdfjnkvsjkdfvjksndjkfnjkvnjksjnkdfnjkvsnjkdv")
 		panic(errs.Error())
 	}
 
@@ -311,7 +309,7 @@ func GetValue(stateInfos [12][16]int) [12]float64 {
 		values[count] = i
 		count += 1
 	}
-
+	
 	return values
 
 	// // make the call to the database
@@ -336,41 +334,32 @@ func GetValue(stateInfos [12][16]int) [12]float64 {
 	// return 0
 }
 
-func Get_action_list(curr_state [16]int) [12]float64 {
+
+func get_action_list(curr_state [16]int, idd int) [12]float64 {
 	// initialize variable to call value function with
 	var arr_to_pass [12][16]int
 
-	// flag to see if there are any valid states
-	flag := 0
-
 	// initialize all values to -1
-	for i := 0; i < 12; i++ {
-		for j := 0; j < 16; j++ {
+	for i:=0; i<12; i++ {
+		for j:=0; j<16; j++ {
 			arr_to_pass[i][j] = -1
 		}
 	}
 
 	// arr_to_fill is set to the state of length 16
 	var arr_to_fill [16]int
-	for i := 0; i < 12; i++ {
+	for i:=0; i<12; i++ {
 		// get state thats length 16
 		if curr_state[i] == 0 {
-			flag = 1
 			arr_to_fill = get_edge_states(curr_state, i)
-			for j := 0; j < 16; j++ {
+			for j:=0;j<16;j++ {
 				arr_to_pass[i][j] = arr_to_fill[j]
 			}
 		}
 	}
 
-	if flag == 0 {
-		err_arr := [12]float64{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}
-		return err_arr
-	}
 	// gets list of action values of length 12
-	action_list := GetValue(arr_to_pass)
-
-	fmt.Println("WE GOT THE VALUES MYD DUIIID --------------------------------------------------------------------------------")
+	action_list := GetValue(arr_to_pass, idd)
 
 	return action_list
 }
@@ -431,7 +420,7 @@ func calc_action(tiny_envys [9][16]int, eps float64) [2]int {
 	// 'a' represents the agentling index
 	for a := 0; a < 9; a++ {
 		// contains all the values
-		tiny_board_values := Get_action_list(tiny_envys[a])
+		tiny_board_values := get_action_list(tiny_envys[a], a)
 
 		for j := 0; j < 12; j++ {
 			// if edge not avaliable, skip

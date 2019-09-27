@@ -4,7 +4,7 @@ from environment import Environment, Envy
 
 class TestAgents(unittest.TestCase):
 	#
-	# Test Type: Verification Test
+	# Test Type: Unit Test
 	# What it is testing: Successfully creates 9 agentlings
 	# Expected output: There should be 9 agentlings if AgentX86 built correctly on top of the environment
 	# 
@@ -15,7 +15,7 @@ class TestAgents(unittest.TestCase):
 		self.assertEqual(len(agentx86.agentlings), 9)
 
 	#
-	# Test Type: Verification Test
+	# Test Type: Unit Test
 	# What it is testing: Successfully reseting state_history to an empty list
 	# Expected output: state_history should have a length of 0
 	# 
@@ -40,7 +40,7 @@ class TestAgents(unittest.TestCase):
 		self.assertEqual(100, len(agentx86.agentlings[0].state_history))
 
 	#
-	# Test Type: Verification Test
+	# Test Type: Unit Test
 	# What it is testing: Verify that the agent can successfully take an action on the environment
 	# Expected output: take_action successfully completes
 	# 
@@ -53,7 +53,7 @@ class TestAgents(unittest.TestCase):
 			self.fail("Taking an action caused the agent to create an exception")
 
 	#
-	# Test Type: Verification Test
+	# Test Type: Unit Test
 	# What it is testing: Make multiple moves, and make sure the environment correctly reflects the moves
 	# Expected output: number of unfilled edges in the environment after 2 moves should be reduced by 2
 	# 
@@ -66,6 +66,18 @@ class TestAgents(unittest.TestCase):
 		new_env_count = agentx86.X_env.get_environment().count(0)
 		self.assertEqual(curr_env_count-2, new_env_count)
 
+
+	#
+	# Test Type: Incremental Test
+	# What it is testing: Updating the values for an agentling that does not have state histories to update
+	# Expected output: The value list must not contain any values for the states when the state history is empty
+	# 
+	def test_update_state_history(self):
+		environment = Environment(writeToDB=False)
+		agentx86 = AgentX86(environment,1)
+		value_list = agentx86.update()
+		self.assertEqual(value_list[0], {})
+		
 
 if __name__ == '__main__':
     unittest.main()
