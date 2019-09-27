@@ -20,7 +20,7 @@ import (
 type MoveDataType struct {
 	EdgesSquare [][]int `json: "edgesSquare"`
 	OwnerSquare [][]int `json: "ownerSquare"`
-	difficulty int `json: "difficulty"`
+	difficulty  int     `json: "difficulty"`
 }
 
 var p1 int         //player id
@@ -253,7 +253,7 @@ func GetValue(stateInfos [12][16]int, idd int) [12]float64 {
 	// has all the hash codes for the values that we need to find
 	hashCodes := ""
 	// has all the values for each of the hash codes from the database
-	var values [12] float64
+	var values [12]float64
 
 	// gets the number for the number of rows
 	for i := 0; i < 12; i++ {
@@ -268,10 +268,10 @@ func GetValue(stateInfos [12][16]int, idd int) [12]float64 {
 
 		hashCode := HashCode(stateInfo)
 		if len(hashCodes) == 0 {
-			hashCodes = `'0_` + fmt.Sprintf("%d",idd) + `_` + hashCode + `'`
+			hashCodes = `'0_` + fmt.Sprintf("%d", idd) + `_` + hashCode + `'`
 		} else {
-			hashCodes = hashCodes + ", '0_" + fmt.Sprintf("%d",idd) + "_" + hashCode + `'`;
-		} 
+			hashCodes = hashCodes + ", '0_" + fmt.Sprintf("%d", idd) + "_" + hashCode + `'`
+		}
 		values[i] = -2
 	}
 
@@ -291,7 +291,6 @@ func GetValue(stateInfos [12][16]int, idd int) [12]float64 {
 		panic(err.Error())
 	}
 
-	
 	rows, errs := db.Query(selectStatement)
 	defer rows.Close()
 
@@ -313,7 +312,7 @@ func GetValue(stateInfos [12][16]int, idd int) [12]float64 {
 		values[count] = i
 		count += 1
 	}
-	
+
 	return values
 
 	// // make the call to the database
@@ -338,25 +337,24 @@ func GetValue(stateInfos [12][16]int, idd int) [12]float64 {
 	// return 0
 }
 
-
 func get_action_list(curr_state [16]int, idd int) [12]float64 {
 	// initialize variable to call value function with
 	var arr_to_pass [12][16]int
 
 	// initialize all values to -1
-	for i:=0; i<12; i++ {
-		for j:=0; j<16; j++ {
+	for i := 0; i < 12; i++ {
+		for j := 0; j < 16; j++ {
 			arr_to_pass[i][j] = -1
 		}
 	}
 
 	// arr_to_fill is set to the state of length 16
 	var arr_to_fill [16]int
-	for i:=0; i<12; i++ {
+	for i := 0; i < 12; i++ {
 		// get state thats length 16
 		if curr_state[i] == 0 {
 			arr_to_fill = get_edge_states(curr_state, i)
-			for j:=0;j<16;j++ {
+			for j := 0; j < 16; j++ {
 				arr_to_pass[i][j] = arr_to_fill[j]
 			}
 		}

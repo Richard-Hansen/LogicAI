@@ -55,11 +55,11 @@ type MoveData struct {
 // }
 
 /**
- * Test Type: Equivalence Test
- # 87
- * What it is testing: Get all possible edges on board
- * Expected output: I expect the values for all the edges on the board
- */
+* Test Type: Equivalence Test
+# 87
+* What it is testing: Get all possible edges on board
+* Expected output: I expect the values for all the edges on the board
+*/
 func TestAllPossibleEdges(t *testing.T) {
 	curr_state := [...]int{1, 1, 1, 2, 2, 0, 2, 2, 1, 2, 1, 0, 1, 0, 0, 0}
 
@@ -211,15 +211,14 @@ func TestNoDifficultySet(t *testing.T) {
 	}
 }
 
-
 /**
  * Test Type: Regression Test
  * What it is testing: Call made for hash code values when no new hash values are provided
  * Expected output: I expect that get value does not crash after all the values are noted as taken and returns a value array with -1
  */
- func TestValueAllFull(t *testing.T) {
+func TestValueAllFull(t *testing.T) {
 
-	var stateInfos [12][16] int
+	var stateInfos [12][16]int
 
 	for i := 0; i < 12; i++ {
 		for j := 0; j < 16; j++ {
