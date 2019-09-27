@@ -41,7 +41,7 @@ class GameLogic {
     /* Who took the square */
     this.whoTookQuad = [];
     /* Sending HTTP request to the squareData route. Need to populate the squares/squaresArea array */
-    httpPost("http://localhost:8080/squareData", { Mapname: "Map1" }, this.httpPostSquareData)
+    httpPost("http://localhost:8080/squareData", { Mapname: "Map2" }, this.httpPostSquareData)
   }
 
   httpPostSquareData(res) {
@@ -157,6 +157,51 @@ class gameScreen {
     this.mmgameLogic.draw();
     /* Draws the vertices onto the screen */
     this.drawVertices();
+    /* Draws the backbutton onto the screen */
+    this.drawBackbutton();
+  }
+
+  drawBackbutton() {
+    /* push all my settings */
+    push();
+    /* Translate back to 0,0 (so the top left corner is the (0,0) coordinate) */
+    translate(0, 0);
+    /* Set my textAlign to the left so they get lined up correctly */
+    textAlign(CENTER);
+    /* Fill with black for now */
+    fill(0,0,0,this.checkBackButton());
+    /* Dawing the box */
+    rect(windowWidth/10/2, windowHeight/1.1, windowWidth/10,windowHeight/15);
+    if(this.checkBackButton() == 30) {
+      fill(0);
+    }else {
+      fill(255);
+    }
+    /* Setting fontSize to 40 */
+    textSize(windowWidth/50);
+    /* Setting style to Georgia because it looks good */
+    textFont('Georgia');
+    /* Write the back onto the box */
+    text("back", windowWidth/10/2, windowHeight/1.085);
+    /* popping all my settings so other functions dont have to deal with them */
+    pop();
+  }
+
+  checkBackButton(mousex = -1, mousey = -1, windowwidth = -1, windowheight = -1) {
+    if(mousex == -1){
+      mousex = mouseX;
+      mousey = mouseY;
+      windowwidth = windowWidth;
+      windowheight = windowHeight;
+    }
+    let x1 = 0;
+    let y1 = windowheight/1.1 - windowheight/20;
+    let x2 = windowwidth/10;
+    let y2 = windowheight/1.1 + windowheight/30;
+    if (((mousex > x1) && (mousex < x2)) && ((mousey > y1) && (mousey < y2))) {
+      return 30;
+    }
+    return 255;
   }
 
   /**
@@ -411,18 +456,20 @@ class gameScreen {
         vertices[vertexWithConnection].clickedConnections.push(parseInt(vertexWithoutConnection));
         vertices[vertexWithConnection].connections.splice(i, 1);
         takenEdges.push([parseInt(move[0]), parseInt(move[1]), WHoTheFuckMoves])
-        var addAndMore = this.mmgameLogic.checkSquareTaken(vertices, squares)
-        console.log(addAndMore);
-        if (addAndMore[0] != undefined) {
-          takenSquare.push([addAndMore[1], WHoTheFuckMoves])
-          if(takenSquare.length == 16){
-            this.scorePlayer = int(this.scorePlayer)
-            this.scoreAI = 100 - this.scorePlayer;
-          }else {
-            this.scoreAI += (100 * addAndMore[0]);
+        do {
+          var addAndMore = this.mmgameLogic.checkSquareTaken(vertices, squares)
+          console.log(addAndMore);
+          if (addAndMore[0] != undefined) {
+            takenSquare.push([addAndMore[1], WHoTheFuckMoves])
+            if(takenSquare.length == 16){
+              this.scorePlayer = int(this.scorePlayer)
+              this.scoreAI = 100 - this.scorePlayer;
+            }else {
+              this.scoreAI += (100 * addAndMore[0]);
+            }
+            // this.scoreAI += (100 * addAndMore[0]);
           }
-          // this.scoreAI += (100 * addAndMore[0]);
-        }
+        } while(addAndMore[0] != undefined)
         /* Change player turn */
         if (WHoTheFuckMoves == 1) { WHoTheFuckMoves = 2 } else { WHoTheFuckMoves = 1 }
         return true;
@@ -441,13 +488,15 @@ class gameScreen {
         vertices[vertexWithConnection].clickedConnections.push((vertexWithoutConnection));
         vertices[vertexWithConnection].connections.splice(i, 1);
         takenEdges.push([(move[0]), (move[1]), WHoTheFuckMoves])
-        var addAndMore = fgameScreen.mmgameLogic.checkSquareTaken(vertices, squares)
-        console.log(addAndMore);
-        if (addAndMore[0] != undefined) {
-          // if(takenSquare)
-          this.scorePlayer += (100 * addAndMore[0]);
-          takenSquare.push([addAndMore[1], WHoTheFuckMoves])
-        }
+        do {
+          var addAndMore = fgameScreen.mmgameLogic.checkSquareTaken(vertices, squares)
+          console.log(addAndMore);
+          if (addAndMore[0] != undefined) {
+            // if(takenSquare)
+            this.scorePlayer += (100 * addAndMore[0]);
+            takenSquare.push([addAndMore[1], WHoTheFuckMoves])
+          }
+        } while(addAndMore[0] != undefined)
         /* Change player turn */
         if (WHoTheFuckMoves == 1) { WHoTheFuckMoves = 2 } else { WHoTheFuckMoves = 1 }
         return true;
@@ -475,22 +524,26 @@ function mouseClicked() {
        we no longer check that line when clicking */
     vertices[res[0]].connections.splice(res[1], 1);
     /* We now need to check if the square has been taken by the person that clicked */
-    addAndMore = mgameScreen.mmgameLogic.checkSquareTaken(vertices, squares)
-    console.log(addAndMore);
-    if (addAndMore[0] != undefined) {
-      takenSquare.push([addAndMore[1], WHoTheFuckMoves])
-      if(takenSquare.length == 16){
-        console.log("GOES IN HERE NOW1");
-        mgameScreen.scorePlayer = 100 - mgameScreen.scoreAI;
-      }else {
-        mgameScreen.scorePlayer += (100 * addAndMore[0]);
+    do {
+      addAndMore = mgameScreen.mmgameLogic.checkSquareTaken(vertices, squares)
+      console.log(addAndMore);
+      if (addAndMore[0] != undefined) {
+        takenSquare.push([addAndMore[1], WHoTheFuckMoves])
+        if(takenSquare.length == 16){
+          mgameScreen.scorePlayer = 100 - mgameScreen.scoreAI;
+        }else {
+          mgameScreen.scorePlayer += (100 * addAndMore[0]);
+        }
       }
-    }
+    } while(addAndMore[0] != undefined)
     /* Change player turn */
     if (WHoTheFuckMoves == 1) { WHoTheFuckMoves = 2 } else { WHoTheFuckMoves = 1 }
-    httpPost("http://localhost:8080/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare }, function(res) {
+    httpPost("http://localhost:8080/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare, "difficulty": 0 }, function(res) {
       mgameScreen.checkAIMove(res, mgameScreen);
     })
+  }
+  if(mgameScreen.checkBackButton() != 255){
+    gameState = 0;
   }
 }
 module.exports = [gameScreen, vertices, squares];
