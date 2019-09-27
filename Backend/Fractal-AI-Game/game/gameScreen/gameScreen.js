@@ -41,7 +41,7 @@ class GameLogic {
     /* Who took the square */
     this.whoTookQuad = [];
     /* Sending HTTP request to the squareData route. Need to populate the squares/squaresArea array */
-    httpPost("http://localhost:8080/squareData", { Mapname: "Map2" }, this.httpPostSquareData)
+    httpPost("http://198.199.121.101:8080/squareData", { Mapname: "Map2" }, this.httpPostSquareData)
   }
 
   httpPostSquareData(res) {
@@ -138,7 +138,7 @@ class gameScreen {
     // this.mgameLogic = new GameLogic()
     mgameLogic = new GameLogic();
     this.mmgameLogic = mgameLogic;
-    httpPost("http://localhost:8080/map", { map: "Map1" }, this.callMapRoute)
+    httpPost("http://198.199.121.101:8080/map", { map: "Map1" }, this.callMapRoute)
     /* Set player move */
     WHoTheFuckMoves = 1;
     this.scoreAI = 0;
@@ -538,7 +538,6 @@ function mouseClicked() {
     } while(addAndMore[0] != undefined)
     /* Change player turn */
     if (WHoTheFuckMoves == 1) { WHoTheFuckMoves = 2 } else { WHoTheFuckMoves = 1 }
-    console.log("difficulty: " + difficulty);
     let difficultyInt;
     switch(difficulty) {
       case "easy": difficultyInt = 0; break;
@@ -546,8 +545,7 @@ function mouseClicked() {
       case "hard": difficultyInt = 2; break;
       case "impossible": difficultyInt = 3; break;
     }
-    console.log("difficulty: " + difficultyInt);
-    httpPost("http://localhost:8080/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare, "difficulty": difficultyInt }, function(res) {
+    httpPost("http://198.199.121.101:8080/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare, "difficulty": difficultyInt }, function(res) {
       mgameScreen.checkAIMove(res, mgameScreen);
     })
   }
