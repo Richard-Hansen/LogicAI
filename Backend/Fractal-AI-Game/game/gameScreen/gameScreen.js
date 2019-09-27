@@ -172,8 +172,11 @@ class gameScreen {
     fill(0,0,0,this.checkBackButton());
     /* Dawing the box */
     rect(windowWidth/10/2, windowHeight/1.1, windowWidth/10,windowHeight/15);
-    /* Make the text white */
-    fill(255);
+    if(this.checkBackButton() == 30) {
+      fill(0);
+    }else {
+      fill(255);
+    }
     /* Setting fontSize to 40 */
     textSize(windowWidth/50);
     /* Setting style to Georgia because it looks good */
@@ -189,8 +192,8 @@ class gameScreen {
     let y1 = windowHeight/1.1 - windowHeight/20;
     let x2 = windowWidth/10;
     let y2 = windowHeight/1.1 + windowHeight/30;
-    if (((mouseX > x1) && (mouseX < x2)) && ((mouseY > y1) && (mouseY < y2))){
-      return 100;
+    if (((mouseX > x1) && (mouseX < x2)) && ((mouseY > y1) && (mouseY < y2))) {
+      return 30;
     }
     return 255;
   }
