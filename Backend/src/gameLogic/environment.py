@@ -1,4 +1,4 @@
-from callDatabases import set_hash_value, get_hash_value_and_state_by_hash_code
+from callDatabases import set_hash_value, get_hash_value_and_state_by_hash_code, get_hash_values_and_by_hash_codes
 
 # creates the big environment 
 class Environment:
@@ -9,7 +9,7 @@ class Environment:
 		self.envys = self.__create_envys()
 		self.big_board = [0] * 40
 		
-		self.tiny_to_big = {
+		self.tiny_to_big_edges = {
 							0:[0,1,4,5,8,9,20,21,22,25,26,27],
 							1:[1,2,5,6,9,10,21,22,23,26,27,28],
 							2:[2,3,6,7,10,11,22,23,24,27,28,29],
@@ -48,9 +48,10 @@ class Environment:
 		#set the edge in the big board to the chosen player
 		tiny_env = envy_tuples[0][0]
 		tiny_edge = envy_tuples[0][1]
-		self.big_board[self.tiny_to_big[tiny_env][tiny_edge]] = player
+		self.big_board[self.tiny_to_big_edges[tiny_env][tiny_edge]] = player
 
 		for (envy_index, edge) in envy_tuples:
+			#print("UPDATING ENVYS\n\n\n\n\n", envy_index, edge)
 			self.envys[envy_index].update_state(player, edge)
 
 	# gets the current environment
@@ -90,9 +91,7 @@ class Envy:
 		# |_|_|
 		# horizontal lines are from 0 - 5, vertical lines are from 6 - 11
 		# when a player makes a move, the value will be placed in this array
-		self.edges = [0] * 12
-
-		self.squares = [0] * 4
+		self.envy_state = [0] * 16
 
 		# edges for each of the squares
 		self.top_left_square = [0, 2, 6, 7]
@@ -110,14 +109,50 @@ class Envy:
 		#print(self.edges, areas)
 
 
-	# rewards calculated when all the game board is filled up - for each player given the player
-	def reward(self, player):
-		# calcuate the value for each of the players
-		if not self.ended():
-			return 0
+	# get all the values with the database
+	def get_values(self, state_history):
+		hash_codes_and_values = {}
 
-		# calculate the amount to give to each player
-		return sum(squares_taken_areas_p1) if player == p1 else sum(squares_taken_areas_p2)		
+		# make the db call to get all the values for the ones in the hash
+		if len(state_history) == 1:
+			# single value in the list
+			hash_values = get_hash_value_and_state_by_hash_code(state_history, self.environment_id, self.envy_id)
+		else:
+			# has more of the hash codes so need to put all into one call
+			hash_values = get_hash_values_and_by_hash_codes(state_history, self.environment_id, self.envy_id)
+		
+		value_index = 0
+		for s in state_history:
+			hash_codes_and_values[s] = hash_values[value_index]
+			value_index += 1
+
+		return hash_codes_and_values
+
+
+	# put all the values into the database it recieves - gets an array of dictionaries - where each dictionary is with the hash values to be updated
+	def put_values(self, all_values_to_update):
+		# gets all the values that need to be updated
+		for i in len(all_values_to_update.keys()):
+			# dictionary of the values that need to be updated
+			put_hash_values_and_state(values_to_update[i], self.environment, i)
+
+
+	# rewards calculated when all the game board is filled up - for each player given the player
+	def reward(self, player, state_info):
+		state_translated = self.ternary(state_info)
+
+		if len(state_translated) < 16:
+			state_translated = ([0] * (16 - len(state_translated))) + state_translated
+
+		rew = self.calculate_values(state_translated)
+		return rew if player == self.p1 else (1 - rew)
+
+		# # calcuate the value for each of the players
+		# if not self.ended():
+		# 	return 0
+
+		# # calculate the amount to give to each player
+		# return sum(squares_taken_areas_p1) if player == p1 else sum(squares_taken_areas_p2)		
 
 
 	# determines if mini board is filled completely
@@ -145,7 +180,7 @@ class Envy:
 	def get_hash(self, state_info = None):
 		# there is no state info so just get it from the current state
 		if state_info == None:
-			state_info = (self.edges + self.squares)
+			state_info = self.envy_state
 
 		h = 0
 		k = 0
@@ -161,16 +196,31 @@ class Envy:
 	# get the edges that are still available
 	def get_unfilled_edges(self):
 		unfilled_edges = []
-		for i in range(len(self.edges)):
-			if self.edges[i] == 0:
+		for i in range(12):
+			if self.envy_state[i] == 0:
 				unfilled_edges.append(i)
 		return unfilled_edges
 
 
 	# update the state of the index
 	def update_state(self, player, edge_chosen_index):
-		self.edges[edge_chosen_index] = player
+		self.envy_state[edge_chosen_index] = player
 
+		#print(self.envy_state[0] != 0 and self.envy_state[2] != 0 and self.envy_state[6] != 0 and self.envy_state[7] != 0 and edge_chosen_index in self.top_left_square)
+		# top left
+		if self.envy_state[0] != 0 and self.envy_state[2] != 0 and self.envy_state[6] != 0 and self.envy_state[7] != 0 and edge_chosen_index in self.top_left_square:
+			self.envy_state[12] = player
+		# top right
+		if self.envy_state[1] != 0 and self.envy_state[3] != 0 and self.envy_state[7] != 0 and self.envy_state[8] != 0 and edge_chosen_index in self.top_right_square:
+			self.envy_state[13] = player
+		# bottom left
+		if self.envy_state[2] != 0 and self.envy_state[4] != 0 and self.envy_state[9] != 0 and self.envy_state[10] != 0 and edge_chosen_index in self.bottom_left_square:
+			self.envy_state[14] = player
+		# bottom right
+		if self.envy_state[3] != 0 and self.envy_state[5] != 0 and self.envy_state[10] != 0 and self.envy_state[11] != 0 and edge_chosen_index in self.bottom_right_square:
+			self.envy_state[15] = player
+
+		#print("UPDATED STATE", self.envy_state)
 
 	# finds the value of the ternary
 	def ternary(self, hash_code):
@@ -179,7 +229,7 @@ class Envy:
 	    nums = []
 	    while hash_code:
 	        hash_code, remainder = divmod(hash_code, 3)
-	        nums.append(remainder)
+	        nums.insert(0, remainder)
 	    return nums
 
 
@@ -248,45 +298,117 @@ class Envy:
 		# print("VALUES", value)
 		return value
 
-
 	# gets the state value
 	def state_value_for_choosing_edge(self, player, edge_to_consider_index):
-		if self.edges[edge_to_consider_index] == 0:
-			self.edges[edge_to_consider_index] = player
+		if self.envy_state[edge_to_consider_index] == 0:
+			self.envy_state[edge_to_consider_index] = player
 
 			#print("Edges to get value for: ", self.edges)
 			# squares that have been changed
+			updated_squares = self.envy_state[12:16]
 			changed_squares = [0] * 4
 
 			# top left
-			if self.edges[0] != 0 and self.edges[2] != 0 and self.edges[6] != 0 and self.edges[7] != 0 and edge_to_consider_index in self.top_left_square:
+			if self.envy_state[0] != 0 and self.envy_state[2] != 0 and self.envy_state[6] != 0 and self.envy_state[7] != 0 and edge_to_consider_index in self.top_left_square:
 				#self.edges[12] = player
-				changed_squares[0] = 1
+				updated_squares[0] = player
+				changed_squares[0] = player
 			# top right
-			if self.edges[1] != 0 and self.edges[3] != 0 and self.edges[7] != 0 and self.edges[8] != 0 and edge_to_consider_index in self.top_right_square:
+			if self.envy_state[1] != 0 and self.envy_state[3] != 0 and self.envy_state[7] != 0 and self.envy_state[8] != 0 and edge_to_consider_index in self.top_right_square:
 				#self.edges[13] = player
-				changed_squares[1] = 1
+				updated_squares[1] = player
+				changed_squares[1] = player
 			# bottom left
-			if self.edges[2] != 0 and self.edges[4] != 0 and self.edges[9] != 0 and self.edges[10] != 0 and edge_to_consider_index in self.bottom_left_square:
+			if self.envy_state[2] != 0 and self.envy_state[4] != 0 and self.envy_state[9] != 0 and self.envy_state[10] != 0 and edge_to_consider_index in self.bottom_left_square:
 				#self.edges[14] = player
-				changed_squares[2] = 1
+				updated_squares[2] = player
+				changed_squares[2] = player
 			# bottom right
-			if self.edges[3] != 0 and self.edges[5] != 0 and self.edges[10] != 0 and self.edges[11] != 0 and edge_to_consider_index in self.bottom_right_square:
+			if self.envy_state[3] != 0 and self.envy_state[5] != 0 and self.envy_state[10] != 0 and self.envy_state[11] != 0 and edge_to_consider_index in self.bottom_right_square:
 				#self.edges[15] = player
-				changed_squares[3] = 1
+				updated_squares[3] = player
+				changed_squares[3] = player
 
-			(value, state) = get_hash_value_and_state_by_hash_code(self.get_hash(self.edges + changed_squares), self.environment_id, self.envy_id)
+			(value, state) = get_hash_value_and_state_by_hash_code(self.get_hash(self.envy_state[:12] + updated_squares), self.environment_id, self.envy_id)
 
-			self.edges[edge_to_consider_index] = 0
+			self.envy_state[edge_to_consider_index] = 0
 
 			for i in range(len(changed_squares)):
-				if changed_squares[i] == 1:
-					edges[12 + i] = 0
+				if changed_squares[i] == player:
+					self.envy_state[12 + i] = 0
 
 			return value
 
 		raise Exception('Edge already chosen')
 
+	# gets the state value
+	def state_value_for_all_edges(self, player, edges_to_consider):
+		values_to_pass = []
+		values_to_return = []
+		#print("THE EDGE TO CONSIDER", edges_to_consider, self.envy_state)
+
+		for i in range(12):
+			edge_to_consider_value = edges_to_consider[i] 
+
+			# 0 means the edge is available to be taken
+			if edge_to_consider_value == 0:
+				self.envy_state[i] = player
+
+
+				#print("Edges to get value for: ", self.edges)
+				# squares that have been changed
+				updated_squares = self.envy_state[12:16]
+				changed_squares = [0] * 4
+
+				# top left
+				if self.envy_state[0] != 0 and self.envy_state[2] != 0 and self.envy_state[6] != 0 and self.envy_state[7] != 0 and i in self.top_left_square:
+					#self.edges[12] = player
+					updated_squares[0] = player
+					changed_squares[0] = player
+				# top right
+				if self.envy_state[1] != 0 and self.envy_state[3] != 0 and self.envy_state[7] != 0 and self.envy_state[8] != 0 and i in self.top_right_square:
+					#self.edges[13] = player
+					updated_squares[1] = player
+					changed_squares[1] = player
+				# bottom left
+				if self.envy_state[2] != 0 and self.envy_state[4] != 0 and self.envy_state[9] != 0 and self.envy_state[10] != 0 and i in self.bottom_left_square:
+					#self.edges[14] = player
+					updated_squares[2] = player
+					changed_squares[2] = player
+				# bottom right
+				if self.envy_state[3] != 0 and self.envy_state[5] != 0 and self.envy_state[10] != 0 and self.envy_state[11] != 0 and i in self.bottom_right_square:
+					#self.edges[15] = player
+					updated_squares[3] = player
+					changed_squares[3] = player
+
+				values_to_pass.append(self.get_hash(self.envy_state[:12] + updated_squares))
+
+				# 0 indicates that this value should be replaced with an actually state value
+				values_to_return.append(0)
+
+				# reset state after calculating has value
+				self.envy_state[i] = 0
+
+				# reset the square value if necessary
+				for j in range(len(changed_squares)):
+					if changed_squares[j] == player:
+						self.envy_state[12 + j] = 0
+			else:
+				# -1 indicates that this value should not be replaced with an actual value
+				values_to_return.append(-1)
+
+		hash_code_list = get_hash_values_and_by_hash_codes(values_to_pass, self.environment_id, self.envy_id)
+
+		for hv in hash_code_list:
+			for k in range(12):
+				if values_to_return[k] == 0:
+					values_to_return[k] = hv
+					break
+
+		return values_to_return
+
+
+		raise Exception('Edge already chosen')
 
 	# gets the current state based on the hash and the value stored
 	def create_state_hash_and_values(self):
@@ -371,10 +493,13 @@ class Envy:
 			self.hash_to_values_and_state = {}
 
 # m = Envy(areas=[0.05, 0.45, 0.4, 0.1], writeToDB = False)
+# (state_val) = m.ternary(29513241)
+# print(m.get_hash([0, 0, 0, 0, 2, 1, 2, 0, 1, 2, 1, 1, 1, 0, 0, 2]))
+# print("VALES", state_val)
 # #m.create_state_hash_and_values()
 
-# print("STATE P1", m.get_state_value(1, m.get_hash([1,0,2,1,1,1,2,1,1,1,1,1,1,0,1,1]))) 
-# print("STATEE 1!!", m.calculate_values([1,0,2,0,0,0,2,1,0,0,0,0,1,0,0,0]))
+# print("STATE P1", m.get_state_value(1, m.get_hash([0, 0, 0, 0, 2, 1, 2, 0, 1, 2, 1, 1, 1, 0, 0, 2]))) 
+# print("STATEE 1!!", m.calculate_values([0, 0, 0, 0, 2, 1, 2, 0, 1, 2, 1, 1, 1, 0, 0, 2]))
 # print("STATEE 2!!", m.calculate_values([2, 0,  1, 0, 0, 0, 1, 2, 0, 0, 0, 0, 2, 0, 0, 0]))
 
 # print("STATE P2", m.get_state_value(2, m.get_hash([1,0,2,1,1,1,2,1,1,1,1,1,1,0,1,1]))) 

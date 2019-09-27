@@ -55,7 +55,8 @@ type MoveData struct {
 // }
 
 /**
- * Test Type: Verification Test
+ * Test Type: Equivalence Test
+ # 87
  * What it is testing: Get all possible edges on board
  * Expected output: I expect the values for all the edges on the board
  */
@@ -79,7 +80,8 @@ func TestAllPossibleEdges(t *testing.T) {
 }
 
 /**
- * Test Type: Verification Test
+ * Test Type: Boundary Test
+ * 88
  * What it is testing: Does not send back the current edge as a possibility
  * Expected output: I expect the agent to send back another edge (not the current edge) back
  */
@@ -101,7 +103,8 @@ func TestExistingEdges(t *testing.T) {
 }
 
 /**
- * Test Type: Verification Test
+ * Test Type: Boundary Test
+ * 89
  * What it is testing: Does not send back an inexistant edge
  * Expected output: I expect the agent to not send back an edge that does not exist
  */
@@ -115,20 +118,20 @@ func TestNonExistantEdges(t *testing.T) {
 	}
 }
 
-/**
- * Test Type: Verification Test
- * What it is testing: Sends that an edge is valid if it is valid edge
- * Expected output: I expect the agent to send back the edge if it does exist
- */
-func TestExistsEdge(t *testing.T) {
-	edge_chosen := 5
+// /**
+//  * Test Type: Verification Test
+//  * What it is testing: Sends that an edge is valid if it is valid edge
+//  * Expected output: I expect the agent to send back the edge if it does exist
+//  */
+// func TestExistsEdge(t *testing.T) {
+// 	edge_chosen := 5
 
-	edge_exists := CheckAction(edge_chosen)
+// 	edge_exists := CheckAction(edge_chosen)
 
-	if edge_exists == false {
-		t.Errorf("Recieved that edge does not exist on board, Expected edge exists")
-	}
-}
+// 	if edge_exists == false {
+// 		t.Errorf("Recieved that edge does not exist on board, Expected edge exists")
+// 	}
+// }
 
 /**
  * Test Type: Verification Test
