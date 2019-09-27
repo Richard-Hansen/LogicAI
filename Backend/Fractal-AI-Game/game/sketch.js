@@ -8,6 +8,15 @@ var mgameScreen;
 var userID;
 var difficulty;
 var board;
+var activeImage;
+var boardOne;
+var boardTwo;
+var boardThree;
+
+function preload() {
+  boardOne = loadImage('assets/board1.png')
+  activeImage = boardOne
+}
 
 function setup() {
   /* Create our canvas with the max windowWidth and windowHeight */
@@ -23,7 +32,7 @@ function setup() {
   mstartScreen = new StartScreen();
   mstartScreen.start()
   /* Set the gameState */
-  gameState = 0;
+  gameState = 1;
 }
 
 function draw() {

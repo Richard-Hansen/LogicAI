@@ -35,19 +35,39 @@ class BoardSelector {
         this.changeBoard(board)()
     }
 
+    getBoardPos() {
+        return this.boardContainer.elt.getBoundingClientRect()
+    }
+
     changeBoard(e) {
         var that = this // store this for scope change
         return function () {
             if (e === undefined)
                 return
+            if (e > 2 || e < 0)
+                return "NO"
             board = e
+            switch (e) {
+                case 0:
+                    activeImage = boardOne
+                    break
+                case 1:
+                    activeImage = boardTwo
+                    break
+                case 2:
+                    activeImage = boardThree
+                    break
+                default:
+                    console.log("error")
+                    break
+            }
             window.localStorage.setItem("board", e)
             try {
                 that.buttons.forEach(element => {
                     element.style('background-color', 'rgba(255,0,0,0.1)')
                 });
                 that.buttons[e].style('background-color', 'rgba(255,0,0,0.6)')
-            } catch (err) { }
+            } catch (err) { console.log(err) }
         }
     }
 

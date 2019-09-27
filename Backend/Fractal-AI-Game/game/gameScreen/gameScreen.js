@@ -27,6 +27,105 @@ var takenEdges = []
 /* Array of taken sqaures */
 var takenSquare = [];
 
+var squares = [];
+var squaresAreas = [];
+/**
+ * This function is going to check if any squares have been completed by either
+ * the AI or the player.
+ */
+class GameLogic {
+  /* Constructor that will send the HTTP request to get the square data */
+  constructor() {
+    /* Make my HTTP request to squareData with the current map */
+    this.fillQuads = [];
+    /* Who took the square */
+    this.whoTookQuad = [];
+    /* Sending HTTP request to the squareData route. Need to populate the squares/squaresArea array */
+    httpPost("http://localhost:8080/squareData", { Mapname: "Map1" }, this.httpPostSquareData)
+  }
+
+  httpPostSquareData(res) {
+    /* Splits the response by spaces and places it back into res */
+    res = res.split(" ");
+    /* Iterate through all indices */
+    for (let i = 0; i < res.length - 1; i++) {
+      squares.push(res[i].split(","));
+    }
+    squaresAreas = res[res.length - 1].split(",")
+    return [squares, squaresAreas]
+  }
+
+  draw() {
+    push();
+    translate(windowWidth / 2, windowHeight / 2)
+    for (var i = 0; i < this.fillQuads.length; i++) {
+      fill(this.whoTookQuad[i][0],this.whoTookQuad[i][1],this.whoTookQuad[i][2], this.whoTookQuad[i][3]);
+      quad(vertices[this.fillQuads[i][0]].screenX, vertices[this.fillQuads[i][0]].screenY, vertices[this.fillQuads[i][2]].screenX, vertices[this.fillQuads[i][2]].screenY, vertices[this.fillQuads[i][3]].screenX, vertices[this.fillQuads[i][3]].screenY, vertices[this.fillQuads[i][1]].screenX, vertices[this.fillQuads[i][1]].screenY);
+    }
+    pop();
+  }
+
+  /* this.checkSquareTaken will check if a square has been taken.
+     I really do not like the way this is coded and I would love to
+     go back and fix this if I have time @TODO */
+  checkSquareTaken(vert, msquares) {
+    for (var i = 0; i < msquares.length; i++) {
+      var tempValue = 0;
+      for (var j = 0; j < msquares[i].length; j++) {
+        var shouldBeTwo = 0;
+        if(msquares[i][j] != -1) {
+          if(vert[msquares[i][j]].clickedConnections.includes(parseInt(msquares[i][0]))){
+            shouldBeTwo++
+            tempValue++
+          }
+          if(vert[msquares[i][j]].clickedConnections.includes(parseInt(msquares[i][1]))){
+            shouldBeTwo++
+            tempValue++
+          }
+          if(vert[msquares[i][j]].clickedConnections.includes(parseInt(msquares[i][2]))){
+            shouldBeTwo++
+            tempValue++
+          }
+          if(vert[msquares[i][j]].clickedConnections.includes(parseInt(msquares[i][3]))){
+            shouldBeTwo++
+            tempValue++
+          }
+          if(shouldBeTwo == 0){
+            break;
+          }
+        }
+      }
+      if (tempValue == 4) {
+        this.fillQuads.push([msquares[i][0], msquares[i][1], msquares[i][2], msquares[i][3]]);
+        if(WHoTheFuckMoves == 1) {
+          this.whoTookQuad.push([197,255,158,100])
+        }else {
+          this.whoTookQuad.push([216,158,255,100])
+        }
+        msquares[i][0] = -1;
+        msquares[i][1] = -1;
+        msquares[i][2] = -1;
+        msquares[i][3] = -1;
+        var ret = squaresAreas[i]
+
+        return [ret, i]
+      }
+    }
+    return [undefined, undefined]
+  }
+}
+
+
+
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+
+
 /**
  * This class will contain all the relevant game code for LogicalAI.
  * When we have entered gameState 1 the draw function found in this class will
@@ -36,27 +135,28 @@ var takenSquare = [];
 class gameScreen {
   /* ctor, does not require any params. Asks the backend for all mapdata */
   constructor() {
-    this.callMapRoute();
-    /* Scores of the AI and player */
-    this.scoreAI = 0;
-    this.scorePlayer = 0;
-    mgameLogic = new GameLogic()
+    // this.mgameLogic = new GameLogic()
+    mgameLogic = new GameLogic();
+    this.mmgameLogic = mgameLogic;
+    httpPost("http://localhost:8080/map", { map: "Map1" }, this.callMapRoute)
     /* Set player move */
     WHoTheFuckMoves = 1;
+    this.scoreAI = 0;
+    this.scorePlayer = 0;
   }
 
   /* draw function that will be called at 60fps once gameState has been moved to 1. */
   draw() {
     /* Setting background to white */
     background(255);
-    /* Draws the vertices onto the screen */
-    this.drawVertices();
     /* Draws the title onto the screen */
     this.drawTitle();
     /* Show the score of the player and AI */
-    this.drawScoreBoard(this.scoreAI, this.scorePlayer);
+    this.drawScoreBoard(int(this.scoreAI), int(this.scorePlayer));
     /* Need to draw the quads that are filled */
-    mgameLogic.draw();
+    this.mmgameLogic.draw();
+    /* Draws the vertices onto the screen */
+    this.drawVertices();
   }
 
   /**
@@ -117,7 +217,13 @@ class gameScreen {
    *              if it is hovering over a dotted line. If the mouse is over a dotted
    *              line it will make that dotted line a solid line.
    */
-  checkMouse() {
+  checkMouse(mousex = -1, mousey = -1, windowwidth = -1, windowheight = -1) {
+    if(mousex == -1){
+      mousex = mouseX;
+      mousey = mouseY;
+      windowwidth = windowWidth;
+      windowheight = windowHeight;
+    }
     /* Loop through each vertex in the vertices array */
     for (var i = 0; i < vertices.length; i++) {
       /* Set a vertex varible, makes things look a little bit nicer */
@@ -126,8 +232,8 @@ class gameScreen {
       for (var j = 0; j < vertex.connections.length; j++) {
         /* Set x0 and y0 to the mouse location. I had to offset this location to make sure
            the translated position and the mouse position are on the same coordinate plane */
-        var x0 = mouseX - (windowWidth / 2);
-        var y0 = mouseY - (windowHeight / 2);
+        var x0 = mousex - (windowwidth / 2);
+        var y0 = mousey - (windowheight / 2);
         /* Setting x1 and y1 to the screen locations of the vertex */
         var x1 = vertex.screenX;
         var y1 = vertex.screenY;
@@ -258,11 +364,11 @@ class gameScreen {
    *                once the data has been received it will parse the response and place
    *                all the usefull data in the correct structures.
    */
-  callMapRoute() {
+  callMapRoute(res) {
     /* A post method to the map route with a json containing the map name */
-    httpPost("http://localhost:8080/map", { map: "Map1" }, function (res) {
       /* Splits the response by spaces and places it back into res */
       res = res.split(" ");
+
       /* Iterate through all indices, except for the last one, and removed '[' and ']' */
       for (let i = 0; i < res.length - 1; i++) {
         /* Regex to globally replace the two chars talked about above */
@@ -278,6 +384,7 @@ class gameScreen {
       /* splitting the last array element by '-' dashes */
       let temp = res[res.length - 1].split("-");
       /* Iterates through res from [4, (res.length-1)] */
+
       for (let i = 4; i < res.length - 1; i++) {
         /* So we can place both x and y into the new vertice */
         if (i % 2 == 0) {
@@ -290,18 +397,59 @@ class gameScreen {
         /* Splits each temp[i] by ',' commas and places them into the vertice data structure */
         vertices[i].connections = temp[i].split(",");
       }
-    });
+      /* Returning all the values that I set */
+      return [mapName, size, sizeName, vertices];
   }
 
-  checkMove(res) {
-    console.log("RES: " + res);
+  checkAIMove(res, fgameScreen) {
+    console.log("RES AI: " + res);
     var move = res.split(" ");
     var vertexWithConnection = Math.min(move[0], move[1]);
     var vertexWithoutConnection = Math.max(move[0], move[1]);
     for (var i = 0; i < vertices[vertexWithConnection].connections.length; i++) {
       if (vertices[vertexWithConnection].connections[i] == vertexWithoutConnection) {
-        vertices[vertexWithConnection].clickedConnections.push(vertexWithoutConnection);
+        vertices[vertexWithConnection].clickedConnections.push(parseInt(vertexWithoutConnection));
         vertices[vertexWithConnection].connections.splice(i, 1);
+        takenEdges.push([parseInt(move[0]), parseInt(move[1]), WHoTheFuckMoves])
+        var addAndMore = this.mmgameLogic.checkSquareTaken(vertices, squares)
+        console.log(addAndMore);
+        if (addAndMore[0] != undefined) {
+          takenSquare.push([addAndMore[1], WHoTheFuckMoves])
+          if(takenSquare.length == 16){
+            this.scorePlayer = int(this.scorePlayer)
+            this.scoreAI = 100 - this.scorePlayer;
+          }else {
+            this.scoreAI += (100 * addAndMore[0]);
+          }
+          // this.scoreAI += (100 * addAndMore[0]);
+        }
+        /* Change player turn */
+        if (WHoTheFuckMoves == 1) { WHoTheFuckMoves = 2 } else { WHoTheFuckMoves = 1 }
+        return true;
+      }
+    }
+    return false;
+  }
+
+  checkPlayerMove(res, fgameScreen = mgameScreen) {
+    console.log("RES PLAYER: " + res);
+    var move = res.split(" ");
+    var vertexWithConnection = Math.min(move[0], move[1]);
+    var vertexWithoutConnection = Math.max(move[0], move[1]);
+    for (var i = 0; i < vertices[vertexWithConnection].connections.length; i++) {
+      if (vertices[vertexWithConnection].connections[i] == vertexWithoutConnection) {
+        vertices[vertexWithConnection].clickedConnections.push((vertexWithoutConnection));
+        vertices[vertexWithConnection].connections.splice(i, 1);
+        takenEdges.push([(move[0]), (move[1]), WHoTheFuckMoves])
+        var addAndMore = fgameScreen.mmgameLogic.checkSquareTaken(vertices, squares)
+        console.log(addAndMore);
+        if (addAndMore[0] != undefined) {
+          // if(takenSquare)
+          this.scorePlayer += (100 * addAndMore[0]);
+          takenSquare.push([addAndMore[1], WHoTheFuckMoves])
+        }
+        /* Change player turn */
+        if (WHoTheFuckMoves == 1) { WHoTheFuckMoves = 2 } else { WHoTheFuckMoves = 1 }
         return true;
       }
     }
@@ -321,27 +469,71 @@ function mouseClicked() {
      we get a number that is not equal to -1 we know that they clicked on a line */
   if (res[0] != -1) {
     takenEdges.push([res[0], int(vertices[res[0]].connections[res[1]]), WHoTheFuckMoves])
-
     /* Pushes the dotted line clicked into clickConnections so we can display it as clicked */
-    vertices[res[0]].clickedConnections.push(vertices[res[0]].connections[res[1]]);
+    vertices[res[0]].clickedConnections.push(int(vertices[res[0]].connections[res[1]]));
     /* Splices the dotted line from the connections array for the vertex, this will make sure
        we no longer check that line when clicking */
     vertices[res[0]].connections.splice(res[1], 1);
     /* We now need to check if the square has been taken by the person that clicked */
-    addAndMore = mgameLogic.checkSquareTaken(vertices)
+    addAndMore = mgameScreen.mmgameLogic.checkSquareTaken(vertices, squares)
     console.log(addAndMore);
     if (addAndMore[0] != undefined) {
-      mgameScreen.scorePlayer += (100 * addAndMore[0]);
       takenSquare.push([addAndMore[1], WHoTheFuckMoves])
+      if(takenSquare.length == 16){
+        console.log("GOES IN HERE NOW1");
+        mgameScreen.scorePlayer = 100 - mgameScreen.scoreAI;
+      }else {
+        mgameScreen.scorePlayer += (100 * addAndMore[0]);
+      }
     }
     /* Change player turn */
     if (WHoTheFuckMoves == 1) { WHoTheFuckMoves = 2 } else { WHoTheFuckMoves = 1 }
-
-    httpPost("http://localhost:8080/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare }, function (res) {
-      mgameScreen.checkMove(res);
-    });
+    httpPost("http://localhost:8080/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare }, function(res) {
+      mgameScreen.checkAIMove(res, mgameScreen);
+    })
   }
-  console.log(takenEdges);
-  console.log(takenSquare);
 }
-module.exports = gameScreen;
+module.exports = [gameScreen, vertices, squares];
+
+
+
+
+
+
+
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+
+
+/* This will contain ALL metadata of a single vertice. */
+function vertice(x, y) {
+  /* These are the values stored in the json. all values will be between [0,5] in
+     both this.x and this.y */
+  this.x = x;
+  this.y = y;
+  /* Screen X cord. i.e 154.5 or some pixel value */
+  this.screenX;
+  /* Screen Y cord. i.e 254.6 or some pixel value */
+  this.screenY;
+  /* Contains all the connections that have no been clicked yet. This is stored
+     as the index of the connection. i.e if you see '0' in this.connections, it means
+     this vertice is connected to the 0 vertex */
+  this.connections = [];
+  /* Same format as this.connections but instead contains all the connections that HAVE
+     been clicked */
+  this.clickedConnections = [];
+}
+
+
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/

@@ -5,20 +5,24 @@ var squaresAreas = [];
  * the AI or the player.
  */
 class GameLogic {
-
   /* Constructor that will send the HTTP request to get the square data */
   constructor() {
     /* Make my HTTP request to squareData with the current map */
     this.fillQuads = [];
-    httpPost("http://localhost:8080/squareData", { Mapname: "Map1" }, function (res) {
-      /* Splits the response by spaces and places it back into res */
-      res = res.split(" ");
-      /* Iterate through all indices */
-      for (let i = 0; i < res.length - 1; i++) {
-        squares.push(res[i].split(","));
-      }
-      squaresAreas = res[res.length - 1].split(",")
-    });
+    /* Sending HTTP request to the squareData route. Need to populate the squares/squaresArea array */
+    httpPost("http://localhost:8080/squareData", { Mapname: "Map1" }, this.httpPostSquareData)
+  }
+
+  httpPostSquareData(res) {
+    console.log("ressssss");
+    console.log(res)
+    /* Splits the response by spaces and places it back into res */
+    res = res.split(" ");
+    /* Iterate through all indices */
+    for (let i = 0; i < res.length - 1; i++) {
+      squares.push(res[i].split(","));
+    }
+    squaresAreas = res[res.length - 1].split(",")
   }
 
   draw() {
@@ -35,25 +39,24 @@ class GameLogic {
      I really do not like the way this is coded and I would love to
      go back and fix this if I have time @TODO */
   checkSquareTaken(vert) {
-    if (this.playerTurn == 1) { this.playerTurn = 2 } else { this.playerTurn = 1 }
     for (var i = 0; i < squares.length; i++) {
       var tempValue = 0;
-      for (var j = 0; j < squares[i].length - 1; j++) {
+      for (var j = 0; j < squares[i].length; j++) {
         var shouldBeTwo = 0;
         if(squares[i][j] != -1) {
-          if(vert[squares[i][j]].clickedConnections.includes(squares[i][0])){
+          if(vert[squares[i][j]].clickedConnections.includes(int(squares[i][0]))){
             shouldBeTwo++
             tempValue++
           }
-          if(vert[squares[i][j]].clickedConnections.includes(squares[i][1])){
+          if(vert[squares[i][j]].clickedConnections.includes(int(squares[i][1]))){
             shouldBeTwo++
             tempValue++
           }
-          if(vert[squares[i][j]].clickedConnections.includes(squares[i][2])){
+          if(vert[squares[i][j]].clickedConnections.includes(int(squares[i][2]))){
             shouldBeTwo++
             tempValue++
           }
-          if(vert[squares[i][j]].clickedConnections.includes(squares[i][3])){
+          if(vert[squares[i][j]].clickedConnections.includes(int(squares[i][3]))){
             shouldBeTwo++
             tempValue++
           }
@@ -64,14 +67,12 @@ class GameLogic {
       }
       if (tempValue == 4) {
         this.fillQuads.push([squares[i][0], squares[i][1], squares[i][2], squares[i][3]]);
-        // squares.splice(i,1);
         squares[i][0] = -1;
         squares[i][1] = -1;
         squares[i][2] = -1;
         squares[i][3] = -1;
         var ret = squaresAreas[i]
-        // squaresAreas.splice(i,1);
-        return [ret, i];
+        return [ret, i]
       }
     }
     return [undefined, undefined]
