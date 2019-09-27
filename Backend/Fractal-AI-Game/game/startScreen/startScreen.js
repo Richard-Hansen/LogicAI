@@ -116,7 +116,7 @@ class StartScreen {
   callAuthRoute() {
     var that = this
     var isokay = true
-    httpPost("http://localhost:8080/auth", { user: userID, username: that.nameInput.elt.value }, function (res) {
+    httpPost("http://198.199.121.101:8088/auth", { user: userID, username: that.nameInput.elt.value }, function (res) {
       console.log("RES:", res)
     }, function (err) {
       // deal with this better in the future
@@ -130,7 +130,7 @@ class StartScreen {
   * callScoresRoute - Gets high scores
   */
   callScoresRoute() {
-    httpPost("http://localhost:8080/hiscores", function (res) {
+    httpPost("http://198.199.121.101:8088/hiscores", function (res) {
       console.log(res)
     })
   }
