@@ -7,10 +7,11 @@ class Game:
 		self.current_player = p2 # initialize current player to p2, so the first loop of play_game() sets p1 to the current player
 		self.game_board = [0] * 40 # 4x4 game board is made up of 40 edges
 
-	def play_game(self, update_after_game=False):
+	def play_game(self, update_after_game=False, get_state_histories_for_p1=False):
 		#while game is not over
+		print("Play game")
 		while not self.game_ended():
-
+			print("New turn")
 			# set current player
 			if self.current_player is self.p1:
 				self.current_player = self.p2
@@ -26,6 +27,9 @@ class Game:
 			# print("Updating agents")
 			put_values(self.p1.update())
 			put_values(self.p2.update())
+
+		if get_state_histories_for_p1:
+			return self.p1.get_state_histories()
 
 	#returns True if game has ended
 	def game_ended(self):

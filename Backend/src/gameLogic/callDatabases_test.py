@@ -54,6 +54,10 @@ class TestCallDatabases(unittest.TestCase):
 
 		self.assertEqual(type(ternary_value[0]), str)
 
+
+	# Test Type: Incremental Test
+	# What it is testing:  
+
 	
 if __name__ == '__main__':
     unittest.main()

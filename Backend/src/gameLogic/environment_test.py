@@ -4,10 +4,10 @@ import time
 
 class TestEnvironment(unittest.TestCase):
 	#
-	# Test Type: Verification Test
+	# Test Type: Unit Test
 	# What it is testing: Successfully enumerates all the states
 	# Expected output: I expect that all the states are enumerated without exceeding limits
-	# 
+	
 	def test_state_enumeration(self):
 		try:
 			m = Envy(areas=[0.05, 0.45, 0.4, 0.1], writeToDB = False)
@@ -16,11 +16,11 @@ class TestEnvironment(unittest.TestCase):
 		except Exception:
 			self.fail("Creating hash_and_values raised exception when enumerating states")
 
-	# #
-	# # Test Type: Verification Test
-	# # What it is testing: Finds the value of the state that has captured squares
-	# # Expected output: I expect that value for state is calculated correctly
-	# # 
+	#
+	# Test Type: Unit Test
+	# What it is testing: Finds the value of the state that has captured squares
+	# Expected output: I expect that value for state is calculated correctly
+	# 
 	def test_value_calculation(self):
 		m = Envy(areas=[0.05, 0.45, 0.4, 0.1])
 		value = m.calculate_values([1,0,1,0,0,0,2,2,0,0,0,0,1,0,0,0])
@@ -28,7 +28,7 @@ class TestEnvironment(unittest.TestCase):
 		self.assertEqual(value, 0.525)
 
 	#
-	# Test Type: Verification Test
+	# Test Type: Unit Test
 	# What it is testing: Successfully enumerates all the states
 	# Expected output: I expect that all the states are enumerated without exceeding limits
 	# 
@@ -41,7 +41,7 @@ class TestEnvironment(unittest.TestCase):
 
 
 	#
-	# Test Type: Verification Test
+	# Test Type: Unit Test
 	# What it is testing: Correctness of hash value given state
 	# Expected output: I expect that the hash avlue must be calculated correctly
 	# 
@@ -51,6 +51,16 @@ class TestEnvironment(unittest.TestCase):
 		state_info[0] = 2
 		hash_code = m.get_hash(state_info)
 		self.assertTrue(hash_code == 28697814)
+
+
+	#
+	# Test Type: Regression Test
+	# What it is testing: Ensures that the edges and squares are all one object instead of multiple objects
+	# Expected output: I expect that there is one consolidated squares and edges object for state instead of the existing edges and squares separately
+	# 
+	def test_value_calculation(self):
+		m = Envy(areas=[0.05, 0.45, 0.4, 0.1])
+		self.assertEqual(m.envy_state, [0] * 16)
 		
 if __name__ == '__main__':
     unittest.main()
