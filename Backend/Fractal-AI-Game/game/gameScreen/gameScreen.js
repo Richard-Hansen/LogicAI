@@ -538,7 +538,16 @@ function mouseClicked() {
     } while(addAndMore[0] != undefined)
     /* Change player turn */
     if (WHoTheFuckMoves == 1) { WHoTheFuckMoves = 2 } else { WHoTheFuckMoves = 1 }
-    httpPost("http://localhost:8080/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare, "difficulty": 0 }, function(res) {
+    console.log("difficulty: " + difficulty);
+    let difficultyInt;
+    switch(difficulty) {
+      case "easy": difficultyInt = 0; break;
+      case "medium": difficultyInt = 1; break;
+      case "hard": difficultyInt = 2; break;
+      case "impossible": difficultyInt = 3; break;
+    }
+    console.log("difficulty: " + difficultyInt);
+    httpPost("http://localhost:8080/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare, "difficulty": difficultyInt }, function(res) {
       mgameScreen.checkAIMove(res, mgameScreen);
     })
   }
