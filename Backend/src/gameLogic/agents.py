@@ -2,6 +2,9 @@ class AgentX86:
 	# X_'variablename' indicates that the variable is present in both the AgentX86 class and the Agentling class. 
 	# Indicates this variable is for the AgentX86 class.
 	def __init__(self, X_env, player, eps = 0.1, alpha = 0.5):
+		if player == None:
+			raise Exception()
+			
 		self.X_env = X_env
 		self.player = player # player id
 		self.X_eps = eps # determines rate at which a random edge is chosed
