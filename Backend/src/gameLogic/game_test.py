@@ -4,6 +4,35 @@ from environment import Environment, Envy
 from game import Game
 
 class TestGame(unittest.TestCase):
+
+	#
+	# Test Type: Incremental Test
+	# What it is testing: Game play with no environment provided
+	# Expected output: Game must not be able to proceed
+	# 
+	def test_play_game_without_environment(self):
+		# set up the big agent and environment
+		# ensure that if the environment is not provided, there is an exception
+		self.assertRaises(Exception, AgentX86, None, 1)
+
+	#
+	# Test Type: Incremental Test
+	# What it is testing: Pass only a single agent to the game constructor
+	# Expected output: game must not work
+	# 
+	def test_create_game_with_one_player(self):
+		environment = Environment(writeToDB=False)
+		agentX86P1 = AgentX86(environment,1)
+		self.assertRaises(Exception, Game, agentX86P1, None)
+
+	#
+	# Test Type: Incremental Test
+	# What it is testing: pass 0 agents to the game constructor
+	# Expected output: Game must not be able to proceed
+	# 
+	def test_create_game_with_no_players(self):
+		self.assertRaises(Exception, Game, None, None)
+
 	#
 	# Test Type: Incremental Test
 	# What it is testing: Successfully plays a game
@@ -18,16 +47,6 @@ class TestGame(unittest.TestCase):
 			game.play_game(update_after_game = True)
 		except Exception:
 			self.fail("Playing a game causes an exception")
-
-	#
-	# Test Type: Incremental Test
-	# What it is testing: Game play with no environment provided
-	# Expected output: Game must not be able to proceed
-	# 
-	def test_play_game_without_environment(self):
-		# set up the big agent and environment
-		# ensure that if the environment is not provided, there is an exception
-		self.assertRaises(Exception, AgentX86, None, 1)
 
 
 	#

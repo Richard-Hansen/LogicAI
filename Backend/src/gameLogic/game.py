@@ -2,6 +2,9 @@ from callDatabases import put_values
 
 class Game:
 	def __init__(self, p1, p2):
+
+		if p1 == None or p2 == None:
+			raise Exception("Invalid players passed, 1 or more are none")
 		self.p1 = p1 # AgentX86/human object
 		self.p2 = p2 # AgentX86/human object
 		self.current_player = p2 # initialize current player to p2, so the first loop of play_game() sets p1 to the current player
