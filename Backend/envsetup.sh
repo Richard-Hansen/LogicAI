@@ -44,17 +44,29 @@ else
     echo -e "${RED}FAILURE, could not pull most recent code${NC}"
 fi
 
-
+# Run all the tests
+if mocha Fractal-AI-Game/game/test/gameScreen.test.js && mocha Fractal-AI-Game/game/test/startScreen.test.js; then
+  echo -e "${GREEN}Frontend Test Success\n${NC}"
+else
+  echo -e "${RED}FAILURE, frontend tests failed\n${NC}"
+fi
 
 
 echo -e "${BLUE}Running Tests${NC}"
 # Run all the tests
-if go test ./... -bench=...; then
+if go test ./...; then
+  echo -e "${GREEN}Success\n${NC}"
+else
+  echo -e "${RED}FAILURE, tests did not pass\n${NC}"
+fi
+cd src/gameLogic
+if python agents_test.py && python callDatabases_test.py && python environment_test.py && python game_test.py; then
   echo -e "${GREEN}Success\n${NC}"
 else
   echo -e "${RED}FAILURE, tests did not pass\n${NC}"
 fi
 
+cd ../..
 
 
 # Running go fmt on all files
