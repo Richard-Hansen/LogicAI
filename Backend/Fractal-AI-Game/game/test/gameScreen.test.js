@@ -261,7 +261,7 @@ describe('GameScreen tests', function () {
        /**
         * 41 - Have the Player take a square, check area increase of player
         */
-       it('Have the AI take a square, check area increased', function (done) {
+       it('Have the Player take a square, check area increase of player', function (done) {
            expect(gameScreen.scorePlayer).to.not.equal(0)
            done();
        })
@@ -270,9 +270,9 @@ describe('GameScreen tests', function () {
         * 42 - Have the player take 2 squares and AI take 3
         * The AI already has 3 squares, and the Players already has 2.
         */
-        it('Have the AI take a square, check area increased', function (done) {
-            expect(gameScreen.scoreAI).to.equal(11)
-            expect(gameScreen.scorePlayer).to.equal(23)
+        it('Have the player take 2 squares and AI take 3', function (done) {
+            expect(gameScreen.scoreAI).to.equal(11.875)
+            expect(gameScreen.scorePlayer).to.equal(23.7813)
             done();
         })
 
@@ -280,7 +280,6 @@ describe('GameScreen tests', function () {
          * 42 - On the game screen, perform a move that will result in the AI making a move that will capture a shape
          */
          it('On the game screen, perform a move that will result in the AI making a move that will capture a shape', function (done) {
-             
              done();
          })
 })
