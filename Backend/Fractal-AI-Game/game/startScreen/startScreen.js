@@ -79,14 +79,17 @@ class StartScreen {
   playGame(that, test = false) {
     return function () {
       if (!that.nameInput.elt.value) {
-        alert("Please enter a username")
+        alert("Please enter a username!")
         return 'NOUSERNAME'
       } else if (that.nameInput.elt.value.length > 30) {
-        alert("Please enter a username less than 30 characters")
+        alert("Please enter a username less than 30 characters!")
         return 'LONGUSERNAME'
+      } else if (!/^[a-zA-Z\d]*$/.test(that.nameInput.elt.value)) {
+        alert("Only use alphabetical characters or digits!")
+        return 'BADCHARS'
       } else {
         if (that.callAuthRoute()) {
-          window.localStorage.setItem("userName", that.nameInput.elt.value)          
+          window.localStorage.setItem("userName", that.nameInput.elt.value)
           that.switchState(test)
         }
         else return 'NOTOK'
@@ -148,9 +151,12 @@ class StartScreen {
     this.drawTitle(this.titleX, this.titleY, this.titleSize);
     /* Make the title move */
     this.animateTitle();
+
     /* Checking what startscreen state we are in */
     if (this.startScreenState == 1) {
       // this.animateBoxes();
+      var pos = this.bs.getBoardPos()
+      image(activeImage, pos.x + (boardOne.width / 3.3) / 3, pos.y + 125, boardOne.width / 3.3, boardOne.height / 3.3)
     }
   }
 
