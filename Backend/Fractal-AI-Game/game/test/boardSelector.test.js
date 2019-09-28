@@ -60,7 +60,54 @@ describe('BoardSelector tests', function () {
         done();
     })
 
+    it('should cycle through maps forward', function (done) {
+        board = 1
+        boardSelector.incrBoard({ that: boardSelector.changeBoard })()
+        expect(board).to.equal(2);
+        done();
+    })
+
+    it('should cycle through maps backward', function (done) {
+        board = 1
+        boardSelector.decrBoard({ that: boardSelector.changeBoard })()
+        expect(board).to.equal(0);
+        done();
+    })
+    
+    it('should cycle through maps backwards 9 times correctly', function (done) {
+        board = 1
+        for (var i=0; i<9; i++)
+            boardSelector.decrBoard({ that: boardSelector.changeBoard })()
+        expect(board).to.equal(1);
+        done();
+    })
+
+    it('should cycle through maps forward 9 times correctly', function (done) {
+        board = 1
+        for (var i=0; i<9; i++)
+            boardSelector.incrBoard({ that: boardSelector.changeBoard })()
+        expect(board).to.equal(1);
+        done();
+    })
+
+    it('should cycle through maps backwards entirely correctly', function (done) {
+        board = 1
+        for (var i=0; i<3; i++)
+            boardSelector.decrBoard({ that: boardSelector.changeBoard })()
+        expect(board).to.equal(1);
+        done();
+    })
+
+    it('should cycle through maps forward entirely correctly', function (done) {
+        board = 1
+        for (var i=0; i<3; i++)
+            boardSelector.incrBoard({ that: boardSelector.changeBoard })()
+        expect(board).to.equal(1);
+        done();
+    })
+
     it('should save the board', function (done) {
+        window.localStorage.setItem("board", 1)
         let oldBoard = window.localStorage.getItem("board")
         boardSelector.changeBoard(2)()
         let newBoard = window.localStorage.getItem("board")
