@@ -2,7 +2,6 @@ class BoardSelector {
     constructor() {
         // Retrieve board from local storage
         board = window.localStorage.getItem("board") || 0
-        // Calling curried functions requires calling the second function hence ()()
         this.buttons = []
     }
 
@@ -13,25 +12,25 @@ class BoardSelector {
         this.boardContainer.style('height', '360px')
         this.boardContainer.style('border', '4px solid black')
         this.boardContainer.style('display', 'flex')
-        this.boardContainer.style('flex-direction', 'column')
+        this.boardContainer.style('flex-direction', 'row')
         this.boardContainer.style('justify-content', 'space-between')
         // only need this if you have more than 10 boards
         // this.boardContainer.style('overflow', 'scroll')
         this.boardContainer.style('top', '30%')
         this.boardContainer.style('left', '65%')
         this.boardContainer.style('margin-left', -1 * 400 / 2 + 'px')
+        this.boardText = createDiv()
+        this.boardText.parent(this.boardContainer)
         var that = this
-        for (var i = 0; i < 3; i += 1) {
-            var c = createButton((i + 1).toString())
-            c.parent(that.boardContainer)
-            c.style('width', '100%')
-            c.style('height', '40px')
-            c.style('background-color', 'rgba(255,0,0,0.1)')
-            c.attribute('name', i)
-            c.mousePressed(that.changeBoard(i))
-            that.buttons.push(c)
-
-        }
+        var prev = createButton("<")
+        prev.parent(that.boardContainer)
+        prev.style('width', '50%')
+        prev.mousePressed(that.decrBoard(that))
+        var next = createButton(">")
+        next.parent(that.boardContainer)
+        next.style('width', '50%')
+        next.mousePressed(that.incrBoard(that))
+        // call this to load cached board
         this.changeBoard(board)()
     }
 
@@ -58,16 +57,36 @@ class BoardSelector {
                     activeImage = boardThree
                     break
                 default:
-                    console.log("error")
+                    console.log("error board val", e)
                     break
             }
-            window.localStorage.setItem("board", e)
             try {
-                that.buttons.forEach(element => {
-                    element.style('background-color', 'rgba(255,0,0,0.1)')
-                });
-                that.buttons[e].style('background-color', 'rgba(255,0,0,0.6)')
-            } catch (err) { console.log(err) }
+                var newstr = "Selected Board: " + board.toString()
+                that.boardText.html(newstr)
+            } catch (err) { /* testing */ }
+            window.localStorage.setItem("board", e)
+        }
+    }
+
+    decrBoard() {
+        var that = this
+        return function () {
+            var newval = parseInt(board) - 1
+            if (newval < 0)
+                newval = 2
+            that.changeBoard(newval)()
+            return newval
+        }
+    }
+
+    incrBoard() {
+        var that = this
+        return function () {
+            var newval = parseInt(board) + 1
+            if (newval > 2)
+                newval = 0
+            that.changeBoard(newval)()
+            return newval
         }
     }
 

@@ -15,6 +15,10 @@ var boardThree;
 
 function preload() {
   boardOne = loadImage('assets/board1.png')
+
+  /* temp while we dont have more boards */
+  boardTwo = boardOne
+  boardThree = boardOne
   activeImage = boardOne
 }
 
