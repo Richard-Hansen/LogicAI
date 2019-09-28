@@ -22,7 +22,7 @@ import (
  * If you define a variable with a lowercase first letter, the variable is private.
  * If you define a variable with a uppercase first letter, the varaible is global.
  */
-var port int = 8080
+var port int = 8088
 
 const (
 	RED   = "\033[0;31m"
