@@ -10,7 +10,6 @@
  * 18.
  */
 
-
 class StartScreen {
   constructor() {
     /* This is the state of the start screen we are in */
@@ -88,9 +87,13 @@ class StartScreen {
         alert("Only use alphabetical characters or digits!")
         return 'BADCHARS'
       } else {
-        if (that.callAuthRoute()) {
+        var isokay = that.callAuthRoute()
+		
+	if (isokay && test) {
+	  console.log("why am i here")
           window.localStorage.setItem("userName", that.nameInput.elt.value)
           that.switchState(test)
+	  return 'OK'
         }
         else return 'NOTOK'
         return 'OK'
@@ -113,18 +116,16 @@ class StartScreen {
   /*
   * callAuthRoute - Sets username
   */
-  callAuthRoute() {
+  async callAuthRoute() {
     var that = this
-    var isokay = true
-    httpPost("http://198.199.121.101:8088/auth", { user: userID, username: that.nameInput.elt.value }, function (res) {
-      console.log("RES:", res)
+    await httpPost("http://198.199.121.101:8088/auth", { user: userID, username: that.nameInput.elt.value }, function (res) {
+	console.log("RES:", res)
+	window.localStorage.setItem("userName", that.nameInput.elt.value)
+	that.switchState(false)
     }, function (err) {
       // deal with this better in the future
       alert("Username taken")
-      isokay = false
-      return isokay
     })
-    return isokay
   }
 
   /*
@@ -136,9 +137,15 @@ class StartScreen {
     })
   }
 
-  checkKeyPress(keyCode) {
+  async checkKeyPress(keyCode) {
     if (keyCode === 13 && this.nameInput.elt === document.activeElement) {
-      this.playGame()
+     var res = await this.playGame()()
+     console.log("reesult",res);
+     if (res === 'OK') {
+	console.log("asdf")
+	window.localStorage.setItem("userName", that.nameInput.elt.value)
+        that.switchState(test)	
+	}
     }
   }
 

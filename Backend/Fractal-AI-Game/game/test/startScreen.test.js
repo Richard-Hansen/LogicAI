@@ -15,6 +15,7 @@ describe('StartScreen tests', function () {
         global.alert = function (val) { }
         global.gameState = 0
         global.this = {}
+	global.isokay = true
         startScreen = new StartScreen();
     })
 
@@ -25,7 +26,7 @@ describe('StartScreen tests', function () {
 
     it('should require a username', function (done) {
         let trash = { nameInput: { elt: { value: '' } } }
-        expect(startScreen.playGame(trash)()).to.equal('NOUSERNAME')
+        expect(startScreen.playGame(trash, true)()).to.equal('NOUSERNAME')
         done()
     })
 
@@ -38,7 +39,7 @@ describe('StartScreen tests', function () {
     it('should cache correct usernames', function (done) {
         window.localStorage.setItem("userName", "notbillbert")
         let trash = { nameInput: { elt: { value: 'billbert' } }, callAuthRoute: function () { return true }, switchState: function () { } }
-        startScreen.playGame(trash)()
+        startScreen.playGame(trash, true)()
         let username = window.localStorage.getItem("userName")
         expect(username).to.equal('billbert')
         done()
@@ -54,26 +55,26 @@ describe('StartScreen tests', function () {
         window.localStorage.setItem("userName", "billbert")
         let trash = { nameInput: { elt: { value: 'verylongusernamethatisverylongandstuffyeah' } }, callAuthRoute: function () { return true }, switchState: function () { } }
         let username = window.localStorage.getItem("userName")
-        startScreen.playGame(trash)()
+        startScreen.playGame(trash, true)()
         expect(username).to.not.equal('verylongusernamethatisverylongandstuffyeah')
         done()
     })
 
     it('should allow numbered usernames', function (done) {
         let trash = { nameInput: { elt: { value: '123' } }, callAuthRoute: function () { return true }, switchState: function () { } }
-        expect(startScreen.playGame(trash)()).to.equal('OK')
+        expect(startScreen.playGame(trash, true)()).to.equal('OK')
         done()
     })
 
     it('should accept valid usernames', function (done) {
         let trash = { nameInput: { elt: { value: 'timmytwoboots' } }, callAuthRoute: function () { return true }, switchState: function () { } }
-        expect(startScreen.playGame(trash)()).to.equal('OK')
+        expect(startScreen.playGame(trash, true)()).to.equal('OK')
         done()
     })
 
     it('should accept 30 character usernames', function (done) {
         let trash = { nameInput: { elt: { value: 'abcdefghijklmnopqrstuvwxyz1234' } }, callAuthRoute: function () { return true }, switchState: function () { } }
-        expect(startScreen.playGame(trash)()).to.equal('OK')
+        expect(startScreen.playGame(trash, true)()).to.equal('OK')
         done()
     })
 
