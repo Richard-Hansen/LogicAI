@@ -41,7 +41,7 @@ class GameLogic {
     /* Who took the square */
     this.whoTookQuad = [];
     /* Sending HTTP request to the squareData route. Need to populate the squares/squaresArea array */
-    httpPost("http://198.199.121.101:8088/squareData", { Mapname: "Map2" }, this.httpPostSquareData)
+    httpPost("http://localhost:8088/squareData", { Mapname: "Map2" }, this.httpPostSquareData)
   }
 
   httpPostSquareData(res) {
@@ -138,7 +138,7 @@ class gameScreen {
     // this.mgameLogic = new GameLogic()
     mgameLogic = new GameLogic();
     this.mmgameLogic = mgameLogic;
-    httpPost("http://198.199.121.101:8088/map", { map: "Map1" }, this.callMapRoute)
+    httpPost("http://localhost:8088/map", { map: "Map1" }, this.callMapRoute)
     /* Set player move */
     WHoTheFuckMoves = 1;
     this.scoreAI = 0;
@@ -545,7 +545,7 @@ function mouseClicked() {
       case "hard": difficultyInt = 2; break;
       case "impossible": difficultyInt = 3; break;
     }
-    httpPost("http://198.199.121.101:8088/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare, "difficulty": difficultyInt }, function(res) {
+    httpPost("http://localhost:8088/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare, "difficulty": difficultyInt }, function(res) {
       mgameScreen.checkAIMove(res, mgameScreen);
     })
   }

@@ -14,6 +14,8 @@ class StartScreen {
   constructor() {
     /* This is the state of the start screen we are in */
     this.startScreenState = 0;
+    /* background object */
+    this.gamebackground = new gamebackground();
   }
 
   start() {
@@ -88,7 +90,7 @@ class StartScreen {
         return 'BADCHARS'
       } else {
         var isokay = that.callAuthRoute()
-		
+
 	if (isokay && test) {
 	  console.log("why am i here")
           window.localStorage.setItem("userName", that.nameInput.elt.value)
@@ -118,7 +120,7 @@ class StartScreen {
   */
   async callAuthRoute() {
     var that = this
-    await httpPost("http://198.199.121.101:8088/auth", { user: userID, username: that.nameInput.elt.value }, function (res) {
+    await httpPost("http://localhost:8088/auth", { user: userID, username: that.nameInput.elt.value }, function (res) {
 	console.log("RES:", res)
 	window.localStorage.setItem("userName", that.nameInput.elt.value)
 	that.switchState(false)
@@ -132,7 +134,7 @@ class StartScreen {
   * callScoresRoute - Gets high scores
   */
   callScoresRoute() {
-    httpPost("http://198.199.121.101:8088/hiscores", function (res) {
+    httpPost("http://localhost:8088/hiscores", function (res) {
       console.log(res)
     })
   }
@@ -144,7 +146,7 @@ class StartScreen {
      if (res === 'OK') {
 	console.log("asdf")
 	window.localStorage.setItem("userName", that.nameInput.elt.value)
-        that.switchState(test)	
+        that.switchState(test)
 	}
     }
   }
@@ -163,8 +165,10 @@ class StartScreen {
     /* Checking what startscreen state we are in */
     if (this.startScreenState == 1) {
       // this.animateBoxes();
-      var pos = this.bs.getBoardPos()
-      image(activeImage, pos.x + (boardOne.width / 3.3) / 3, pos.y + 125, boardOne.width / 3.3, boardOne.height / 3.3)
+      // var pos = this.bs.getBoardPos()
+      // image(activeImage, pos.x + (boardOne.width / 3.3) / 3, pos.y + 125, boardOne.width / 3.3, boardOne.height / 3.3)
+      /* Drawing my background */
+      this.gamebackground.draw();
     }
   }
 
@@ -198,10 +202,6 @@ class StartScreen {
     if (this.titleY < windowHeight / 7) {
       /* Set the new startscreen state */
       this.startScreenState = 1;
-      this.nameInput.show()
-      this.button.show()
-      this.bs.show()
-      this.ds.show()
     } else {
       /* This will start bring the title up */
       this.titleY -= windowHeight / 150;
@@ -214,6 +214,7 @@ class StartScreen {
    * drawTitle - This function display the LogicAI logo at the top of the screen
    */
   drawTitle(x, y, size) {
+    // console.log(x + ":" + y);
     /* push all my settings */
     push();
     /* Setting the fontSize */
