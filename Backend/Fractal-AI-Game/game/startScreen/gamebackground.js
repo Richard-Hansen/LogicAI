@@ -52,9 +52,9 @@ class gamebackground {
     this.scoreAI = 0;
     this.scorePlayer = 0;
 
-    // httpPost("http://localhost:8088/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare, "difficulty": 0 }, function(res) {
-    //   mgameScreen.checkAIMove(res, mgameScreen);
-    // })
+    httpPost("http://localhost:8088/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare, "difficulty": 0 }, function(res) {
+      Gamebackground.checkAIMove(res, Gamebackground);
+    })
   }
 
   /* draw function that will be called at 60fps once gameState has been moved to 1. */
@@ -65,12 +65,6 @@ class gamebackground {
     this.mmgameLogic.draw();
     /* Draws the vertices onto the screen */
     this.drawVertices();
-
-    if(frameCount % 50 == 0 && takenSquare.length != 16){
-      httpPost("http://localhost:8088/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare, "difficulty": 0 }, function(res) {
-        mgameScreen.checkAIMove(res, mgameScreen);
-      })
-    }
   }
 
   drawBackbutton() {
@@ -158,10 +152,10 @@ class gamebackground {
       this.drawClickedLines(vertices[i]);
       /* Set my screenX and screenY for each vertice. Note: This prob does not need
          to be recalculated everytime... could be moved to callMapRoute or in the ctor  */
-      vertices[i].screenX = (vertices[i].x * 2) * windowWidth / 20 - 4 * windowWidth / 20;
-      vertices[i].screenY = (vertices[i].y * 2) * windowWidth / 20 - 3.5 * windowWidth / 20;
+      vertices[i].screenX = (vertices[i].x * .75) * windowWidth / 20 - 1.5 * windowWidth / 20;
+      vertices[i].screenY = (vertices[i].y * .75) * windowWidth / 20 - 3.5 * windowWidth / 20 + windowWidth/4.8;
       /* Draw my circle!!!! */
-      circle(vertices[i].screenX, vertices[i].screenY, windowWidth / 80);
+      circle(vertices[i].screenX, vertices[i].screenY, windowWidth / 150);
     }
     /* popping all my settings so other functions dont have to deal with them */
     pop();
@@ -280,11 +274,12 @@ class gamebackground {
         } while(addAndMore[0] != undefined)
         /* Change player turn */
         if (WHoTheFuckMoves == 1) { WHoTheFuckMoves = 2 } else { WHoTheFuckMoves = 1 }
-        console.log("GOT HERE");
+        httpPost("http://localhost:8088/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare, "difficulty": 3 }, function(res) {
+          Gamebackground.checkAIMove(res, Gamebackground);
+        })
         return true;
       }
     }
-    console.log("GOT HERE2");
     return false;
   }
 }
