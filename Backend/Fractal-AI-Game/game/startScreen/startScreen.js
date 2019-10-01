@@ -24,26 +24,26 @@ class StartScreen {
     buttonsOnStartScreen.push(
       {
         "x": (-windowWidth/10),
-        "y": (-windowHeight / 11 + windowHeight/27)
+        "y": (windowHeight / 3.6)
       }
     )
 
     buttonsOnStartScreen.push(
       {
         "x": (windowWidth/10),
-        "y": (-windowHeight / 11 + windowHeight/27)
+        "y": (windowHeight / 3.6)
       }
     )
     buttonsOnStartScreen.push(
       {
         "x": (-windowWidth/9),
-        "y": (windowHeight / 4.5)
+        "y": (windowHeight / 10)
       }
     )
     buttonsOnStartScreen.push(
       {
         "x": (windowWidth/9),
-        "y": (windowHeight / 4.5)
+        "y": (windowHeight / 10)
       }
     )
   }
@@ -247,11 +247,11 @@ class StartScreen {
     /* Setting style to Georgia because it looks good */
     textFont('Georgia');
     /* Write the back onto the box */
-    text("Map Selection", 0, windowHeight / 22);
+    text("Map Selection", 0, -windowHeight / 10);
     // fill(0,0,0,this.boxAlpha)
     // text(difficulty, 0, -windowHeight / 15 + windowHeight/20);
-    this.drawArrows(-windowWidth/9,windowHeight / 4.5, "right");
-    this.drawArrows(windowWidth/9,windowHeight / 4.5,"left");
+    this.drawArrows(-windowWidth/9,windowHeight / 10, "right");
+    this.drawArrows(windowWidth/9,windowHeight / 10,"left");
     /* popping all my settings so other functions dont have to deal with them */
     pop();
   }
@@ -267,7 +267,6 @@ class StartScreen {
     /* Setting style to Georgia because it looks good */
     textFont('Georgia');
     /* Write the back onto the box */
-    text("Difficulty", 0, -windowHeight / 11);
     fill(255,0,0,this.boxAlpha)
     switch(this.difficultyIntForm) {
       case 0: difficulty = "easy"; break;
@@ -275,9 +274,9 @@ class StartScreen {
       case 2: difficulty = "hard"; break;
       case 3: difficulty = "impossible"; break;
     }
-    text(difficulty, 0, -windowHeight / 11 + windowHeight/20);
-    this.drawArrows(-windowWidth/10,-windowHeight / 11 + windowHeight/27,"right");
-    this.drawArrows(windowWidth/10,-windowHeight / 11 + windowHeight/27,"left");
+    text(difficulty, 0, windowHeight / 3.2);
+    this.drawArrows(-windowWidth/10,windowHeight / 3.3,"right");
+    this.drawArrows(windowWidth/10,windowHeight / 3.3,"left");
     /* popping all my settings so other functions dont have to deal with them */
     pop();
   }
@@ -372,7 +371,7 @@ function mouseClicked() {
   push();
   translate(windowWidth/2, windowHeight/2)
   for (var i = 0; i < buttonsOnStartScreen.length; i++) {
-    if(dist(buttonsOnStartScreen[i].x, buttonsOnStartScreen[i].y, mouseX-windowWidth/2, mouseY-windowHeight/2) < 20){
+    if(dist(buttonsOnStartScreen[i].x, buttonsOnStartScreen[i].y, mouseX-windowWidth/2, mouseY-windowHeight/2) < 30){
       if(i == 0 && mstartScreen.difficultyIntForm > 0){
         mstartScreen.difficultyIntForm--;
       }else if(i == 1 && mstartScreen.difficultyIntForm < 4){
@@ -381,9 +380,9 @@ function mouseClicked() {
     }
   }
   if(mstartScreen.checkPlayButton() == 30){
-    gameState = 1;
+    // gameState = 1;
   }
-  gameState = 1;
+  // gameState = 1;
   pop();
 }
 

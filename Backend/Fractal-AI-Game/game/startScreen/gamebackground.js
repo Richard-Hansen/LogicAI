@@ -153,7 +153,7 @@ class gamebackground {
       /* Set my screenX and screenY for each vertice. Note: This prob does not need
          to be recalculated everytime... could be moved to callMapRoute or in the ctor  */
       vertices[i].screenX = (vertices[i].x * .75) * windowWidth / 20 - 1.5 * windowWidth / 20;
-      vertices[i].screenY = (vertices[i].y * .75) * windowWidth / 20 - 3.5 * windowWidth / 20 + windowWidth/4.8;
+      vertices[i].screenY = (vertices[i].y * .75) * windowWidth / 20 - 3.5 * windowWidth / 20 + windowWidth/7;
       /* Draw my circle!!!! */
       circle(vertices[i].screenX, vertices[i].screenY, windowWidth / 150);
     }
