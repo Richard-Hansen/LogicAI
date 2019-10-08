@@ -487,7 +487,7 @@ class gameScreen {
       if (vertices[vertexWithConnection].connections[i] == vertexWithoutConnection) {
         vertices[vertexWithConnection].clickedConnections.push((vertexWithoutConnection));
         vertices[vertexWithConnection].connections.splice(i, 1);
-        takenEdges.push([(move[0]), (move[1]), WHoTheFuckMoves])
+        takenEdges.push([parseInt(move[0]), parseInt(move[1]), WHoTheFuckMoves])
         do {
           var addAndMore = fgameScreen.mmgameLogic.checkSquareTaken(vertices, squares)
           console.log(addAndMore);
