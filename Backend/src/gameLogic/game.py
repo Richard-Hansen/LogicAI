@@ -12,9 +12,9 @@ class Game:
 
 	def play_game(self, update_after_game=False, get_state_histories_for_p1=False):
 		#while game is not over
-		print("Play game")
+		print("Playing game")
 		while not self.game_ended():
-			print("New turn")
+			self.print_board(self.current_player.X_env.big_board)
 			# set current player
 			if self.current_player is self.p1:
 				self.current_player = self.p2
@@ -39,12 +39,14 @@ class Game:
 		return 0 not in self.game_board
 
 	def print_board(self, big_env):
+		print("-----------------------")
 		for i in range(4):
 			c = i+4*i
 			v = 5*i
 			print("  %d  %d  %d  %d  " % (big_env[c],big_env[c+1],big_env[c+2],big_env[c+3]))
 			print("%d  %d  %d  %d  %d" % (big_env[v+20],big_env[v+21],big_env[v+22],big_env[v+23],big_env[v+24]))
 		print("  %d  %d  %d  %d  " % (big_env[16],big_env[17],big_env[18],big_env[19]))
+		print("-----------------------")
 			
 
 

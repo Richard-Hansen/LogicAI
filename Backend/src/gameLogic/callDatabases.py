@@ -181,6 +181,8 @@ def put_values(values_to_update_by_hash):
             # execute the select statement
             cursor.execute(update_statement_for_hash_and_value)
             connection.commit()
+            print("Completed database update")
+
     except Exception as e:
         print("EXCEPTION", e)
     finally:
