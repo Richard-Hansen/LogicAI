@@ -250,7 +250,7 @@ class gamebackground {
   }
 
   checkAIMove(res, fgameScreen) {
-    console.log("RES AI: " + res);
+    // console.log("RES AI: " + res);
     var move = res.split(" ");
     var vertexWithConnection = Math.min(move[0], move[1]);
     var vertexWithoutConnection = Math.max(move[0], move[1]);
@@ -261,7 +261,7 @@ class gamebackground {
         takenEdges.push([parseInt(move[0]), parseInt(move[1]), WHoTheFuckMoves])
         do {
           var addAndMore = this.mmgameLogic.checkSquareTaken(vertices, squares)
-          console.log(addAndMore);
+          // console.log(addAndMore);
           if (addAndMore[0] != undefined) {
             takenSquare.push([addAndMore[1], WHoTheFuckMoves])
             if(takenSquare.length == 16){

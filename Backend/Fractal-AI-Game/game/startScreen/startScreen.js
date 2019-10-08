@@ -19,6 +19,8 @@ class StartScreen {
     /* background object */
     Gamebackground = new gamebackground();
 
+    this.boxAlpha = 0;
+
     this.difficultyIntForm = 0;
 
     buttonsOnStartScreen.push(
@@ -201,16 +203,30 @@ class StartScreen {
       this.animatePlayButton();
     }
     this.drawTitle(this.titleX, this.titleY, this.titleSize);
+    mstartScreen.checkPlayButton()
   }
 
   checkPlayButton() {
-    let x1 = windowHeight / 2.3;
-    let y1 = windowWidth / 16;
-    let x2 = windowHeight / 15;
-    let y2 = windowHeight/1.1 + windowHeight/30;
+    /* push all my settings */
+    push();
+    /* translate my postion to the center of the screen */
+    translate(0,0);
+    let x1 = windowWidth / 2;
+    let y1 = windowHeight / 1.07;
+    let x2 = windowHeight / 8;
+    let y2 = windowHeight / 15;
+
+    // fill(255,0,0,100);
+    // rect(x1,y1,x2,y2)
+    if((mouseX > x1) && (mouseX < x2)){
+      console.log("YES");
+    }
+    pop();
     if (((mouseX > x1) && (mouseX < x2)) && ((mouseY > y1) && (mouseY < y2))) {
+      console.log("YEP");
       return 30;
     }
+    console.log("NOPE");
     return 255;
   }
 
@@ -222,16 +238,16 @@ class StartScreen {
     /* Setting my strokeweight */
     strokeWeight(4);
     /* Setting my stroke color */
-    stroke(0, 0, 0, this.boxAlpha);
+    stroke(0, 0, 0, mstartScreen.checkPlayButton());
     /* Drawing my rectangle */
     rect(0, windowHeight / 2.3, windowWidth / 16, windowHeight / 15, 20);
-    fill(0,0,0,this.boxAlpha)
+    fill(0,0,0,mstartScreen.checkPlayButton())
     strokeWeight(0);
     textSize(windowHeight/30);
     /* Setting style to Georgia because it looks good */
     textFont('Georgia');
     /* Write the back onto the box */
-    text("Play", 0, windowWidth / 4.58);
+    text("Play", 0, windowHeight / 2.25);
     /* popping all my settings so other functions dont have to deal with them */
     pop();
   }
@@ -380,7 +396,7 @@ function mouseClicked() {
     }
   }
   if(mstartScreen.checkPlayButton() == 30){
-    // gameState = 1;
+    gameState = 1;
   }
   // gameState = 1;
   pop();
