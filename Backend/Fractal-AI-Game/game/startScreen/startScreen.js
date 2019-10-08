@@ -9,11 +9,45 @@
  * 16.
  * 18.
  */
-
+var Gamebackground;
+var buttonsOnStartScreen = [];
+// var difficultyIntForm;
 class StartScreen {
   constructor() {
     /* This is the state of the start screen we are in */
     this.startScreenState = 0;
+    /* background object */
+    Gamebackground = new gamebackground();
+
+    this.boxAlpha = 0;
+
+    this.difficultyIntForm = 0;
+
+    buttonsOnStartScreen.push(
+      {
+        "x": (-windowWidth/10),
+        "y": (windowHeight / 3.6)
+      }
+    )
+
+    buttonsOnStartScreen.push(
+      {
+        "x": (windowWidth/10),
+        "y": (windowHeight / 3.6)
+      }
+    )
+    buttonsOnStartScreen.push(
+      {
+        "x": (-windowWidth/9),
+        "y": (windowHeight / 10)
+      }
+    )
+    buttonsOnStartScreen.push(
+      {
+        "x": (windowWidth/9),
+        "y": (windowHeight / 10)
+      }
+    )
   }
 
   start() {
@@ -88,7 +122,7 @@ class StartScreen {
         return 'BADCHARS'
       } else {
         var isokay = that.callAuthRoute()
-		
+
 	if (isokay && test) {
 	  console.log("why am i here")
           window.localStorage.setItem("userName", that.nameInput.elt.value)
@@ -118,7 +152,7 @@ class StartScreen {
   */
   async callAuthRoute() {
     var that = this
-    await httpPost("http://198.199.121.101:8088/auth", { user: userID, username: that.nameInput.elt.value }, function (res) {
+    await httpPost("http://localhost:8088/auth", { user: userID, username: that.nameInput.elt.value }, function (res) {
 	console.log("RES:", res)
 	window.localStorage.setItem("userName", that.nameInput.elt.value)
 	that.switchState(false)
@@ -132,7 +166,7 @@ class StartScreen {
   * callScoresRoute - Gets high scores
   */
   callScoresRoute() {
-    httpPost("http://198.199.121.101:8088/hiscores", function (res) {
+    httpPost("http://localhost:8088/hiscores", function (res) {
       console.log(res)
     })
   }
@@ -144,7 +178,7 @@ class StartScreen {
      if (res === 'OK') {
 	console.log("asdf")
 	window.localStorage.setItem("userName", that.nameInput.elt.value)
-        that.switchState(test)	
+        that.switchState(test)
 	}
     }
   }
@@ -155,17 +189,122 @@ class StartScreen {
   draw() {
     /* Setting background to white */
     background(255);
-    /* Draw the LogicAI title */
-    this.drawTitle(this.titleX, this.titleY, this.titleSize);
     /* Make the title move */
     this.animateTitle();
-
     /* Checking what startscreen state we are in */
     if (this.startScreenState == 1) {
-      // this.animateBoxes();
-      var pos = this.bs.getBoardPos()
-      image(activeImage, pos.x + (boardOne.width / 3.3) / 3, pos.y + 125, boardOne.width / 3.3, boardOne.height / 3.3)
+      push();
+      /* Drawing my background */
+      pop();
+      Gamebackground.draw();
+      this.animateBoxes();
+      this.animateMapSelection();
+      this.animateDiffculity();
+      this.animatePlayButton();
     }
+    this.drawTitle(this.titleX, this.titleY, this.titleSize);
+    mstartScreen.checkPlayButton()
+  }
+
+  checkPlayButton() {
+    /* push all my settings */
+    push();
+    /* translate my postion to the center of the screen */
+    translate(0,0);
+    let x1 = windowWidth / 2 - (windowHeight / 8 / 3);
+    let y1 = windowHeight / 1.07 - windowHeight / 15 / 2;
+    let x2 = x1 + (windowHeight / 8)/1.4;
+    let y2 = y1 + windowHeight / 15;
+    if (((mouseX > x1) && (mouseX < x2)) && ((mouseY > y1) && (mouseY < y2))) {
+      pop();
+      return 30;
+    }
+    pop();
+    return 255;
+
+  }
+
+  animatePlayButton() {
+    /* push all my settings */
+    push();
+    /* translate my postion to the center of the screen */
+    translate(windowWidth / 2, windowHeight / 2);
+    /* Setting my strokeweight */
+    strokeWeight(4);
+    /* Setting my stroke color */
+    stroke(0, 0, 0, mstartScreen.checkPlayButton());
+    /* Drawing my rectangle */
+    rect(0, windowHeight / 2.3, windowWidth / 16, windowHeight / 15, 20);
+    fill(0,0,0,mstartScreen.checkPlayButton())
+    strokeWeight(0);
+    textSize(windowHeight/30);
+    /* Setting style to Georgia because it looks good */
+    textFont('Georgia');
+    /* Write the back onto the box */
+    text("Play", 0, windowHeight / 2.25);
+    /* popping all my settings so other functions dont have to deal with them */
+    pop();
+  }
+
+  animateMapSelection() {
+    /* push all my settings */
+    push();
+    /* translate my postion to the center of the screen */
+    translate(windowWidth / 2, windowHeight / 2);
+    fill(0,0,0,this.boxAlpha)
+    strokeWeight(0);
+    textSize(windowHeight/20);
+    /* Setting style to Georgia because it looks good */
+    textFont('Georgia');
+    /* Write the back onto the box */
+    text("Map Selection", 0, -windowHeight / 10);
+    // fill(0,0,0,this.boxAlpha)
+    // text(difficulty, 0, -windowHeight / 15 + windowHeight/20);
+    this.drawArrows(-windowWidth/9,windowHeight / 10, "right");
+    this.drawArrows(windowWidth/9,windowHeight / 10,"left");
+    /* popping all my settings so other functions dont have to deal with them */
+    pop();
+  }
+
+  animateDiffculity() {
+    /* push all my settings */
+    push();
+    /* translate my postion to the center of the screen */
+    translate(windowWidth / 2, windowHeight / 2);
+    fill(0,0,0,this.boxAlpha)
+    strokeWeight(0);
+    textSize(windowHeight/20);
+    /* Setting style to Georgia because it looks good */
+    textFont('Georgia');
+    /* Write the back onto the box */
+    fill(255,0,0,this.boxAlpha)
+    switch(this.difficultyIntForm) {
+      case 0: difficulty = "easy"; break;
+      case 1: difficulty = "medium"; break;
+      case 2: difficulty = "hard"; break;
+      case 3: difficulty = "impossible"; break;
+    }
+    text(difficulty, 0, windowHeight / 3.2);
+    this.drawArrows(-windowWidth/10,windowHeight / 3.3,"right");
+    this.drawArrows(windowWidth/10,windowHeight / 3.3,"left");
+    /* popping all my settings so other functions dont have to deal with them */
+    pop();
+  }
+
+  drawArrows(x, y, pointing){
+    push();
+    if(pointing == "right") {
+      stroke(0, 0, 0, this.boxAlpha);
+      strokeWeight(3);
+      line(x, y, x+windowHeight/70, y+windowHeight/70);
+      line(x, y, x+windowHeight/70, y-windowHeight/70);
+    } else {
+      stroke(0, 0, 0, this.boxAlpha);
+      strokeWeight(3);
+      line(x, y, x-windowHeight/70, y-windowHeight/70);
+      line(x, y, x-windowHeight/70, y+windowHeight/70);
+    }
+    pop();
   }
 
   /**
@@ -184,8 +323,14 @@ class StartScreen {
     /* Setting my stroke color */
     stroke(0, 0, 0, this.boxAlpha);
     /* Drawing my rectangle */
-    rect(0, -windowHeight / 10, windowWidth / 3, windowHeight / 10, 20);
-
+    rect(0, -windowHeight / 5, windowWidth / 4, windowHeight / 15, 20);
+    fill(0,0,0,this.boxAlpha)
+    strokeWeight(0);
+    textSize(windowHeight/20);
+    /* Setting style to Georgia because it looks good */
+    textFont('Georgia');
+    /* Write the back onto the box */
+    text("Username", 0, -windowHeight / 5 - windowHeight / 16);
     /* popping all my settings so other functions dont have to deal with them */
     pop();
   }
@@ -198,15 +343,11 @@ class StartScreen {
     if (this.titleY < windowHeight / 7) {
       /* Set the new startscreen state */
       this.startScreenState = 1;
-      this.nameInput.show()
-      this.button.show()
-      this.bs.show()
-      this.ds.show()
     } else {
       /* This will start bring the title up */
       this.titleY -= windowHeight / 150;
       /* This will decrease the size of the title as it moves */
-      this.titleSize -= 1;
+      this.titleSize -= windowHeight/400;
     }
   }
 
@@ -214,6 +355,7 @@ class StartScreen {
    * drawTitle - This function display the LogicAI logo at the top of the screen
    */
   drawTitle(x, y, size) {
+    // console.log(x + ":" + y + ":" + size);
     /* push all my settings */
     push();
     /* Setting the fontSize */
@@ -233,6 +375,29 @@ class StartScreen {
 
 function keyPressed() {
   mstartScreen.checkKeyPress(keyCode);
+}
+
+function mouseClicked() {
+  if(gameState == 1){
+    mgameScreen.mouseClickedInClass();
+    return;
+  }
+  push();
+  translate(windowWidth/2, windowHeight/2)
+  for (var i = 0; i < buttonsOnStartScreen.length; i++) {
+    if(dist(buttonsOnStartScreen[i].x, buttonsOnStartScreen[i].y, mouseX-windowWidth/2, mouseY-windowHeight/2) < 30){
+      if(i == 0 && mstartScreen.difficultyIntForm > 0){
+        mstartScreen.difficultyIntForm--;
+      }else if(i == 1 && mstartScreen.difficultyIntForm < 4){
+        mstartScreen.difficultyIntForm++;
+      }
+    }
+  }
+  if(mstartScreen.checkPlayButton() == 30){
+    mgameScreen.init();
+    gameState = 1;
+  }
+  pop();
 }
 
 module.exports = StartScreen
