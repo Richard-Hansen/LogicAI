@@ -23,7 +23,7 @@ var mgameLogic;
 /* ? */
 var WHoTheFuckMoves;
 /* Player Taken edges */
-var takenEdges = []
+var takenEdges = [];
 /* Array of taken sqaures */
 var takenSquare = [];
 
@@ -41,7 +41,7 @@ class GameLogic {
     /* Who took the square */
     this.whoTookQuad = [];
     /* Sending HTTP request to the squareData route. Need to populate the squares/squaresArea array */
-    httpPost("http://198.199.121.101:8088/squareData", { Mapname: "Map2" }, this.httpPostSquareData)
+    httpPost("http://localhost:8088/squareData", { Mapname: "Map2" }, this.httpPostSquareData)
   }
 
   httpPostSquareData(res) {
@@ -69,6 +69,7 @@ class GameLogic {
      I really do not like the way this is coded and I would love to
      go back and fix this if I have time @TODO */
   checkSquareTaken(vert, msquares) {
+    console.log(msquares.length);
     for (var i = 0; i < msquares.length; i++) {
       var tempValue = 0;
       for (var j = 0; j < msquares[i].length; j++) {
@@ -136,13 +137,21 @@ class gameScreen {
   /* ctor, does not require any params. Asks the backend for all mapdata */
   constructor() {
     // this.mgameLogic = new GameLogic()
-    mgameLogic = new GameLogic();
-    this.mmgameLogic = mgameLogic;
-    httpPost("http://198.199.121.101:8088/map", { map: "Map1" }, this.callMapRoute)
+  }
+
+  init(){
     /* Set player move */
     WHoTheFuckMoves = 1;
+    squares = [];
+    squaresAreas = [];
+    takenSquare = [];
+    takenEdges = [];
+    vertices = [];
     this.scoreAI = 0;
     this.scorePlayer = 0;
+    mgameLogic = new GameLogic();
+    this.mmgameLogic = mgameLogic;
+    httpPost("http://localhost:8088/map", { map: "Map1" }, this.callMapRoute)
   }
 
   /* draw function that will be called at 60fps once gameState has been moved to 1. */
@@ -487,7 +496,7 @@ class gameScreen {
       if (vertices[vertexWithConnection].connections[i] == vertexWithoutConnection) {
         vertices[vertexWithConnection].clickedConnections.push((vertexWithoutConnection));
         vertices[vertexWithConnection].connections.splice(i, 1);
-        takenEdges.push([(move[0]), (move[1]), WHoTheFuckMoves])
+        takenEdges.push([parseInt(move[0]), parseInt(move[1]), WHoTheFuckMoves])
         do {
           var addAndMore = fgameScreen.mmgameLogic.checkSquareTaken(vertices, squares)
           console.log(addAndMore);
@@ -504,6 +513,10 @@ class gameScreen {
     }
     return false;
   }
+
+  mouseClickedInClass(){
+    mouseClickedd();
+  }
 }
 
 /**
@@ -511,7 +524,11 @@ class gameScreen {
  *                It will check where the mouse is and if it happens to be over a line
  *                it put that line into clickConnections for that vertex
  */
-function mouseClicked() {
+function mouseClickedd() {
+  if(gameState == 0){
+    return;
+  }
+
   /* Checks to see if the mouse is over a dotted line */
   var res = mgameScreen.checkMouse();
   /* If we get a -1, we know it was not over a dotted line and nothing should happen, if
@@ -545,7 +562,7 @@ function mouseClicked() {
       case "hard": difficultyInt = 2; break;
       case "impossible": difficultyInt = 3; break;
     }
-    httpPost("http://198.199.121.101:8088/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare, "difficulty": difficultyInt }, function(res) {
+    httpPost("http://localhost:8088/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare, "difficulty": difficultyInt }, function(res) {
       mgameScreen.checkAIMove(res, mgameScreen);
     })
   }
