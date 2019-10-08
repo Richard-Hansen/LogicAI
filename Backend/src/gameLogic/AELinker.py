@@ -67,24 +67,17 @@ for i in range(0,4):
 	areas.append(a[i+8])
 	areas.append(a[i+12])
 
-# Environment - creates the environment and creates all the states for the environment
-environment = Environment(areas, writeToDB=True)
-# environment.create_envy_states()
-print("Environment created")
+for i in range(100):
+	# Environment - creates the environment and creates all the states for the environment
+	environment = Environment(areas, writeToDB=False)
+	print("Environment created")
 
-# Agent X86 - creates the agent for the environment
-agentX86P1 = AgentX86(environment,1)
-agentX86P2 = AgentX86(environment,2)
+	# Agent X86 - creates the agent for the environment
+	agentX86P1 = AgentX86(environment,1)
+	agentX86P2 = AgentX86(environment,2)
 
-# environment.envys[0].envy_state = [0,0,1,0,0,0,1,1,0,0,0,0,0,0,0,0]
-# environment.envys[0].update_state(1,0)
-# print(environment.envys[0].envy_state)
-
-# print("Agents created")
-
-game = Game(agentX86P1, agentX86P2)
-
-for i in range(1):
+	game = Game(agentX86P1, agentX86P2)
+	
 	print("NEW GAME!!!", i)
 	game.play_game(update_after_game = True)
 print("TRAINED")
