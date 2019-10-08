@@ -211,23 +211,17 @@ class StartScreen {
     push();
     /* translate my postion to the center of the screen */
     translate(0,0);
-    let x1 = windowWidth / 2;
-    let y1 = windowHeight / 1.07;
-    let x2 = windowHeight / 8;
-    let y2 = windowHeight / 15;
-
-    // fill(255,0,0,100);
-    // rect(x1,y1,x2,y2)
-    if((mouseX > x1) && (mouseX < x2)){
-      console.log("YES");
-    }
-    pop();
+    let x1 = windowWidth / 2 - (windowHeight / 8 / 3);
+    let y1 = windowHeight / 1.07 - windowHeight / 15 / 2;
+    let x2 = x1 + (windowHeight / 8)/1.4;
+    let y2 = y1 + windowHeight / 15;
     if (((mouseX > x1) && (mouseX < x2)) && ((mouseY > y1) && (mouseY < y2))) {
-      console.log("YEP");
+      pop();
       return 30;
     }
-    console.log("NOPE");
+    pop();
     return 255;
+
   }
 
   animatePlayButton() {
@@ -384,6 +378,10 @@ function keyPressed() {
 }
 
 function mouseClicked() {
+  if(gameState == 1){
+    mgameScreen.mouseClickedInClass();
+    return;
+  }
   push();
   translate(windowWidth/2, windowHeight/2)
   for (var i = 0; i < buttonsOnStartScreen.length; i++) {
@@ -396,9 +394,9 @@ function mouseClicked() {
     }
   }
   if(mstartScreen.checkPlayButton() == 30){
+    mgameScreen.init();
     gameState = 1;
   }
-  // gameState = 1;
   pop();
 }
 

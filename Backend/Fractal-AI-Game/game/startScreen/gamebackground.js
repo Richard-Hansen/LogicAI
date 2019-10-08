@@ -251,6 +251,9 @@ class gamebackground {
 
   checkAIMove(res, fgameScreen) {
     // console.log("RES AI: " + res);
+    if(gameState == 1) {
+      return false;
+    }
     var move = res.split(" ");
     var vertexWithConnection = Math.min(move[0], move[1]);
     var vertexWithoutConnection = Math.max(move[0], move[1]);
