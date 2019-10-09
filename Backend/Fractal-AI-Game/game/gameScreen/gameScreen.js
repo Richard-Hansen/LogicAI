@@ -45,6 +45,7 @@ class GameLogic {
   }
 
   httpPostSquareData(res) {
+    console.log("???");
     /* Splits the response by spaces and places it back into res */
     res = res.split(" ");
     /* Iterate through all indices */
@@ -136,11 +137,24 @@ class GameLogic {
 class gameScreen {
   /* ctor, does not require any params. Asks the backend for all mapdata */
   constructor() {
-    // this.mgameLogic = new GameLogic()
+    /* Make my HTTP request to squareData with the current map */
+    this.fillQuads = [];
+    /* Who took the square */
+    this.whoTookQuad = [];
+    this.scoreAI = 0;
+    this.scorePlayer = 0;
+    mgameLogic = new GameLogic();
+    this.mmgameLogic = mgameLogic;
+    WHoTheFuckMoves = 1;
+    /* Sending HTTP request to the squareData route. Need to populate the squares/squaresArea array */
+    httpPost("http://localhost:8088/squareData", { Mapname: "Map2" }, this.httpPostSquareData)
   }
 
-  init(){
+  init(test){
     /* Set player move */
+    if(test) {
+      return;
+    }
     WHoTheFuckMoves = 1;
     squares = [];
     squaresAreas = [];

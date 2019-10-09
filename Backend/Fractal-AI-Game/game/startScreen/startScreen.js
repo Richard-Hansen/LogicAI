@@ -394,7 +394,7 @@ function mouseClicked() {
     }
   }
   if(mstartScreen.checkPlayButton() == 30){
-    mgameScreen.init();
+    mgameScreen.init(false);
     gameState = 1;
   }
   pop();
