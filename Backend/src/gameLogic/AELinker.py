@@ -67,7 +67,7 @@ for i in range(0,4):
 	areas.append(a[i+8])
 	areas.append(a[i+12])
 
-for i in range(100):
+for i in range(1):
 	# Environment - creates the environment and creates all the states for the environment
 	environment = Environment(areas, writeToDB=False)
 	print("Environment created")

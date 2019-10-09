@@ -153,6 +153,8 @@ def ternary(hash_code):
 
 # puts all the values of the state with the hashes
 def put_values(values_to_update_by_hash):
+
+    # INSERT INTO hashes (HashCode, Value, State) VALUES ('0_0_227205',4084488000.5,'0000102112200000')ON DUPLICATE KEY UPDATE State=VALUES(State), Value=VALUES(Value);
     try:
         hash_codes_and_values = {}
 
@@ -169,14 +171,18 @@ def put_values(values_to_update_by_hash):
                     if len(state_translated) < 16:
                         state_translated = (['0'] * (16 - len(state_translated))) + state_translated
                     state_translated = ''.join(state_translated)
-                    values = values + "('" + join_part + str(hash_code) + "'," + str(values_to_update_by_hash[i][hash_code]) + "," + state_translated + "),"
+                    # values = values + "('" + join_part + str(hash_code) + "'," + "'" + values_to_update_by_hash[i][hash_code] + "'" + "," + state_translated + "),"
+                    values = values + "('" + join_part + str(hash_code) + "'," + str(values_to_update_by_hash[i][hash_code])  + ",'" + state_translated + "'),"
+                    # values = values + "('" + join_part + str(hash_code) + "'," + state_translated + "," + str(values_to_update_by_hash[i][hash_code]) + "),"
 
             values = values[:-1]
 
             # INSERT INTO hashes (HashCode, Value) VALUES (0_8_5919480,0.14167968750000004) ON DUPLICATE KEY UPDATE HashCode=VALUES(HashCode), Value=VALUES(Value);
 
             # hash codes
-            update_statement_for_hash_and_value = "INSERT INTO hashes (HashCode, Value, State) VALUES " + values + " ON DUPLICATE KEY UPDATE State=VALUES(State), Value=VALUES(Value);"
+            update_statement_for_hash_and_value = "INSERT INTO hashes (HashCode, State, Value) VALUES " + values + " ON DUPLICATE KEY UPDATE State=VALUES(State), Value=VALUES(Value);"
+
+            print("UPDATE STATEMENT", update_statement_for_hash_and_value)
 
             # execute the select statement
             cursor.execute(update_statement_for_hash_and_value)
