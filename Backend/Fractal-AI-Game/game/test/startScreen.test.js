@@ -4,6 +4,7 @@ const expect = require('chai').expect;
 const mock = require('./mock-localstorage')
 
 const StartScreen = require('../startScreen/startScreen.js')
+const gamebackground = require('../startScreen/gamebackground.js')
 /* p5js functions and certain DOM functions don't work with mocha
  * resulting in a lot of weird code
  */
@@ -15,7 +16,7 @@ describe('StartScreen tests', function () {
         global.alert = function (val) { }
         global.gameState = 0
         global.this = {}
-	global.isokay = true
+	      global.isokay = true
         startScreen = new StartScreen();
     })
 
@@ -48,7 +49,7 @@ describe('StartScreen tests', function () {
     it('should not allow mean characters', function (done) {
         let trash = { nameInput: { elt: { value: 'bad$$name' } } }
         expect(startScreen.playGame(trash)()).to.equal('BADCHARS')
-        done()        
+        done()
     })
 
     it('should not cache incorrect usernames', function (done) {

@@ -22,12 +22,13 @@ describe('GameScreen tests', function () {
         global.httpPost = function (val) { }
         global.GameLogic = GameLogic.constructor
         gameScreen = new GameScreen[0]();
+
     })
 
     it('should be an object', function (done) {
+        gameScreen.init(true);
         res = gameScreen.callMapRoute(sentRes);
         expect(gameScreen).to.be.a('object');
-        // console.log(mapName);
         done()
     })
 
@@ -77,6 +78,8 @@ describe('GameScreen tests', function () {
 
     it('Check First Square', function (done) {
         resHttpPostSquareData = gameScreen.mmgameLogic.httpPostSquareData(sentSquareRes);
+        console.log(resHttpPostSquareData);
+        console.log("LOL");
         expect(resHttpPostSquareData[0][0][0]).to.equal("0")
         expect(resHttpPostSquareData[0][0][1]).to.equal("1")
         expect(resHttpPostSquareData[0][0][2]).to.equal("5")
@@ -145,9 +148,17 @@ describe('GameScreen tests', function () {
         expect(gameScreen.checkPlayerMove("0 5", gameScreen)).to.equal(true)
         expect(gameScreen.checkPlayerMove("5 6", gameScreen)).to.equal(true)
         expect(gameScreen.checkPlayerMove("1 6", gameScreen)).to.equal(true)
+        console.log(GameScreen[1]);
         expect(GameScreen[2][0][0]).to.equal(-1)
         done()
     })
+
+
+
+
+
+
+
     /* 86 - The agent sends back line selections, 32 - On the game screen, have the AI make a move */
     it('On the game screen, have the AI make a move', function (done) {
         expect(gameScreen.checkAIMove("1 2", gameScreen)).to.equal(true)
