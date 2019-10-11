@@ -1,7 +1,10 @@
 package routes
 
 import (
-	// "bytes"
+	"bytes"
+	"log"
+	"os"
+	"strings"
 	// "encoding/json"
 	// httptest "net/http/httptest"
 	// "database/sql"
@@ -228,11 +231,39 @@ func TestValueAllFull(t *testing.T) {
 
 	idd := 0
 
-	values := GetValue(stateInfos, idd)
+	values := GetValue(stateInfos, idd, false)
 
 	for i := 0; i < 12; i++ {
 		if values[0] != -1 {
 			t.Errorf("Difficulty incorrectly handling full squares")
 		}
+	}
+}
+
+/**
+ * Test Type: Unit Test
+ * What it is testing: Debug statements are not printed when the debug output flag is false
+ * Expected output: I expect that the debug statements for the SQL select commands are not printed when the flag is false
+ */
+func TestDebugStatementsWithoutStatements(t *testing.T) {
+
+	var stateInfos [12][16]int
+
+	for i := 0; i < 12; i++ {
+		for j := 0; j < 16; j++ {
+			stateInfos[i][j] = 0
+		}
+	}
+
+	idd := 0
+
+	var buf bytes.Buffer
+	log.SetOutput(&buf)
+	defer func() {
+		log.SetOutput(os.Stdout)
+	}()
+	GetValue(stateInfos, idd, false)
+	if strings.Contains(buf.String(), "SELECT") == true {
+		t.Errorf("Printed out the debug statements")
 	}
 }

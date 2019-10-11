@@ -2,6 +2,8 @@ import unittest
 from agents import AgentX86, Agentling
 from environment import Environment, Envy
 from game import Game
+from io import StringIO
+import sys
 
 class TestGame(unittest.TestCase):
 
@@ -77,6 +79,27 @@ class TestGame(unittest.TestCase):
 		# ensure that if the agent is not provided, there is an exception
 		environment = Environment(writeToDB=False)
 		self.assertRaises(Exception, AgentX86, environment, None)
+
+
+	
+	# Test Type: Unit Test
+	# What it is testing: Game play without printing board
+	# Expected output: Board should not be printed for every turn
+	# 
+	def test_play_game_without_board_display(self):
+		capturedOutput = StringIO()          
+		sys.stdout = capturedOutput
+
+	    # set up the big agent and environment
+		environment = Environment(writeToDB=False)
+		agentX86P1 = AgentX86(environment,1)
+		agentX86P2 = AgentX86(environment,2)
+		game = Game(agentX86P1, agentX86P2)
+		game.play_game(update_after_game = False, get_state_histories_for_p1 = False, print_board = False)
+
+		sys.stdout = sys.__stdout__
+		if "|-----------------------|" in capturedOutput.getvalue():
+			self.fail("Printed the board")
 
 
 if __name__ == '__main__':
