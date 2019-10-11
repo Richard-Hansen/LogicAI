@@ -224,13 +224,13 @@ class Envy:
 
 	# finds the value of the ternary
 	def ternary(self, hash_code):
-	    if hash_code == 0:
-	        return 0
-	    nums = []
-	    while hash_code:
-	        hash_code, remainder = divmod(hash_code, 3)
-	        nums.insert(0, remainder)
-	    return nums
+		if hash_code == 0:
+			return 0
+		nums = []
+		while hash_code:
+			hash_code, remainder = divmod(hash_code, 3)
+			nums.insert(0, remainder)
+		return nums
 
 
 	# get the value of the state given the player and returns the values of the state corresponding to that hash
@@ -411,7 +411,8 @@ class Envy:
 		raise Exception('Edge already chosen')
 
 	# gets the current state based on the hash and the value stored
-	def create_state_hash_and_values(self):
+	def create_state_hash_and_values(self, see_first_states = False):
+		print("HERHEHEHEHE\n\n\n\n\n\n")
 		self.hash_to_values_and_state = {}
 
 		count = 0
@@ -480,12 +481,15 @@ class Envy:
 																		self.hash_to_values_and_state[hash_key] = (value, state_info)
 
 																		# if there are enough hash to values and states, then can place in the database
-																		if len(self.hash_to_values_and_state) == 900 and self.writeToDB == True:
-																			print(count)
-																			count += 1
-																			# hash_to_values_and_state is ready to be put in the database and then clear the local dictionary - local caching mechanism
-																			set_hash_value(self.hash_to_values_and_state, self.environment_id, self.envy_id)
-																			self.hash_to_values_and_state = {}
+																		if len(self.hash_to_values_and_state) == 900:
+																			if see_first_states == True:
+																				return self.hash_to_values_and_state
+																			if self.writeToDB == True:
+																				print(count)
+																				count += 1
+																				# hash_to_values_and_state is ready to be put in the database and then clear the local dictionary - local caching mechanism
+																				set_hash_value(self.hash_to_values_and_state, self.environment_id, self.envy_id)
+																				self.hash_to_values_and_state = {}
 
 		# at the end of the loop when the states have all been already generated - need to say that it needs to have the different values in the db
 		if len(self.hash_to_values_and_state) > 0 and self.writeToDB == True:
