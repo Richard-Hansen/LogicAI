@@ -9,8 +9,9 @@ class Game:
 		self.p2 = p2 # AgentX86/human object
 		self.current_player = p2 # initialize current player to p2, so the first loop of play_game() sets p1 to the current player
 		self.game_board = [0] * 40 # 4x4 game board is made up of 40 edges
+		self.players = []
 
-	def play_game(self, update_after_game=False, get_state_histories_for_p1=False, print_board=False, verbose=False):
+	def play_game(self, update_after_game=False, get_state_histories_for_p1=False, print_board=False, verbose=False, get_players=False):
 		#while game is not over
 		if verbose:
 			print("Playing game")
@@ -26,6 +27,9 @@ class Game:
 			else:
 				self.current_player = self.p1
 
+			if get_players == True:
+				self.players.append(self.current_player)
+
 			# current player takes an action
 			self.game_board = self.current_player.take_action()
 			#self.print_board(self.current_player.X_env.big_board)
@@ -39,6 +43,9 @@ class Game:
 		if get_state_histories_for_p1:
 			return self.p1.get_state_histories()
 
+	def get_players(self):
+		return self.players
+	
 	#returns True if game has ended
 	def game_ended(self):
 		return 0 not in self.game_board

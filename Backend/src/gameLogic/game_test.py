@@ -102,5 +102,24 @@ class TestGame(unittest.TestCase):
 			self.fail("Printed the board")
 
 
+	#
+	# Test Type: Unit Test
+	# What it is testing: Alternating players in the game play for first moves
+	# Expected output: The players are getting alternating while the game is getting played in the first moves
+	# 
+	def test_play_game_players(self):
+		# set up the big agent and environment
+		environment = Environment(writeToDB=False)
+		agentX86P1 = AgentX86(environment,1)
+		agentX86P2 = AgentX86(environment,2)
+		game = Game(agentX86P1, agentX86P2)
+
+		game.play_game(update_after_game = False, get_state_histories_for_p1 = True, print_board=True, get_players=True)
+		players = game.get_players()
+
+		if players[0] == players[1]:
+			self.fail("Not alternating in the initial moves")
+
+
 if __name__ == '__main__':
     unittest.main()

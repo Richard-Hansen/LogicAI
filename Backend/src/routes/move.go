@@ -27,11 +27,14 @@ var p1 int                   //player id
 var difficulty int           //difficulty of game
 var eps float64              //randomization factor related to difficulty
 var showDebugStatements bool // whether debug statements must be shown
+var connectionString string
 
 /**
  * Should be called when the play makes a move.
  */
 func MoveHandler(w http.ResponseWriter, r *http.Request) {
+	connectionString = "Richard:SteveIsTheBest@tcp(198.199.121.101:3306)/logic" // connection string to the db
+
 	showDebugStatements = false
 
 	/* Print to stdout */
@@ -289,7 +292,7 @@ func GetValue(stateInfos [12][16]int, idd int, showDebugStatements bool) [12]flo
 	}
 
 	// make the call to the database
-	db, err := sql.Open("mysql", "Richard:SteveIsTheBest@tcp(198.199.121.101:3306)/logic")
+	db, err := sql.Open("mysql", connectionString)
 	defer db.Close()
 
 	// unable to open the database
