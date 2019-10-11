@@ -143,6 +143,8 @@ def get_hash_values_and_by_hash_codes(hash_codes, environment_id, envy_id):
 
 # finds the value of the ternary
 def ternary(hash_code):
+    if hash_code < 0:
+        raise ValueError('Invalid value')
     if hash_code == 0:
         return ['0']
     nums = []
@@ -151,10 +153,34 @@ def ternary(hash_code):
         nums.insert(0, str(remainder))
     return nums
 
+
+# pads the state with 0's if the state translated does not have the correct length
+def fix_state_translated(state_translated):
+    return (['0'] * (16 - len(state_translated))) + state_translated
+
+# build update statement
+def build_update(values_to_update_by_hash):
+    values = ""
+    for i in range(len(values_to_update_by_hash)):
+        join_part = "0" + "_" + str(i)  + "_"
+        for hash_code in values_to_update_by_hash[i]:
+            state_translated = ternary(hash_code)
+            if len(state_translated) < 16:
+                state_translated = fix_state_translated(state_translated)
+            state_translated = ''.join(state_translated)
+            # values = values + "('" + join_part + str(hash_code) + "'," + "'" + values_to_update_by_hash[i][hash_code] + "'" + "," + state_translated + "),"
+            # values = values + "('" + join_part + str(hash_code) + ",'" + str(values_to_update_by_hash[i][hash_code])  + "'," + state_translated + "'),"
+            values = values + "('" + join_part + str(hash_code) + "','" + state_translated + "'," + str(values_to_update_by_hash[i][hash_code]) + "),"
+    values = values[:-1]
+
+    update_statement_for_hash_and_value = "INSERT INTO hashes (HashCode, State, Value) VALUES " + values + " ON DUPLICATE KEY UPDATE State=VALUES(State), Value=VALUES(Value);"
+    return update_statement_for_hash_and_value
+
+
 # puts all the values of the state with the hashes
 def put_values(values_to_update_by_hash):
-
-    # INSERT INTO hashes (HashCode, Value, State) VALUES ('0_0_227205',4084488000.5,'0000102112200000')ON DUPLICATE KEY UPDATE State=VALUES(State), Value=VALUES(Value);
+    # SELECT * FROM hashes WHERE HashCode LIKE '0_%_227205' AND WHERE State = '0000102112200000';
+    # INSERT INTO hashes (HashCode, Value, State) VALUES ('0_0_227205',4084488000.5,'0000102112200000'), ('0_0_227205',4084488000.5,'0000102112200000')  ON DUPLICATE KEY UPDATE State=VALUES(State), Value=VALUES(Value);
     try:
         hash_codes_and_values = {}
 
@@ -163,24 +189,9 @@ def put_values(values_to_update_by_hash):
 
         # connection is established
         with connection.cursor() as cursor:
-            values = ""
-            for i in range(len(values_to_update_by_hash)):
-                join_part = "0" + "_" + str(i)  + "_"
-                for hash_code in values_to_update_by_hash[i]:
-                    state_translated = ternary(hash_code)
-                    if len(state_translated) < 16:
-                        state_translated = (['0'] * (16 - len(state_translated))) + state_translated
-                    state_translated = ''.join(state_translated)
-                    # values = values + "('" + join_part + str(hash_code) + "'," + "'" + values_to_update_by_hash[i][hash_code] + "'" + "," + state_translated + "),"
-                    values = values + "('" + join_part + str(hash_code) + "'," + str(values_to_update_by_hash[i][hash_code])  + ",'" + state_translated + "'),"
-                    # values = values + "('" + join_part + str(hash_code) + "'," + state_translated + "," + str(values_to_update_by_hash[i][hash_code]) + "),"
-
-            values = values[:-1]
+            update_statement_for_hash_and_value = build_update(values_to_update_by_hash)
 
             # INSERT INTO hashes (HashCode, Value) VALUES (0_8_5919480,0.14167968750000004) ON DUPLICATE KEY UPDATE HashCode=VALUES(HashCode), Value=VALUES(Value);
-
-            # hash codes
-            update_statement_for_hash_and_value = "INSERT INTO hashes (HashCode, State, Value) VALUES " + values + " ON DUPLICATE KEY UPDATE State=VALUES(State), Value=VALUES(Value);"
 
             print("UPDATE STATEMENT", update_statement_for_hash_and_value)
 
