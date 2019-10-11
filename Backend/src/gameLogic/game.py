@@ -10,11 +10,15 @@ class Game:
 		self.current_player = p2 # initialize current player to p2, so the first loop of play_game() sets p1 to the current player
 		self.game_board = [0] * 40 # 4x4 game board is made up of 40 edges
 
-	def play_game(self, update_after_game=False, get_state_histories_for_p1=False):
+	def play_game(self, update_after_game=False, get_state_histories_for_p1=False, verbose=False):
 		#while game is not over
-		print("Playing game")
+		if verbose:
+			print("Playing game")
+
 		while not self.game_ended():
-			self.print_board(self.current_player.X_env.big_board)
+			if verbose:
+				self.print_board(self.current_player.X_env.big_board)
+				
 			# set current player
 			if self.current_player is self.p1:
 				self.current_player = self.p2
