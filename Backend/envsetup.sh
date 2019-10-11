@@ -32,6 +32,7 @@ fi
 cd -
 pip3 install pymysql
 pip install pymysql
+# pip install StringIO
 echo -e "${GREEN}Success\n${NC}"
 
 

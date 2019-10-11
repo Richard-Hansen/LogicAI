@@ -220,7 +220,7 @@ class StartScreen {
       return 30;
     }
     pop();
-    return 255;
+    return 0;
 
   }
 
@@ -234,8 +234,6 @@ class StartScreen {
     /* Setting my stroke color */
     stroke(0, 0, 0, mstartScreen.checkPlayButton());
     /* Drawing my rectangle */
-    rect(0, windowHeight / 2.3, windowWidth / 16, windowHeight / 15, 20);
-    fill(0,0,0,mstartScreen.checkPlayButton())
     strokeWeight(0);
     textSize(windowHeight/30);
     /* Setting style to Georgia because it looks good */
@@ -243,6 +241,10 @@ class StartScreen {
     /* Write the back onto the box */
     text("Play", 0, windowHeight / 2.25);
     /* popping all my settings so other functions dont have to deal with them */
+    stroke(0, 0, 0, 255);
+    strokeWeight(1);
+    fill(0,0,0,mstartScreen.checkPlayButton())
+    rect(0, windowHeight / 2.3, windowWidth / 16, windowHeight / 15, 20);
     pop();
   }
 

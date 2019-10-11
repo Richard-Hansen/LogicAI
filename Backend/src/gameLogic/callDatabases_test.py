@@ -1,8 +1,19 @@
 import unittest
-from callDatabases import get_hash_values_and_by_hash_codes, put_values, ternary
+from callDatabases import get_hash_values_and_by_hash_codes, put_values, ternary, fix_state_translated, build_update
 import time
 
 class TestCallDatabases(unittest.TestCase):
+	#
+	# What it is testing: Invalid hash code not returning state
+	# Expected output: I expect that the invalid hash code does not return a state corresponding to it
+	# 
+	def test_invalid_hash_code_conversion(self):
+		hash_code = -1
+		# ensure that the call is able to obtain all the information about the hash codes and returns the correct hash codes
+			
+		with self.assertRaises(ValueError) as context:
+			ternary(hash_code)
+
 	#
 	# What it is testing: Able to retrieve hash code information from the database for given hash codes
 	# Expected output: I expect that all the values associated with the hash code are retrieved from the database
@@ -55,9 +66,30 @@ class TestCallDatabases(unittest.TestCase):
 		self.assertEqual(type(ternary_value[0]), str)
 
 
-	# Test Type: Incremental Test
-	# What it is testing:  
+	# Test Type: Unit Test
+	# What it is testing: Padding of 0's for a state that has a state that is not 16 characters long
+	# Expected Output: I expect that given a state that does not have 16 characters, it is created into one that has 16 characters
+	#
+	def test_fix_state(self):
+		state_translated = [1,2,0,0,0,0]
+		fixed_state_translated = fix_state_translated(state_translated)
+		self.assertEqual(len(fixed_state_translated), 16)
 
-	
+
+	# Test Type: Unit Test
+	# What it is testing: Padding of 0's for a state that has a state that is not 16 characters long
+	# Expected Output: I expect that given a state that does not have 16 characters, it is created into one that has 16 characters
+	#
+	def test_quotes_state_translated(self):
+
+		# obtain the values to be updated from the database
+		hash_codes = ['0', '81']
+		hash_codes_and_values = get_hash_values_and_by_hash_codes(hash_codes, 0, 0)
+		code_value_dictionary = [{0: hash_codes_and_values[0], 81: hash_codes_and_values[1]}]
+		update_statement_for_hash_and_value = build_update(code_value_dictionary)
+
+		if "'0000000000010000'" not in update_statement_for_hash_and_value:
+			self.fail("Does not contain the quotes necessary for state")
+
 if __name__ == '__main__':
     unittest.main()
