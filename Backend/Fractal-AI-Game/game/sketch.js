@@ -24,7 +24,7 @@ function preload() {
 
 function setup() {
   /* Create our canvas with the max windowWidth and windowHeight */
-  createCanvas(windowWidth,windowHeight)
+  createCanvas(windowWidth, windowHeight)
   /* Have all our rects in center mode */
   rectMode(CENTER);
   /* Have all our text in center mode */
@@ -35,8 +35,9 @@ function setup() {
      username and what not */
   mstartScreen = new StartScreen();
   mstartScreen.start()
+  mscoreScreen = new ScoreScreen();
   /* Set the gameState */
-  gameState = 0;
+  gameState = 2;
 }
 
 function draw() {
@@ -45,12 +46,14 @@ function draw() {
             1 = game screen
             2 = score screen
   */
-  if(gameState == 0){
+  if (gameState == 0) {
     /* Init state, will be called when a new user logs in */
     mstartScreen.draw();
-  }else if(gameState == 1) {
+  } else if (gameState == 1) {
     /* Call our games draw function, conditional rendering at its finest :) */
     mgameScreen.draw();
+  } else if (gameState == 2) {
+    mscoreScreen.draw();
   }
 }
 

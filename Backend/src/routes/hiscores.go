@@ -5,6 +5,7 @@ import (
 	"C"
 	"fmt"
 	http "net/http"
+	"io/ioutil"
 )
 import (
 	"database/sql"
@@ -14,6 +15,7 @@ import (
 type Game struct {
 	GameID     int
 	Score      int
+	Name       string
 	UserID     int
 	Difficulty int
 	Board      int
@@ -28,6 +30,11 @@ func ScoreHandler(w http.ResponseWriter, r *http.Request) {
 	/* defer will run the line at the very end of the scope (i.e the function) */
 	defer fmt.Println("End ScoreHandler")
 
+	reqBody, _ := ioutil.ReadAll(r.Body)
+	in := []byte(reqBody)
+	var raw map[string]interface{}
+	json.Unmarshal(in, &raw)
+
 	var games []*Game
 
 	/* Reading the body of the request, r */
@@ -37,18 +44,19 @@ func ScoreHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err.Error())
 	}
-	sqlStatement := `SELECT * FROM game ORDER BY score LIMIT 10`
+	
+	sqlStatement := `SELECT s.gameid,s.score,s.userid,(select username from user where userid=s.userid) as ` + "`name`" + `,s.difficult,s.board FROM game s ORDER BY score DESC`
+	fmt.Println(sqlStatement);
 	rows, errs := db.Query(sqlStatement)
 	defer rows.Close()
 	for rows.Next() {
 		g := new(Game)
-		errs = rows.Scan(&g.GameID, &g.Score, &g.UserID, &g.Difficulty, &g.Board)
+		errs = rows.Scan(&g.GameID, &g.Score, &g.UserID, &g.Name, &g.Difficulty, &g.Board)
 		if errs != nil {
 			panic(err)
 		}
 		games = append(games, g)
 	}
-
 	if err := json.NewEncoder(w).Encode(games); err != nil {
 		fmt.Println(err)
 	}
