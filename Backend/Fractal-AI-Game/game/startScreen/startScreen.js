@@ -63,7 +63,6 @@ class StartScreen {
     /* The size of the title, this will be decreased by 1 per frame until it gets to the top */
     this.titleSize = 200;
     this.boxAlpha = 0;
-    this.callScoresRoute()
     this.inpWidth = windowWidth / 3.5
     this.inpHeight = windowHeight / 15
     this.ds = new DifficultySelector()
@@ -159,15 +158,6 @@ class StartScreen {
     }, function (err) {
       // deal with this better in the future
       alert("Username taken")
-    })
-  }
-
-  /*
-  * callScoresRoute - Gets high scores
-  */
-  callScoresRoute() {
-    httpPost("http://localhost:8088/hiscores", function (res) {
-      console.log(res)
     })
   }
 

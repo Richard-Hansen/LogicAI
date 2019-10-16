@@ -524,10 +524,9 @@ class gameScreen {
             }
 
             if(takenSquare.length == 16){
-              console.log("FEAWFGEWGFDSAFEWAFDWEAFSD");
               httpPost("http://localhost:8088/score", { "time": playerTimer, "scorePlayer": mgameScreen.scorePlayer, "scoreAI": mgameScreen.scoreAI }, function(res) {
                 mgameScreen.endGameSender(res, mgameScreen);
-                gameState == 2;
+                gameState = 2;
               })
             }
             // this.scoreAI += (100 * addAndMore[0]);
@@ -583,6 +582,9 @@ class gameScreen {
  *                it put that line into clickConnections for that vertex
  */
 function mouseClickedd() {
+  if(WHoTheFuckMoves == 2){
+    return;
+  }
   if(gameState == 0){
     return;
   }
