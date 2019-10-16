@@ -42,13 +42,13 @@ func SendScoreHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(scoreData)
 
 
-	db, err := sql.Open("mysql", "Richard:SteveIsTheBest@tcp(198.199.121.101:3306)/logic")
-	defer db.Close()
-	if err != nil {
-		panic(err.Error())
-	}
-
-	sqlStatement := `SELECT s.gameid,s.score,s.userid,(select username from user where userid=s.userid) as ` + "`name`" + `,s.difficult,s.board FROM game s ORDER BY score DESC`
+	// db, err := sql.Open("mysql", "Richard:SteveIsTheBest@tcp(198.199.121.101:3306)/logic")
+	// defer db.Close()
+	// if err != nil {
+	// 	panic(err.Error())
+	// }
+  //
+	// sqlStatement := `SELECT s.gameid,s.score,s.userid,(select username from user where userid=s.userid) as ` + "`name`" + `,s.difficult,s.board FROM game s ORDER BY score DESC`
 
 	fmt.Fprintf(w, "%s", "Hello")
 }
