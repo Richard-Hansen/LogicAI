@@ -39,9 +39,12 @@ class Linker:
 	def train(self, epochs, verbose=False, writeToDB=False):
 		if epochs < 1 or epochs > 10000:
 			raise Exception("Epochs should be between 1 and 10,000 inclusive.")
+		
+		environment = Environment(self.areas, writeToDB=writeToDB)
+
 		for i in range(epochs):
 			# Environment - creates the environment and creates all the states for the environment
-			environment = Environment(self.areas, writeToDB=writeToDB)
+			environment = Environment(self.areas, writeToDB=False)
 			if verbose:
 				print("Environment created")
 
