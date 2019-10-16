@@ -1,6 +1,6 @@
 class ScoreScreen {
   constructor() {
-    this.callScoresRoute()
+    // this.callScoresRoute()
     this.scores = []
     this.inputsCreated = false;
   }
@@ -35,6 +35,14 @@ class ScoreScreen {
     createElement('td', 'Board').parent(this.scoreList)
   }
 
+  hide() {
+    this.scoreContainer.hide()
+  }
+
+  show() {
+    this.scoreContainer.show()
+  }
+
   goBack(that) {
     return function () {
       that.scoreContainer.hide()
@@ -47,14 +55,14 @@ class ScoreScreen {
     try {
       httpPost("http://localhost:8088/hiscores", { user: userID }, function (res) {
         that.scores = JSON.parse(res)
-        userID = 42
         // that.scores = [{ Index: 1, UserID: 1, Name: "name", Score: 10, Difficulty: 2, Board: 5 }]
+        // that.scores = that.parseScores(that)
         that.validateScores(that)
-        that.scores = that.parseScores(that)
+        that.parseScores(that)  
       })
     } catch (ReferenceError) {
       // testing
-      that.scores = [{ Index: 1, UserID: 42, Name: "name", Score: 10, Difficulty: 2, Board: 5 }]
+      // that.scores = [{ Index: 1, UserID: 42, Name: "name", Score: 10, Difficulty: 2, Board: 5 }]
       // userID = 42
       // that.validateScores(that)
       // that.scores = that.parseScores(that)
@@ -151,8 +159,10 @@ class ScoreScreen {
       createElement('td', score.Difficulty.toString()).style('background-color', bgColor).parent(tElement)
       createElement('td', score.Board.toString()).style('background-color', bgColor).parent(tElement)
       tElement.parent(this.scoreList)
+      console.log('scohroe list', this.scoreList)
     } catch (e) {
       // testing
+      console.log('ererererer', e)
     }
   }
 
@@ -186,9 +196,12 @@ class ScoreScreen {
 
   draw() {
     // no
+    // this.hide()
     if (!this.inputsCreated) {
-      this.inputsCreated = true;
+      this.inputsCreated = true;    
       this.createInputs()
+      this.callScoresRoute()
+      // this.hide()
     }
   }
 }
