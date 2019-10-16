@@ -29,6 +29,9 @@ var takenSquare = [];
 
 var squares = [];
 var squaresAreas = [];
+
+var playerTimer;
+
 /**
  * This function is going to check if any squares have been completed by either
  * the AI or the player.
@@ -148,6 +151,10 @@ class gameScreen {
     WHoTheFuckMoves = 1;
     /* Sending HTTP request to the squareData route. Need to populate the squares/squaresArea array */
     httpPost("http://localhost:8088/squareData", { Mapname: "Map2" }, this.httpPostSquareData)
+
+    playerTimer = -1;
+
+    setInterval(function(){ playerTimer++ }, 1000);
   }
 
   init(test){
@@ -156,6 +163,7 @@ class gameScreen {
       return;
     }
     WHoTheFuckMoves = 1;
+    playerTimer = 0;
     squares = [];
     squaresAreas = [];
     takenSquare = [];
@@ -182,6 +190,30 @@ class gameScreen {
     this.drawVertices();
     /* Draws the backbutton onto the screen */
     this.drawBackbutton();
+    /* This will display the current timer */
+    this.drawTimer();
+  }
+
+  drawTimer() {
+    /* push all my settings */
+    push();
+    /* Setting fontSize to windowHeight/13 */
+    textSize(windowHeight / 13);
+    /* Setting style to Georgia because it looks good */
+    textFont('Georgia');
+    /* Translate back to 0,0 (so the top left corner is the (0,0) coordinate) */
+    translate(0, 0);
+    /* Set my textAlign to the left so they get lined up correctly */
+    textAlign(LEFT);
+    /* Drawing 'AI' in the left top corner of the screen */
+    text('Timer', windowWidth / 1.2, windowHeight / 9);
+    fill(255, 0, 0);
+    textAlign(CENTER);
+
+    text(playerTimer, windowWidth / 1.14, windowHeight / 5.5);
+
+    /* popping all my settings so other functions dont have to deal with them */
+    pop();
   }
 
   drawBackbutton() {
@@ -490,6 +522,14 @@ class gameScreen {
             }else {
               this.scoreAI += (100 * addAndMore[0]);
             }
+
+            if(takenSquare.length == 16){
+              console.log("FEAWFGEWGFDSAFEWAFDWEAFSD");
+              httpPost("http://localhost:8088/score", { "time": playerTimer, "scorePlayer": mgameScreen.scorePlayer, "scoreAI": mgameScreen.scoreAI }, function(res) {
+                mgameScreen.endGameSender(res, mgameScreen);
+                gameState == 2;
+              })
+            }
             // this.scoreAI += (100 * addAndMore[0]);
           }
         } while(addAndMore[0] != undefined)
@@ -531,6 +571,10 @@ class gameScreen {
   mouseClickedInClass(){
     mouseClickedd();
   }
+
+  endGameSender(res) {
+    console.log("RESSSSS: " + res);
+  }
 }
 
 /**
@@ -564,6 +608,12 @@ function mouseClickedd() {
           mgameScreen.scorePlayer = 100 - mgameScreen.scoreAI;
         }else {
           mgameScreen.scorePlayer += (100 * addAndMore[0]);
+        }
+        if(takenSquare.length == 16){
+          console.log("FEAWFGEWGFDSAFEWAFDWEAFSD");
+          httpPost("http://localhost:8088/score", { "time": playerTimer, "scorePlayer": mgameScreen.scorePlayer, "scoreAI": mgameScreen.scoreAI }, function(res) {
+            mgameScreen.endGameSender(res, mgameScreen);
+          })
         }
       }
     } while(addAndMore[0] != undefined)
