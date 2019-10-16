@@ -37,7 +37,7 @@ function setup() {
   mstartScreen.start()
   mscoreScreen = new ScoreScreen();
   /* Set the gameState */
-  gameState = 0;
+  gameState = 2;
 }
 
 function draw() {
