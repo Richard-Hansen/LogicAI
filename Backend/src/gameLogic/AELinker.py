@@ -40,7 +40,6 @@ class Linker:
 		if epochs < 1 or epochs > 10000:
 			raise Exception("Epochs should be between 1 and 10,000 inclusive.")
 		
-		environment = Environment(self.areas, writeToDB=writeToDB)
 
 		for i in range(epochs):
 			# Environment - creates the environment and creates all the states for the environment
@@ -120,8 +119,10 @@ class Linker:
 # set up the big agent and environment
 # a = [0.045625,0.078125,0.081250,0.110938,0.038750,0.081250,0.071875,0.035938,0.061250,0.085937,0.026562,0.046875,0.038750,0.090625,0.065625,0.040625]
 a = [0.045625, 0.038750, 0.061250, 0.038750, 0.078125, 0.081250, 0.085937, 0.090625, 0.081250, 0.071875, 0.026562, 0.065625, 0.110938, 0.035938, 0.046875, 0.040625]
-L = Linker(a)
-L.train(1,verbose=True, writeToDB=True)
+environment = Environment(a, writeToDB=True)
+
+# L = Linker(a)
+# L.train(1,verbose=True, writeToDB=True)
 
 
 # have an agent with its agentlings connected to the environment
