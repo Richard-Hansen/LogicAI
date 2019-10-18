@@ -184,7 +184,7 @@ class AgentX86:
 	def random_action(self, big_board_sums, big_board_counts):
 		available_actions = [x for x in range(len(big_board_counts)) if big_board_counts[x] != 0]
 
-		k = available_actions[random.randint(0,len(available_actions))]
+		k = random.choice(available_actions)
 
 		guess_value = ((big_board_sums[k] * 1.00) / big_board_counts[k])
 		guess_action = k
