@@ -194,8 +194,8 @@ class StartScreen {
       /* Drawing my background */
       pop();
       Gamebackground.draw();
-      this.animateBoxes();
       this.animateMapSelection();
+      this.animateBoxes();
       this.animateDiffculity();
       this.animatePlayButton();
     }

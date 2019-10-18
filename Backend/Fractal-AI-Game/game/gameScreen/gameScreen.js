@@ -523,6 +523,17 @@ class gameScreen {
               this.scoreAI += (100 * addAndMore[0]);
             }
 
+
+
+
+            
+            let difficultyInt;
+            switch(difficulty) {
+              case "easy": difficultyInt = 0; break;
+              case "medium": difficultyInt = 1; break;
+              case "hard": difficultyInt = 2; break;
+              case "impossible": difficultyInt = 3; break;
+            }
             if(takenSquare.length == 16){
               httpPost("http://localhost:8088/score", { "time": playerTimer, "scorePlayer": mgameScreen.scorePlayer, "scoreAI": mgameScreen.scoreAI, "difficulty": difficultyInt, "map": mapName, "userID": userID}, function(res) {
                 mgameScreen.endGameSender(res, mgameScreen);
@@ -582,6 +593,10 @@ class gameScreen {
  *                it put that line into clickConnections for that vertex
  */
 function mouseClickedd() {
+  if(mgameScreen.checkBackButton() != 255){
+    gameState = 0;
+    mstartScreen.show()
+  }
   if(WHoTheFuckMoves == 2){
     return;
   }
@@ -611,6 +626,13 @@ function mouseClickedd() {
         }else {
           mgameScreen.scorePlayer += (100 * addAndMore[0]);
         }
+
+        if(takenSquare.length == 16){
+          httpPost("http://localhost:8088/score", { "time": playerTimer, "scorePlayer": mgameScreen.scorePlayer, "scoreAI": mgameScreen.scoreAI, "difficulty": difficultyInt, "map": mapName, "userID": userID}, function(res) {
+            mgameScreen.endGameSender(res, mgameScreen);
+            gameState = 2;
+          })
+        }
         // if(takenSquare.length == 16){
         //   console.log("FEAWFGEWGFDSAFEWAFDWEAFSD");
         //   httpPost("http://localhost:8088/score", { "time": playerTimer, "scorePlayer": mgameScreen.scorePlayer, "scoreAI": mgameScreen.scoreAI }, function(res) {
@@ -631,10 +653,6 @@ function mouseClickedd() {
     httpPost("http://localhost:8088/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare, "difficulty": difficultyInt }, function(res) {
       mgameScreen.checkAIMove(res, mgameScreen);
     })
-  }
-  if(mgameScreen.checkBackButton() != 255){
-    gameState = 0;
-    mstartScreen.show()
   }
 }
 module.exports = [gameScreen, vertices, squares];
