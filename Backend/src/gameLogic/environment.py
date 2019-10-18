@@ -291,11 +291,11 @@ class Envy:
 
 		for edges_needed_for_side_index in range(4):
 			if edges_needed[edges_needed_for_side_index] == 4 or edges_needed[edges_needed_for_side_index] == 3:
-				value += 0.5 * self.areas[edges_needed_for_side_index]
+				value += 0.4 * self.areas[edges_needed_for_side_index]
 			elif edges_needed[edges_needed_for_side_index] == 2:
-				value += 0.25 * self.areas[edges_needed_for_side_index]
+				value += 0.8 * self.areas[edges_needed_for_side_index]
 			elif edges_needed[edges_needed_for_side_index] == 1:
-				value += 0.9 * self.areas[edges_needed_for_side_index]
+				value += 0.2 * self.areas[edges_needed_for_side_index]
 			elif edges_needed[edges_needed_for_side_index] == 0:
 				if state_info[edges_needed_for_side_index + 12] == self.p1:
 					value += self.areas[edges_needed_for_side_index]
