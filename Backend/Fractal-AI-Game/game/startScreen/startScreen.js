@@ -322,7 +322,7 @@ class StartScreen {
     /* Setting my stroke color */
     stroke(0, 0, 0, this.boxAlpha);
     /* Drawing my rectangle */
-    rect(0, -windowHeight / 5, windowWidth / 4, windowHeight / 15, 20);
+    // rect(0, -windowHeight / 5, windowWidth / 4, windowHeight / 15, 20);
     fill(0, 0, 0, this.boxAlpha)
     strokeWeight(0);
     textSize(windowHeight / 20);
