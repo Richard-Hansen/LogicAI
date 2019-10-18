@@ -36,9 +36,11 @@ class Linker:
 		return new_areas
 
 	# train agents based on the provided number of epochs
-	def train(self, epochs, verbose=False):
+	def train(self, epochs, verbose=False, writeToDB=False):
 		if epochs < 1 or epochs > 10000:
 			raise Exception("Epochs should be between 1 and 10,000 inclusive.")
+		
+
 		for i in range(epochs):
 			# Environment - creates the environment and creates all the states for the environment
 			environment = Environment(self.areas, writeToDB=False)
@@ -54,7 +56,7 @@ class Linker:
 			if verbose:
 				print("Starting Game ", i)
 
-			game.play_game(update_after_game = True, verbose = verbose)
+			game.play_game(update_after_game = True, verbose = verbose, get_state_histories_for_p1=True)
 
 		print("Training for %d epochs completed" % (epochs))
 
@@ -116,9 +118,11 @@ class Linker:
 
 # set up the big agent and environment
 # a = [0.045625,0.078125,0.081250,0.110938,0.038750,0.081250,0.071875,0.035938,0.061250,0.085937,0.026562,0.046875,0.038750,0.090625,0.065625,0.040625]
-# print(sum(a))
+a = [0.045625, 0.038750, 0.061250, 0.038750, 0.078125, 0.081250, 0.085937, 0.090625, 0.081250, 0.071875, 0.026562, 0.065625, 0.110938, 0.035938, 0.046875, 0.040625]
+environment = Environment(a, writeToDB=True)
+
 # L = Linker(a)
-# L.train(1,verbose=True)
+# L.train(1,verbose=True, writeToDB=True)
 
 
 # have an agent with its agentlings connected to the environment
