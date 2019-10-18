@@ -42,7 +42,7 @@ class Linker:
 		
 
 		for i in range(epochs):
-                        print("Epoch: ",i)
+			print("Epoch: ",i)
 			# Environment - creates the environment and creates all the states for the environment
 			environment = Environment(self.areas, writeToDB=False)
 			if verbose:
