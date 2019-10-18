@@ -44,7 +44,7 @@ class GameLogic {
     /* Who took the square */
     this.whoTookQuad = [];
     /* Sending HTTP request to the squareData route. Need to populate the squares/squaresArea array */
-    httpPost("http://localhost:8088/squareData", { Mapname: "Map2" }, this.httpPostSquareData)
+    httpPost("http://localhost:8088/squareData", { Mapname: "Map" + currentMapSelected }, this.httpPostSquareData)
   }
 
   httpPostSquareData(res) {
@@ -151,7 +151,7 @@ class gameScreen {
     this.mmgameLogic = mgameLogic;
     WHoTheFuckMoves = 1;
     /* Sending HTTP request to the squareData route. Need to populate the squares/squaresArea array */
-    httpPost("http://localhost:8088/squareData", { Mapname: "Map2" }, this.httpPostSquareData)
+    httpPost("http://localhost:8088/squareData", { Mapname: "Map" + currentMapSelected }, this.httpPostSquareData)
 
     playerTimer = -1;
 
@@ -174,9 +174,9 @@ class gameScreen {
     this.scorePlayer = 0;
     mgameLogic = new GameLogic();
     this.mmgameLogic = mgameLogic;
-    httpPost("http://localhost:8088/map", { map: "Map2" }, this.callMapRoute)
+    httpPost("http://localhost:8088/map", { map: "Map" + currentMapSelected }, this.callMapRoute)
     /* Sending HTTP request to the squareData route. Need to populate the squares/squaresArea array */
-    httpPost("http://localhost:8088/squareData", { Mapname: "Map2" }, this.httpPostSquareData)
+    httpPost("http://localhost:8088/squareData", { Mapname: "Map" + currentMapSelected }, this.httpPostSquareData)
   }
 
   /* draw function that will be called at 60fps once gameState has been moved to 1. */
