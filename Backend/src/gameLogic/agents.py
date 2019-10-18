@@ -182,9 +182,9 @@ class AgentX86:
 
 	# calculates a random action the agent can take from the given state
 	def random_action(self, big_board_sums, big_board_counts):
-		available_actions = [x for x in big_board_counts if x != 0]
+		available_actions = [x for x in range(len(big_board_counts)) if big_board_counts[x] != 0]
 
-		k = random.randint(0,len(available_actions))
+		k = available_actions[random.randint(0,len(available_actions))]
 
 		guess_value = ((big_board_sums[k] * 1.00) / big_board_counts[k])
 		guess_action = k
