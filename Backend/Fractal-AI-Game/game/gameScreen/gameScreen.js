@@ -524,7 +524,7 @@ class gameScreen {
             }
 
             if(takenSquare.length == 16){
-              httpPost("http://localhost:8088/score", { "time": playerTimer, "scorePlayer": mgameScreen.scorePlayer, "scoreAI": mgameScreen.scoreAI }, function(res) {
+              httpPost("http://localhost:8088/score", { "time": playerTimer, "scorePlayer": mgameScreen.scorePlayer, "scoreAI": mgameScreen.scoreAI, "difficulty": difficultyInt, "map": mapName, "userID": userID}, function(res) {
                 mgameScreen.endGameSender(res, mgameScreen);
                 gameState = 2;
               })
@@ -611,12 +611,12 @@ function mouseClickedd() {
         }else {
           mgameScreen.scorePlayer += (100 * addAndMore[0]);
         }
-        if(takenSquare.length == 16){
-          console.log("FEAWFGEWGFDSAFEWAFDWEAFSD");
-          httpPost("http://localhost:8088/score", { "time": playerTimer, "scorePlayer": mgameScreen.scorePlayer, "scoreAI": mgameScreen.scoreAI }, function(res) {
-            mgameScreen.endGameSender(res, mgameScreen);
-          })
-        }
+        // if(takenSquare.length == 16){
+        //   console.log("FEAWFGEWGFDSAFEWAFDWEAFSD");
+        //   httpPost("http://localhost:8088/score", { "time": playerTimer, "scorePlayer": mgameScreen.scorePlayer, "scoreAI": mgameScreen.scoreAI }, function(res) {
+        //     mgameScreen.endGameSender(res, mgameScreen);
+        //   })
+        // }
       }
     } while(addAndMore[0] != undefined)
     /* Change player turn */
