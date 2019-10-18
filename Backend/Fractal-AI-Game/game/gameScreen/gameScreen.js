@@ -159,6 +159,7 @@ class gameScreen {
   }
 
   init(test){
+    console.log(userID);
     /* Set player move */
     if(test) {
       return;
@@ -533,7 +534,7 @@ class gameScreen {
               case "impossible": difficultyInt = 3; break;
             }
             if(takenSquare.length == 16){
-              httpPost("http://localhost:8088/score", { "time": playerTimer, "scorePlayer": mgameScreen.scorePlayer, "scoreAI": mgameScreen.scoreAI, "difficulty": difficultyInt, "map": mapName, "userID": userID}, function(res) {
+              httpPost("http://localhost:8088/score", { "time": playerTimer, "scorePlayer": mgameScreen.scorePlayer, "scoreAI": mgameScreen.scoreAI, "difficulty": difficultyInt, "map": currentMapSelected, "userID": parseInt(userID)}, function(res) {
                 mgameScreen.endGameSender(res, mgameScreen);
                 gameState = 2;
               })
@@ -626,7 +627,7 @@ function mouseClickedd() {
         }
 
         if(takenSquare.length == 16){
-          httpPost("http://localhost:8088/score", { "time": playerTimer, "scorePlayer": mgameScreen.scorePlayer, "scoreAI": mgameScreen.scoreAI, "difficulty": difficultyInt, "map": mapName, "userID": userID}, function(res) {
+          httpPost("http://localhost:8088/score", { "time": playerTimer, "scorePlayer": mgameScreen.scorePlayer, "scoreAI": mgameScreen.scoreAI, "difficulty": difficultyInt, "map": currentMapSelected, "userID": parseInt(userID) }, function(res) {
             mgameScreen.endGameSender(res, mgameScreen);
             gameState = 2;
           })
