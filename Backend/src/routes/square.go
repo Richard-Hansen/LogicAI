@@ -41,7 +41,7 @@ func SquareData(w http.ResponseWriter, r *http.Request) {
 	_ = json.Unmarshal([]byte(file), &data)
 	fmt.Println(data)
 	ret := data.Squares + " "
-	areaArray := gameLogic.FindArea("gameBoards/Map1.json")
+	areaArray := gameLogic.FindArea("gameBoards/" + mapData["Mapname"].(string) + ".json")
 	for i := 0; i < len(areaArray); i++ {
 
 		if i == len(areaArray)-1 {
