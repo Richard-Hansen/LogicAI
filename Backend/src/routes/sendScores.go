@@ -19,6 +19,9 @@ type SendScoreDataType struct {
 	Time        int `json: "time"`
 	ScorePlayer int `json: "scorePlayer"`
 	ScoreAI     int `json: "scoreAI"`
+	Difficulty  int `json: "difficulty"`
+	MapName			int `json: "map"`
+	UserID 			int `json: "userID"`
 }
 
 /**
