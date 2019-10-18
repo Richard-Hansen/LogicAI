@@ -1,7 +1,9 @@
+import random
+
 class AgentX86:
 	# X_'variablename' indicates that the variable is present in both the AgentX86 class and the Agentling class. 
 	# Indicates this variable is for the AgentX86 class.
-	def __init__(self, X_env, player, eps = 0.1, alpha = 0.5):
+	def __init__(self, X_env, player, eps = 0.2, alpha = 0.5):
 		if player == None:
 			raise Exception()
 			
@@ -125,22 +127,28 @@ class AgentX86:
 				big_board_sums[big_board_label] += tiny_board_values[j]
 				big_board_counts[big_board_label] += 1
 
+
+		if random.random() >= self.X_eps:
+			max_value, action = self.find_action(big_board_sums, big_board_counts)
+		else:
+			max_value, action = self.random_action(big_board_sums, big_board_counts)
+
 		# find the max average value in the big board
-		max_value = -1
-		action = -1
-		for k in range(40):
+		# max_value = -1
+		# action = -1
+		# for k in range(40):
 
-			# if there are no counts for the chosen edge, then the chosen edge cant be a valid option
-			if big_board_counts[k] == 0:
-				continue
+		# 	# if there are no counts for the chosen edge, then the chosen edge cant be a valid option
+		# 	if big_board_counts[k] == 0:
+		# 		continue
 
-			# calculate average value of taking edge k on the big board	
-			temp_value = big_board_sums[k] / big_board_counts[k]
+		# 	# calculate average value of taking edge k on the big board	
+		# 	temp_value = (big_board_sums[k] * 1.00) / big_board_counts[k]
 
-			# set max edge value, and the the corresponding edge choice
-			if temp_value > max_value:
-				max_value = temp_value
-				action = k
+		# 	# set max edge value, and the the corresponding edge choice
+		# 	if temp_value > max_value:
+		# 		max_value = temp_value
+		# 		action = k
 
 		#return the mapping of the chosen big board edge in the form of the tiny board edge choices
 		self.X_env.update_envys(self.player, self.big_to_tiny[action])
@@ -151,6 +159,37 @@ class AgentX86:
 
 		return self.X_env.get_environment()
 
+	# Calculates the best possible action that the agent can take from the given state
+	def find_action(self, big_board_sums, big_board_counts):
+		max_value = -1
+		action = -1
+
+		for k in range(40):
+
+			# if there are no counts for the chosen edge, then the chosen edge cant be a valid option
+			if big_board_counts[k] == 0:
+				continue
+
+			# calculate average value of taking edge k on the big board	
+			temp_value = (big_board_sums[k] * 1.00) / big_board_counts[k]
+
+			# set max edge value, and the the corresponding edge choice
+			if temp_value > max_value:
+				max_value = temp_value
+				action = k
+
+		return max_value, action
+
+	# calculates a random action the agent can take from the given state
+	def random_action(self, big_board_sums, big_board_counts):
+		available_actions = [x for x in range(len(big_board_counts)) if big_board_counts[x] != 0]
+
+		k = random.choice(available_actions)
+
+		guess_value = ((big_board_sums[k] * 1.00) / big_board_counts[k])
+		guess_action = k
+
+		return guess_value, guess_action
 
 	# get the history associated with each of the states
 	def get_state_histories(self):
