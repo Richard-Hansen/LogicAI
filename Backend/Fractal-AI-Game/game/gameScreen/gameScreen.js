@@ -634,6 +634,7 @@ function mouseClickedd() {
   }
   if(mgameScreen.checkBackButton() != 255){
     gameState = 0;
+    mstartScreen.show()
   }
 }
 module.exports = [gameScreen, vertices, squares];
