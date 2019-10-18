@@ -49,6 +49,7 @@ class GameLogic {
 
   httpPostSquareData(res) {
     console.log("???");
+    console.log(res);
     /* Splits the response by spaces and places it back into res */
     res = res.split(" ");
     /* Iterate through all indices */
@@ -173,7 +174,9 @@ class gameScreen {
     this.scorePlayer = 0;
     mgameLogic = new GameLogic();
     this.mmgameLogic = mgameLogic;
-    httpPost("http://localhost:8088/map", { map: "Map1" }, this.callMapRoute)
+    httpPost("http://localhost:8088/map", { map: "Map2" }, this.callMapRoute)
+    /* Sending HTTP request to the squareData route. Need to populate the squares/squaresArea array */
+    httpPost("http://localhost:8088/squareData", { Mapname: "Map2" }, this.httpPostSquareData)
   }
 
   /* draw function that will be called at 60fps once gameState has been moved to 1. */
@@ -522,11 +525,6 @@ class gameScreen {
             }else {
               this.scoreAI += (100 * addAndMore[0]);
             }
-
-
-
-
-            
             let difficultyInt;
             switch(difficulty) {
               case "easy": difficultyInt = 0; break;
