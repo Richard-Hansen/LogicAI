@@ -11,15 +11,18 @@
  */
 var Gamebackground;
 var buttonsOnStartScreen = [];
+var currentMapSelected;
 // var difficultyIntForm;
 class StartScreen {
   constructor() {
     /* This is the state of the start screen we are in */
     this.startScreenState = 0;
+    currentMapSelected = 1;
     /* background object */
     Gamebackground = new gamebackground();
     this.buttonShown = false;
     this.boxAlpha = 0;
+
 
     this.difficultyIntForm = 0;
 
@@ -393,6 +396,15 @@ function mouseClicked() {
         mstartScreen.difficultyIntForm--;
       } else if (i == 1 && mstartScreen.difficultyIntForm < 4) {
         mstartScreen.difficultyIntForm++;
+      }
+      if(i == 2 && currentMapSelected > 0){
+        currentMapSelected--;
+        mgameScreen.init();
+        Gamebackground = new gamebackground();
+      } else if(i == 3 && currentMapSelected < 3){
+        currentMapSelected++;
+        mgameScreen.init();
+        Gamebackground = new gamebackground();
       }
     }
   }
