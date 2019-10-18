@@ -8,6 +8,7 @@ class Environment:
 		self.writeToDB = writeToDB
 		self.envys = self.__create_envys()
 		self.big_board = [0] * 40
+                print("ININT")
 		
 		self.tiny_to_big_edges = {
 							0:[0,1,4,5,8,9,20,21,22,25,26,27],
@@ -414,7 +415,8 @@ class Envy:
 	def create_state_hash_and_values(self, see_first_states = False):
 		print("HERHEHEHEHE\n\n\n\n\n\n")
 		self.hash_to_values_and_state = {}
-
+                
+                print("State hash and values")
 		count = 0
 
 		TERNARY = 3
