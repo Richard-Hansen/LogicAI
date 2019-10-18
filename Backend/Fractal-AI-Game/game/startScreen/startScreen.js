@@ -11,15 +11,18 @@
  */
 var Gamebackground;
 var buttonsOnStartScreen = [];
+var currentMapSelected;
 // var difficultyIntForm;
 class StartScreen {
   constructor() {
     /* This is the state of the start screen we are in */
     this.startScreenState = 0;
+    currentMapSelected = 1;
     /* background object */
     Gamebackground = new gamebackground();
     this.buttonShown = false;
     this.boxAlpha = 0;
+
 
     this.difficultyIntForm = 0;
 
@@ -194,8 +197,8 @@ class StartScreen {
       /* Drawing my background */
       pop();
       Gamebackground.draw();
-      this.animateBoxes();
       this.animateMapSelection();
+      this.animateBoxes();
       this.animateDiffculity();
       this.animatePlayButton();
     }
@@ -322,7 +325,7 @@ class StartScreen {
     /* Setting my stroke color */
     stroke(0, 0, 0, this.boxAlpha);
     /* Drawing my rectangle */
-    rect(0, -windowHeight / 5, windowWidth / 4, windowHeight / 15, 20);
+    // rect(0, -windowHeight / 5, windowWidth / 4, windowHeight / 15, 20);
     fill(0, 0, 0, this.boxAlpha)
     strokeWeight(0);
     textSize(windowHeight / 20);
@@ -393,6 +396,15 @@ function mouseClicked() {
         mstartScreen.difficultyIntForm--;
       } else if (i == 1 && mstartScreen.difficultyIntForm < 4) {
         mstartScreen.difficultyIntForm++;
+      }
+      if(i == 2 && currentMapSelected > 0){
+        currentMapSelected--;
+        mgameScreen.init();
+        Gamebackground = new gamebackground();
+      } else if(i == 3 && currentMapSelected < 3){
+        currentMapSelected++;
+        mgameScreen.init();
+        Gamebackground = new gamebackground();
       }
     }
   }

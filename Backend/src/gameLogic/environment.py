@@ -115,17 +115,22 @@ class Envy:
 
 		# make the db call to get all the values for the ones in the hash
 		if len(state_history) == 1:
+                        #print(1)
 			# single value in the list
-			hash_values = get_hash_value_and_state_by_hash_code(state_history, self.environment_id, self.envy_id)
+			hash_values = get_hash_value_and_state_by_hash_code(state_history[0], self.environment_id, self.envy_id)
 		else:
+                        #print(2)
 			# has more of the hash codes so need to put all into one call
 			hash_values = get_hash_values_and_by_hash_codes(state_history, self.environment_id, self.envy_id)
 		
 		value_index = 0
 		for s in state_history:
+                        #print(s, value_index, len(hash_values))
 			hash_codes_and_values[s] = hash_values[value_index]
-			value_index += 1
+			#print(hash_codes_and_values[s])
+                        value_index += 1
 
+                print("After the values")
 		return hash_codes_and_values
 
 
@@ -286,11 +291,11 @@ class Envy:
 
 		for edges_needed_for_side_index in range(4):
 			if edges_needed[edges_needed_for_side_index] == 4 or edges_needed[edges_needed_for_side_index] == 3:
-				value += 0.5 * self.areas[edges_needed_for_side_index]
+				value += 0.4 * self.areas[edges_needed_for_side_index]
 			elif edges_needed[edges_needed_for_side_index] == 2:
-				value += 0.25 * self.areas[edges_needed_for_side_index]
+				value += 0.8 * self.areas[edges_needed_for_side_index]
 			elif edges_needed[edges_needed_for_side_index] == 1:
-				value += 0.9 * self.areas[edges_needed_for_side_index]
+				value += 0.2 * self.areas[edges_needed_for_side_index]
 			elif edges_needed[edges_needed_for_side_index] == 0:
 				if state_info[edges_needed_for_side_index + 12] == self.p1:
 					value += self.areas[edges_needed_for_side_index]

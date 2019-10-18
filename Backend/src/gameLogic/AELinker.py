@@ -53,7 +53,7 @@ class Linker:
 			agentX86P2 = AgentX86(environment,2)
 
 			game = Game(agentX86P1, agentX86P2)
-			
+		        #print(environment, agentX86P1, agentX86P2, game)	
 			if verbose:
 				print("Starting Game ", i)
 

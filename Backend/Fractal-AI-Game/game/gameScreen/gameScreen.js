@@ -44,11 +44,12 @@ class GameLogic {
     /* Who took the square */
     this.whoTookQuad = [];
     /* Sending HTTP request to the squareData route. Need to populate the squares/squaresArea array */
-    httpPost("http://localhost:8088/squareData", { Mapname: "Map2" }, this.httpPostSquareData)
+    httpPost("http://localhost:8088/squareData", { Mapname: "Map" + currentMapSelected }, this.httpPostSquareData)
   }
 
   httpPostSquareData(res) {
     console.log("???");
+    console.log(res);
     /* Splits the response by spaces and places it back into res */
     res = res.split(" ");
     /* Iterate through all indices */
@@ -150,7 +151,7 @@ class gameScreen {
     this.mmgameLogic = mgameLogic;
     WHoTheFuckMoves = 1;
     /* Sending HTTP request to the squareData route. Need to populate the squares/squaresArea array */
-    httpPost("http://localhost:8088/squareData", { Mapname: "Map2" }, this.httpPostSquareData)
+    httpPost("http://localhost:8088/squareData", { Mapname: "Map" + currentMapSelected }, this.httpPostSquareData)
 
     playerTimer = -1;
 
@@ -173,7 +174,9 @@ class gameScreen {
     this.scorePlayer = 0;
     mgameLogic = new GameLogic();
     this.mmgameLogic = mgameLogic;
-    httpPost("http://localhost:8088/map", { map: "Map1" }, this.callMapRoute)
+    httpPost("http://localhost:8088/map", { map: "Map" + currentMapSelected }, this.callMapRoute)
+    /* Sending HTTP request to the squareData route. Need to populate the squares/squaresArea array */
+    httpPost("http://localhost:8088/squareData", { Mapname: "Map" + currentMapSelected }, this.httpPostSquareData)
   }
 
   /* draw function that will be called at 60fps once gameState has been moved to 1. */
@@ -522,7 +525,13 @@ class gameScreen {
             }else {
               this.scoreAI += (100 * addAndMore[0]);
             }
-
+            let difficultyInt;
+            switch(difficulty) {
+              case "easy": difficultyInt = 0; break;
+              case "medium": difficultyInt = 1; break;
+              case "hard": difficultyInt = 2; break;
+              case "impossible": difficultyInt = 3; break;
+            }
             if(takenSquare.length == 16){
               httpPost("http://localhost:8088/score", { "time": playerTimer, "scorePlayer": mgameScreen.scorePlayer, "scoreAI": mgameScreen.scoreAI, "difficulty": difficultyInt, "map": mapName, "userID": userID}, function(res) {
                 mgameScreen.endGameSender(res, mgameScreen);
@@ -582,6 +591,10 @@ class gameScreen {
  *                it put that line into clickConnections for that vertex
  */
 function mouseClickedd() {
+  if(mgameScreen.checkBackButton() != 255){
+    gameState = 0;
+    mstartScreen.show()
+  }
   if(WHoTheFuckMoves == 2){
     return;
   }
@@ -611,6 +624,13 @@ function mouseClickedd() {
         }else {
           mgameScreen.scorePlayer += (100 * addAndMore[0]);
         }
+
+        if(takenSquare.length == 16){
+          httpPost("http://localhost:8088/score", { "time": playerTimer, "scorePlayer": mgameScreen.scorePlayer, "scoreAI": mgameScreen.scoreAI, "difficulty": difficultyInt, "map": mapName, "userID": userID}, function(res) {
+            mgameScreen.endGameSender(res, mgameScreen);
+            gameState = 2;
+          })
+        }
         // if(takenSquare.length == 16){
         //   console.log("FEAWFGEWGFDSAFEWAFDWEAFSD");
         //   httpPost("http://localhost:8088/score", { "time": playerTimer, "scorePlayer": mgameScreen.scorePlayer, "scoreAI": mgameScreen.scoreAI }, function(res) {
@@ -631,10 +651,6 @@ function mouseClickedd() {
     httpPost("http://localhost:8088/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare, "difficulty": difficultyInt }, function(res) {
       mgameScreen.checkAIMove(res, mgameScreen);
     })
-  }
-  if(mgameScreen.checkBackButton() != 255){
-    gameState = 0;
-    mstartScreen.show()
   }
 }
 module.exports = [gameScreen, vertices, squares];
