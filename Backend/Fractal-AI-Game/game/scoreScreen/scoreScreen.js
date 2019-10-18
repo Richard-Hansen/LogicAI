@@ -115,7 +115,7 @@ class ScoreScreen {
       that.createTableHeader("Your Results")
       for (var i = 0; i < yourResults.length; i++) {
         var score = yourResults[i]
-        score.Index = i + 1
+        // score.Index = i + 1 this was an error
         var bgColor = that.getScoreHighlight(score)
         that.createTableElement(score, bgColor)
       }
