@@ -28,7 +28,7 @@ function setup() {
   /* Have all our rects in center mode */
   rectMode(CENTER);
   /* Have all our text in center mode */
-  textAlign(CENTER);
+  textAlign(CENTER)
   /* Making an instance of the game, this will call the map route to setup the game */
   mgameScreen = new gameScreen();
   /* Making an instance of the start screen, this is where you will make your

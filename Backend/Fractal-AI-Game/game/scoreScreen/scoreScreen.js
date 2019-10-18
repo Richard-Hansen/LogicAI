@@ -75,9 +75,9 @@ class ScoreScreen {
 
   getScoreHighlight(score) {
     if (score.UserID.toString() === userID.toString()) {
-      return '#e876ff'
+      return 'rgba(255, 159, 0, 0.8)'
     }
-    return '#e8edff'
+    return 'white'
   }
 
   getLastScore(scores) {

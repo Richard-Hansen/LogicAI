@@ -81,6 +81,8 @@ func set_difficulty(diff int) {
 		difficulty = 1
 	}
 
+	difficulty = 5
+
 	eps = 1 - (0.2 * float64(difficulty))
 }
 
