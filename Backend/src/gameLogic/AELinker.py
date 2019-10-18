@@ -42,6 +42,7 @@ class Linker:
 		
 
 		for i in range(epochs):
+                        print("Epoch: ",i)
 			# Environment - creates the environment and creates all the states for the environment
 			environment = Environment(self.areas, writeToDB=False)
 			if verbose:
@@ -119,10 +120,11 @@ class Linker:
 # set up the big agent and environment
 # a = [0.045625,0.078125,0.081250,0.110938,0.038750,0.081250,0.071875,0.035938,0.061250,0.085937,0.026562,0.046875,0.038750,0.090625,0.065625,0.040625]
 a = [0.045625, 0.038750, 0.061250, 0.038750, 0.078125, 0.081250, 0.085937, 0.090625, 0.081250, 0.071875, 0.026562, 0.065625, 0.110938, 0.035938, 0.046875, 0.040625]
-environment = Environment(a, writeToDB=True)
-
-# L = Linker(a)
-# L.train(1,verbose=True, writeToDB=True)
+# environment = Environment(a, writeToDB=True)
+# environment.create_envy_states()
+# print("Written to db")
+L = Linker(a)
+L.train(10000,verbose=False, writeToDB=False)
 
 
 # have an agent with its agentlings connected to the environment
