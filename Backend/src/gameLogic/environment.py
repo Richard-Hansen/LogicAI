@@ -414,7 +414,6 @@ class Envy:
 	def create_state_hash_and_values(self, see_first_states = False):
 		print("HERHEHEHEHE\n\n\n\n\n\n")
 		self.hash_to_values_and_state = {}
-
 		count = 0
 
 		TERNARY = 3
