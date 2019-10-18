@@ -115,17 +115,22 @@ class Envy:
 
 		# make the db call to get all the values for the ones in the hash
 		if len(state_history) == 1:
+                        #print(1)
 			# single value in the list
-			hash_values = get_hash_value_and_state_by_hash_code(state_history, self.environment_id, self.envy_id)
+			hash_values = get_hash_value_and_state_by_hash_code(state_history[0], self.environment_id, self.envy_id)
 		else:
+                        #print(2)
 			# has more of the hash codes so need to put all into one call
 			hash_values = get_hash_values_and_by_hash_codes(state_history, self.environment_id, self.envy_id)
 		
 		value_index = 0
 		for s in state_history:
+                        #print(s, value_index, len(hash_values))
 			hash_codes_and_values[s] = hash_values[value_index]
-			value_index += 1
+			#print(hash_codes_and_values[s])
+                        value_index += 1
 
+                print("After the values")
 		return hash_codes_and_values
 
 
