@@ -110,7 +110,7 @@ class AgentX86:
 		return agentling_list
 
 	# return which edge to take for the agent's next move
-	def take_action(self):
+	def take_action(self, map_num):
 		big_board_sums = [0] * 40
 		big_board_counts = [0] * 40
 

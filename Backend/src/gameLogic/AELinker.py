@@ -1,6 +1,7 @@
 from agents import AgentX86, Agentling
 from environment import Environment, Envy
 from game import Game
+from callDatabases import check_map 
 
 class Linker:
 	def __init__(self, areas, translate_areas=True, map_num=0): 
@@ -41,7 +42,7 @@ class Linker:
 		return new_areas
 
 	# train agents based on the provided number of epochs
-	def train(self, epochs, verbose=False, writeToDB=False):
+	def train(self, epochs, map_num, verbose=False, writeToDB=False):
 		if epochs < 1 or epochs > 10000:
 			raise Exception("Epochs should be between 1 and 10,000 inclusive.")
 		
@@ -49,7 +50,7 @@ class Linker:
 		for i in range(epochs):
 			print("Epoch: ",i)
 			# Environment - creates the environment and creates all the states for the environment
-			environment = Environment(self.areas, writeToDB=False)
+			environment = Environment(self.areas, environment_id=map_num, writeToDB=False)
 			if verbose:
 				print("Environment created")
 
@@ -66,11 +67,17 @@ class Linker:
 
 		print("Training for %d epochs completed" % (epochs))
 
+
 	# create map values intialization function
-	def create_map_values(self):
-		environment = Environment(self.areas, writeToDB=True)
-		environment.create_envy_states()
-		print("Written to db")
+	def create_map_values(self, exists):
+		try:
+			if exists == False:
+				environment = Environment(self.areas, writeToDB=True)
+				environment.create_envy_states()
+			# denotes that it is not failing
+			return True
+		except Exception as e:
+			return False
 
 
 	# # # does the mapping from an edge to the vertices for all the edges
@@ -144,16 +151,16 @@ def train_AI(areas, map_num):
 
 
 # create the ai given the areas
-def create_AI(areas, map_num):
+def create_AI(areas, map_num, exists):
 	L = Linker(areas = areas, map_num = map_num)
-	L.create_map_values(areas)
+	return L.create_map_values(exists)
 
 
 # call train for AI
 # train_AI(a1, 1)
 
 # call create for AI to set up environments for a given map
-# create_AI(a2, 1)
+# create_AI(a2, 1, check_map(1))
 
 
 
