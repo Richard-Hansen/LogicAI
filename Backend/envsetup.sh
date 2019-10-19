@@ -61,7 +61,7 @@ else
   echo -e "${RED}FAILURE, tests did not pass\n${NC}"
 fi
 cd src/gameLogic
-if python agents_test.py && python callDatabases_test.py && python environment_test.py && python game_test.py; then
+if python agents_test.py && python callDatabases_test.py && python environment_test.py && python game_test.py && python AELinker_test.py; then
   echo -e "${GREEN}Success\n${NC}"
 else
   echo -e "${RED}FAILURE, tests did not pass\n${NC}"
