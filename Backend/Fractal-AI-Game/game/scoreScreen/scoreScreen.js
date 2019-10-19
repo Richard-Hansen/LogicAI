@@ -4,6 +4,7 @@ class ScoreScreen {
     this.scores = []
     this.inputsCreated = false;
     this.shownInputs = false;
+    this.eleList = []
   }
 
   buildScreen() {
@@ -12,6 +13,7 @@ class ScoreScreen {
 
   createInputs() {
     this.scoreContainer = createDiv();
+    this.eleList.push(this.scoreContainer);
     this.scoreContainer.style('position', 'absolute')
     this.scoreContainer.style('top', '0')
     this.scoreContainer.style('width', '100vw')
@@ -20,20 +22,41 @@ class ScoreScreen {
     this.scoreContainer.style('display', 'flex')
     this.scoreContainer.style('flex-direction', 'column')
     this.scoreContainer.style('align-items', 'center')
+    this.createSubElements()
+  }
+
+  createSubElements() {
     this.scoreList = createElement('table')
+    this.eleList.push(this.scoreList);
     this.scoreList.parent(this.scoreContainer)
     this.scoreHeader = createElement('tr')
+    this.eleList.push(this.scoreHeader);
     this.scoreHeader.parent(this.scoreList)
+    this.head01 = createElement('td', 'No.').parent(this.scoreList)
+    this.head02 = createElement('td', 'User').parent(this.scoreList)
+    this.head03 = createElement('td', 'Score').parent(this.scoreList)
+    this.head04 = createElement('td', 'Difficulty').parent(this.scoreList)
+    this.head05 = createElement('td', 'Board').parent(this.scoreList)
+    this.eleList.push(this.head01);
+    this.eleList.push(this.head02);
+    this.eleList.push(this.head03);
+    this.eleList.push(this.head04);
+    this.eleList.push(this.head05);
     this.backButton = createButton("BACK")
+    this.eleList.push(this.backButton);
     this.backButton.style('height', '30px')
     this.backButton.style('width', '100px')
     this.backButton.parent(this.scoreContainer)
     this.backButton.mousePressed(this.goBack(this))
-    createElement('td', 'No.').parent(this.scoreList)
-    createElement('td', 'User').parent(this.scoreList)
-    createElement('td', 'Score').parent(this.scoreList)
-    createElement('td', 'Difficulty').parent(this.scoreList)
-    createElement('td', 'Board').parent(this.scoreList)
+  }
+
+  removeSubElements() {
+    this.eleList.forEach(element => {
+      try {
+        element.remove()
+      } catch (e) {
+      }
+    });
   }
 
   hide() {
@@ -48,7 +71,8 @@ class ScoreScreen {
     return function () {
       that.scoreContainer.hide()
       mgameScreen.init()
-      that.shownInputs = false;
+      that.inputsCreated = false;
+      that.removeSubElements()
       gameState = 0
     }
   }
@@ -60,6 +84,7 @@ class ScoreScreen {
         that.scores = JSON.parse(res)
         // that.scores = [{ Index: 1, UserID: 1, Name: "name", Score: 10, Difficulty: 2, Board: 5 }]
         // that.scores = that.parseScores(that)
+        console.log("call scores route")
         that.validateScores(that)
         that.parseScores(that)
       })
@@ -143,8 +168,10 @@ class ScoreScreen {
   createTableHeader(title) {
     try {
       var tElement = createElement('tr')
+      this.eleList.push(this.tElement);
       //<th class="tg-c3ow" colspan="6">Results</th>
       var tHeader = createElement('th', title)
+      this.eleList.push(this.tHeader);
       tHeader.attribute('colspan', '6')
       tHeader.parent(tElement)
       tElement.parent(this.scoreList)
@@ -156,13 +183,13 @@ class ScoreScreen {
   createTableElement(score, bgColor) {
     try {
       var tElement = createElement('tr')
-      createElement('td', score.Index.toString()).style('background-color', bgColor).parent(tElement)
-      createElement('td', score.Name.toString()).style('background-color', bgColor).parent(tElement)
-      createElement('td', score.Score.toString()).style('background-color', bgColor).parent(tElement)
-      createElement('td', score.Difficulty.toString()).style('background-color', bgColor).parent(tElement)
-      createElement('td', score.Board.toString()).style('background-color', bgColor).parent(tElement)
+      this.eleList.push(this.tElement);
+      this.eleList.push(createElement('td', score.Index.toString()).style('background-color', bgColor).parent(tElement))
+      this.eleList.push(createElement('td', score.Name.toString()).style('background-color', bgColor).parent(tElement))
+      this.eleList.push(createElement('td', score.Score.toString()).style('background-color', bgColor).parent(tElement))
+      this.eleList.push(createElement('td', score.Difficulty.toString()).style('background-color', bgColor).parent(tElement))
+      this.eleList.push(createElement('td', score.Board.toString()).style('background-color', bgColor).parent(tElement))
       tElement.parent(this.scoreList)
-      console.log('scohroe list', this.scoreList)
     } catch (e) {
       // testing
     }
@@ -200,16 +227,21 @@ class ScoreScreen {
     // no
     // this.hide()
 
-    if (!this.shownInputs) {
-      if (!this.inputsCreated) {
-        this.inputsCreated = true;
-        this.createInputs()
-        this.callScoresRoute()
-        // this.hide()
-      } else {
-        this.shownInputs = true
-        this.scoreContainer.style('display', 'flex')
-      }
+    if (!this.inputsCreated) {
+      console.log("calling scores route")
+      this.createInputs()
+      this.scoreContainer.style('display', 'flex')
+      this.callScoresRoute()
+      this.inputsCreated = true
+      // if (!this.inputsCreated) {
+      //   this.inputsCreated = true;
+      //   this.createInputs()
+      //   // this.hide()
+      // } else {
+      //   this.shownInputs = true
+      //   this.scoreContainer.style('display', 'flex')
+      //   this.createSubElements()
+      // }
     }
   }
 }
