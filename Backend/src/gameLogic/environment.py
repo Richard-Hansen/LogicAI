@@ -2,7 +2,10 @@ from callDatabases import set_hash_value, get_hash_value_and_state_by_hash_code,
 
 # creates the big environment 
 class Environment:
-	def __init__(self, areas=[0.25]*16, environment_id=0, writeToDB=True):
+	def __init__(self, environment_id, areas=[0.25]*16, writeToDB=True):
+		if environment_id == None:
+			raise Exception("Unacceptable environment id provided")
+
 		self.areas = areas
 		self.environment_id = environment_id 
 		self.writeToDB = writeToDB
