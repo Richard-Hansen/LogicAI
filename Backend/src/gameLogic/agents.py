@@ -3,7 +3,7 @@ import random
 class AgentX86:
 	# X_'variablename' indicates that the variable is present in both the AgentX86 class and the Agentling class. 
 	# Indicates this variable is for the AgentX86 class.
-	def __init__(self, X_env, player, eps = 0.2, alpha = 0.5):
+	def __init__(self, X_env, player, eps = 0.05, alpha = 0.01):
 		if player == None:
 			raise Exception("Player cannot be NoneType")
 

@@ -10,7 +10,7 @@ class TestAgents(unittest.TestCase):
 	# 
 	def test_state_build_agentlings(self):
 		# set up the big agent and environment
-		environment = Environment(writeToDB=False)
+		environment = Environment(0,writeToDB=False)
 		agentx86 = AgentX86(environment,1)
 		self.assertEqual(len(agentx86.agentlings), 9)
 
@@ -20,7 +20,7 @@ class TestAgents(unittest.TestCase):
 	# Expected output: state_history should have a length of 0
 	# 
 	def test_agentling_state_history(self):
-		environment = Environment(writeToDB=False)
+		environment = Environment(0,writeToDB=False)
 		agentx86 = AgentX86(environment,1)
 		agentx86.agentlings[0].update_state_history()
 		agentx86.agentlings[0].reset_state_history()
@@ -33,7 +33,7 @@ class TestAgents(unittest.TestCase):
 	# Expected output: length of state history matches the insertion count
 	# 
 	def test_agentling_many_states(self):
-		environment = Environment(writeToDB=False)
+		environment = Environment(0,writeToDB=False)
 		agentx86 = AgentX86(environment,1)
 		for i in range(100):
 			agentx86.agentlings[0].update_state_history()
@@ -46,7 +46,7 @@ class TestAgents(unittest.TestCase):
 	# 
 	def test_take_action(self):
 		try:
-			environment = Environment(writeToDB=False)
+			environment = Environment(0,writeToDB=False)
 			agentx86 = AgentX86(environment,1)
 			agentx86.take_action()
 		except Exception:
@@ -58,7 +58,7 @@ class TestAgents(unittest.TestCase):
 	# Expected output: number of unfilled edges in the environment after 2 moves should be reduced by 2
 	# 
 	def test_take_action_environment_update(self):
-		environment = Environment(writeToDB=False)
+		environment = Environment(0,writeToDB=False)
 		agentx86 = AgentX86(environment,1)
 		curr_env_count = agentx86.X_env.get_environment().count(0)
 		agentx86.take_action()
@@ -73,7 +73,7 @@ class TestAgents(unittest.TestCase):
 	# Expected output: The value list must not contain any values for the states when the state history is empty
 	# 
 	def test_update_state_history(self):
-		environment = Environment(writeToDB=False)
+		environment = Environment(0,writeToDB=False)
 		agentx86 = AgentX86(environment,1)
 		value_list = agentx86.update()
 		self.assertEqual(value_list[0], {})
@@ -84,7 +84,7 @@ class TestAgents(unittest.TestCase):
 	# Expected output: All 9 value dictionaries should be empty.
 	# 
 	def test_empty_value_dictionary(self):
-		environment = Environment(writeToDB=False)
+		environment = Environment(0,writeToDB=False)
 		agentx86 = AgentX86(environment,1)
 		flag = True
 		for a in agentx86.get_agentlings():
@@ -99,7 +99,7 @@ class TestAgents(unittest.TestCase):
 	# Expected output: exception from the random action function
 	# 
 	def test_no_random_action(self):
-		environment = Environment(writeToDB=False)
+		environment = Environment(0,writeToDB=False)
 		agentx86 = AgentX86(environment,1)
 		bbs = [1] * 40
 		bbc = [0] * 40
@@ -112,7 +112,7 @@ class TestAgents(unittest.TestCase):
 	# Expected output: exception from the random action function
 	# 
 	def test_bad_random_action_parameters(self):
-		environment = Environment(writeToDB=False)
+		environment = Environment(0,writeToDB=False)
 		agentx86 = AgentX86(environment,1)
 		bbs = [1] * 39
 		bbc = [1] * 39
@@ -126,7 +126,7 @@ class TestAgents(unittest.TestCase):
 	# Expected output: same action and values
 	# 
 	def test_both_action_choices(self):
-		environment = Environment(writeToDB=False)
+		environment = Environment(0,writeToDB=False)
 		agentx86 = AgentX86(environment,1)
 		bbs = [1] * 39
 		bbs.append(2)
@@ -142,7 +142,7 @@ class TestAgents(unittest.TestCase):
 	# Expected output: exception from the random action function
 	# 
 	def test_state_history_data_type(self):
-		environment = Environment(writeToDB=False)
+		environment = Environment(0,writeToDB=False)
 		agentx86 = AgentX86(environment,1)
 		agentx86.take_action()
 
@@ -160,7 +160,7 @@ class TestAgents(unittest.TestCase):
 	# 
 	def test_alpha_must_be_reasonable(self):
 		# set up the big agent and environment
-		environment = Environment(writeToDB=False)
+		environment = Environment(0,writeToDB=False)
 		self.assertRaises(Exception, AgentX86, environment, 1, alpha=-0.1)
 
 	#
@@ -169,13 +169,13 @@ class TestAgents(unittest.TestCase):
 	# Expected output: The mapping suggested number of updated environments should be the same number updated by the environment class
 	# 
 	def test_mapping_validity(self):
-		environment = Environment(writeToDB=False)
+		environment = Environment(0,writeToDB=False)
 		agentx86 = AgentX86(environment,1)
 		big_to_tiny = agentx86.big_to_tiny
 
 		for i in range(40):
 			# recreate environment to reset update counts
-			environment = Environment(writeToDB=False)
+			environment = Environment(0,writeToDB=False)
 			agentx86 = AgentX86(environment,1)
 
 			# update the environments assuming that the action big_to_tiny[i] had been taken
