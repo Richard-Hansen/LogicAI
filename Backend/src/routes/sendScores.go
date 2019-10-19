@@ -21,7 +21,7 @@ type SendScoreDataType struct {
 	ScorePlayer int `json: "scorePlayer"`
 	ScoreAI     int `json: "scoreAI"`
 	Difficulty  int `json: "difficulty"`
-	MapName			int `json: "map"`
+	MapName			int `json: "mapname"`
 	UserID 			int `json: "userID"`
 }
 
@@ -31,9 +31,9 @@ type SendScoreDataType struct {
 func SendScoreHandler(w http.ResponseWriter, r *http.Request) {
 	// connectionString = "Richard:SteveIsTheBest@tcp(198.199.121.101:3306)/logic" // connection string to the db
 	/* Print to stdout */
-	fmt.Println("Start MoveHandler")
+	fmt.Println("Start SendScoreHandler")
 	/* defer will run the line at the very end of the scope (i.e the function) */
-	defer fmt.Println("End MoveHandler")
+	defer fmt.Println("End SendScoreHandler")
 
 	/* Making an empty struct object */
 	scoreData := SendScoreDataType{}
@@ -43,7 +43,8 @@ func SendScoreHandler(w http.ResponseWriter, r *http.Request) {
 	if scoreData.Time < 60 {
 		scoreData.Time = 60
 	}
-
+	fmt.Println("result:\n", reqBody)
+	fmt.Println("THE RECEIVED MAP WAS", scoreData.MapName)
 	var penalty float32 = (float32(scoreData.Difficulty)+1.0)/(4.0) * (60.0/float32(scoreData.Time))
 	var totalScore float32 = float32(scoreData.ScorePlayer) * penalty
 	db, err := sql.Open("mysql", "Richard:SteveIsTheBest@tcp(198.199.121.101:3306)/logic")
