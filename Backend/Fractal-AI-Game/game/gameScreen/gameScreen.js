@@ -48,8 +48,6 @@ class GameLogic {
   }
 
   httpPostSquareData(res) {
-    console.log("???");
-    console.log(res);
     /* Splits the response by spaces and places it back into res */
     res = res.split(" ");
     /* Iterate through all indices */
@@ -101,6 +99,7 @@ class GameLogic {
           }
         }
       }
+
       if (tempValue == 4) {
         this.fillQuads.push([msquares[i][0], msquares[i][1], msquares[i][2], msquares[i][3]]);
         if(WHoTheFuckMoves == 1) {

@@ -294,6 +294,7 @@ class StartScreen {
   }
 
   drawArrows(x, y, pointing) {
+    this.nameInput.show()
     push();
     if (pointing == "right") {
       stroke(0, 0, 0, this.boxAlpha);
