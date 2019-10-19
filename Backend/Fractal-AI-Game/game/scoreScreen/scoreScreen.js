@@ -163,7 +163,6 @@ class ScoreScreen {
       console.log('scohroe list', this.scoreList)
     } catch (e) {
       // testing
-      console.log('ererererer', e)
     }
   }
 
@@ -204,6 +203,7 @@ class ScoreScreen {
       this.callScoresRoute()
       // this.hide()
     }
+    this.show();
   }
 }
 
