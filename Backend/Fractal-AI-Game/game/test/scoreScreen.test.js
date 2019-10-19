@@ -159,8 +159,8 @@ describe('ScoreScreen tests', function () {
         var notUsersScore = { UserID: 42, Name: "name", Score: 10, Difficulty: 2, Board: 5 }
         var res = scoreScreen.getScoreHighlight(usersScore) // #e876ff or #e8edff
         var nonRes = scoreScreen.getScoreHighlight(notUsersScore)
-        expect(res).to.equal('#e876ff')
-        expect(nonRes).to.equal('#e8edff')
+        expect(res).to.equal('rgba(255, 159, 0, 0.8)')
+        expect(nonRes).to.equal('white')
         done()
     })
 
