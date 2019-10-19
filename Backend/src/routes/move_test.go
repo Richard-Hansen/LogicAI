@@ -66,7 +66,7 @@ type MoveData struct {
 func TestAllPossibleEdges(t *testing.T) {
 	curr_state := [...]int{1, 1, 1, 2, 2, 0, 2, 2, 1, 2, 1, 0, 1, 0, 0, 0}
 
-	recieved_actions := get_action_list(curr_state, 0)
+	recieved_actions := get_action_list(curr_state, 0, false)
 	possible_edges := 0
 	var edges_chosen [2]int
 
@@ -91,7 +91,7 @@ func TestAllPossibleEdges(t *testing.T) {
 func TestExistingEdges(t *testing.T) {
 	curr_state := [...]int{1, 1, 1, 2, 2, 0, 2, 2, 1, 2, 1, 0, 1, 0, 0, 0}
 
-	recieved_actions := get_action_list(curr_state, 0)
+	recieved_actions := get_action_list(curr_state, 0, false)
 
 	found_existing := false
 	for i := 0; i < 12; i++ {
