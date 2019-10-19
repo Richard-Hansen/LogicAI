@@ -4,7 +4,7 @@ from game import Game
 from callDatabases import check_map 
 
 class Linker:
-	def __init__(self, areas, translate_areas=True, map_num=0): 
+	def __init__(self, areas, map_num, translate_areas=True): 
 
 		if map_num < 0:
 			raise Exception("All the maps looked at must have a map num greater than or equal to 0")
@@ -50,7 +50,7 @@ class Linker:
 		for i in range(epochs):
 			print("Epoch: ",i)
 			# Environment - creates the environment and creates all the states for the environment
-			environment = Environment(self.areas, environment_id=map_num, writeToDB=False)
+			environment = Environment(environment_id=self.map_num, areas=self.areas, writeToDB=False)
 			if verbose:
 				print("Environment created")
 
@@ -72,7 +72,7 @@ class Linker:
 	def create_map_values(self, exists):
 		try:
 			if exists == False:
-				environment = Environment(self.areas, writeToDB=True)
+				environment = Environment(environment_id=self.map_num, areas=self.areas, writeToDB=True)
 				environment.create_envy_states()
 			# denotes that it is not failing
 			return True
@@ -147,13 +147,13 @@ a2 = []
 
 # do the training given the areas
 def train_AI(areas, map_num):
-	L = Linker(areas = areas, map_num = map_num)
+	L = Linker(areas = areas, map_num = map_num, translate_areas=False)
 	L.train(10000,verbose=False, writeToDB=False)
 
 
 # create the ai given the areas
 def create_AI(areas, map_num, exists):
-	L = Linker(areas = areas, map_num = map_num)
+	L = Linker(areas = areas, map_num = map_num, translate_areas=False)
 	return L.create_map_values(exists)
 
 
