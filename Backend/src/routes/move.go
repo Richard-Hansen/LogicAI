@@ -81,9 +81,7 @@ func set_difficulty(diff int) {
 		difficulty = 1
 	}
 
-	difficulty = 5
-
-	eps = 1 - (0.2 * float64(difficulty))
+	eps = 1 - (0.25 * float64(difficulty))
 }
 
 func TakeAction(mapData MoveDataType, showDebugStatements bool) string {

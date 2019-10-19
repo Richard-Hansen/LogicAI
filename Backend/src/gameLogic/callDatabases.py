@@ -207,5 +207,42 @@ def put_values(values_to_update_by_hash):
         connection.close()
 
 
+# check if the map already exists in the database before creating new values for that map with initial values
+def check_map(map_id_to_check):
+    try:
+        # open the connecton
+        connection = pymysql.connect('198.199.121.101', 'Richard', pwd, 'logic')
+
+        # connection is established
+        with connection.cursor() as cursor:
+            select_statement = "SELECT DISTINCT LEFT(HashCode, 1) FROM hashes;"
+
+            # execute the select statement
+            cursor.execute(select_statement)
+            connection.commit()
+
+            rows = cursor.fetchall()
+
+            code_index = 0
+
+            # for each of the row
+            for row in rows:
+                # value found
+                value = row[0]
+                
+                if str(map_id_to_check) == value:
+                    connection.close()
+                    return True
+
+            connection.close()
+            return False
+
+    except Exception as e:
+        print("EXCEPTION", e)
+        
+
+
+# check_map(0)
+
 
 

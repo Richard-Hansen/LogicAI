@@ -1,9 +1,10 @@
 from agents import AgentX86, Agentling
 from environment import Environment, Envy
 from game import Game
+from callDatabases import check_map 
 
 class Linker:
-	def __init__(self, areas, translate_areas=True, map_num=0): 
+	def __init__(self, areas, map_num, translate_areas=True): 
 
 		if map_num < 0:
 			raise Exception("All the maps looked at must have a map num greater than or equal to 0")
@@ -41,7 +42,7 @@ class Linker:
 		return new_areas
 
 	# train agents based on the provided number of epochs
-	def train(self, epochs, verbose=False, writeToDB=False):
+	def train(self, epochs, map_num, verbose=False, writeToDB=False):
 		if epochs < 1 or epochs > 10000:
 			raise Exception("Epochs should be between 1 and 10,000 inclusive.")
 		
@@ -49,7 +50,7 @@ class Linker:
 		for i in range(epochs):
 			print("Epoch: ",i)
 			# Environment - creates the environment and creates all the states for the environment
-			environment = Environment(self.areas, writeToDB=False)
+			environment = Environment(environment_id=self.map_num, areas=self.areas, writeToDB=False)
 			if verbose:
 				print("Environment created")
 
@@ -66,11 +67,17 @@ class Linker:
 
 		print("Training for %d epochs completed" % (epochs))
 
+
 	# create map values intialization function
-	def create_map_values(self):
-		environment = Environment(self.areas, writeToDB=True)
-		environment.create_envy_states()
-		print("Written to db")
+	def create_map_values(self, exists):
+		try:
+			if exists == False:
+				environment = Environment(environment_id=self.map_num, areas=self.areas, writeToDB=True)
+				environment.create_envy_states()
+			# denotes that it is not failing
+			return True
+		except Exception as e:
+			return False
 
 
 	# # # does the mapping from an edge to the vertices for all the edges
@@ -131,29 +138,35 @@ class Linker:
 # set up the big agent and environment
 # a = [0.045625,0.078125,0.081250,0.110938,0.038750,0.081250,0.071875,0.035938,0.061250,0.085937,0.026562,0.046875,0.038750,0.090625,0.065625,0.040625]
 
-
-
-a1 = [0.045625, 0.038750, 0.061250, 0.038750, 0.078125, 0.081250, 0.085937, 0.090625, 0.081250, 0.071875, 0.026562, 0.065625, 0.110938, 0.035938, 0.046875, 0.040625]
-a2 = []
-a3 = []
+# untranslated areas of the game boards
+a0 = [0.045625,0.078125,0.081250,0.110938,0.038750,0.081250,0.071875,0.035938,0.061250,0.085937,0.026562,0.046875,0.038750,0.090625,0.065625,0.040625]
+a1 = [0.019375,0.031875,0.061250,0.173125,0.092188,0.169375,0.081875,0.026250,0.056250,0.077188,0.024375,0.030625,0.046875,0.037500,0.031250,0.040625]
+a2 = [0.106875,0.073750,0.040625,0.082812,0.078125,0.076250,0.021875,0.067188,0.056250,0.065000,0.043750,0.046875,0.054375,0.076875,0.056250,0.053125]
 
 # do the training given the areas
 def train_AI(areas, map_num):
-	L = Linker(areas = areas, map_num = map_num)
+	L = Linker(areas = areas, map_num = map_num, translate_areas=False)
 	L.train(10000,verbose=False, writeToDB=False)
 
 
 # create the ai given the areas
-def create_AI(areas, map_num):
-	L = Linker(areas = areas, map_num = map_num)
-	L.create_map_values(areas)
+def create_AI(areas, map_num, exists):
+	L = Linker(areas = areas, map_num = map_num, translate_areas=False)
+	return L.create_map_values(exists)
 
 
 # call train for AI
 # train_AI(a1, 1)
 
 # call create for AI to set up environments for a given map
-# create_AI(a2, 1)
+create_AI(a0, 0, check_map(0))
+#train_AI(a0, 0)
+
+#create_AI(a1, 1, check_map(1))
+#train_AI(a1, 1)
+
+#create_AI(a2, 2, check_map(2))
+#train_AI(a2, 2)
 
 
 
