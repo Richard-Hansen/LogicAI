@@ -203,6 +203,7 @@ class ScoreScreen {
       this.callScoresRoute()
       // this.hide()
     }
+    this.show();
   }
 }
 
