@@ -5,7 +5,13 @@ class AgentX86:
 	# Indicates this variable is for the AgentX86 class.
 	def __init__(self, X_env, player, eps = 0.2, alpha = 0.5):
 		if player == None:
-			raise Exception()
+			raise Exception("Player cannot be NoneType")
+
+		if alpha < 0 or alpha > 1:
+			raise Exception("Alpha (learning rate) must be between 0 and 1")
+
+		if eps < 0 or eps > 1:
+			raise Exception("Eps (randomization factor) must be between 0 and 1")
 			
 		self.X_env = X_env
 		self.player = player # player id
@@ -128,27 +134,11 @@ class AgentX86:
 				big_board_counts[big_board_label] += 1
 
 
+		# decides if the AI will make a random move or not
 		if random.random() >= self.X_eps:
 			max_value, action = self.find_action(big_board_sums, big_board_counts)
 		else:
 			max_value, action = self.random_action(big_board_sums, big_board_counts)
-
-		# find the max average value in the big board
-		# max_value = -1
-		# action = -1
-		# for k in range(40):
-
-		# 	# if there are no counts for the chosen edge, then the chosen edge cant be a valid option
-		# 	if big_board_counts[k] == 0:
-		# 		continue
-
-		# 	# calculate average value of taking edge k on the big board	
-		# 	temp_value = (big_board_sums[k] * 1.00) / big_board_counts[k]
-
-		# 	# set max edge value, and the the corresponding edge choice
-		# 	if temp_value > max_value:
-		# 		max_value = temp_value
-		# 		action = k
 
 		#return the mapping of the chosen big board edge in the form of the tiny board edge choices
 		self.X_env.update_envys(self.player, self.big_to_tiny[action])
@@ -178,11 +168,20 @@ class AgentX86:
 				max_value = temp_value
 				action = k
 
+		if max_value == -1 or action == -1:
+			raise Exception("No available actions to be taken")
+
 		return max_value, action
 
 	# calculates a random action the agent can take from the given state
 	def random_action(self, big_board_sums, big_board_counts):
+		if len(big_board_sums) != 40 or len(big_board_counts) != 40:
+			raise Exception("Random action being chosen from an invalid number of states")
+
 		available_actions = [x for x in range(len(big_board_counts)) if big_board_counts[x] != 0]
+
+		if len(available_actions) == 0:
+			raise Exception("No available actions to be taken")
 
 		k = random.choice(available_actions)
 
@@ -264,8 +263,12 @@ class Agentling:
 
 	# appends state hash to end of state_history
 	def update_state_history(self):
-		# print("STATE HISTORY", self.state_history)
-		self.state_history.append(self.env.get_hash())
+		val = self.env.get_hash()
+
+		if type(val) != type(1):
+			raise Exception("Incorrect update history value")
+
+		self.state_history.append(val)
 
 	# reset state_history to an empty list
 	def reset_state_history(self):
