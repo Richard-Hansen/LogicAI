@@ -6,7 +6,6 @@ from io import StringIO
 import sys
 
 class TestGame(unittest.TestCase):
-
 	#
 	# Test Type: Incremental Test
 	# What it is testing: Game play with no environment provided
@@ -25,7 +24,7 @@ class TestGame(unittest.TestCase):
 	def test_create_game_with_one_player(self):
 		environment = Environment(writeToDB=False)
 		agentX86P1 = AgentX86(environment,1)
-		self.assertRaises(Exception, Game, agentX86P1, None)
+		self.assertRaises(Exception, Game, agentX86P1, None, 0)
 
 	#
 	# Test Type: Incremental Test
@@ -33,7 +32,7 @@ class TestGame(unittest.TestCase):
 	# Expected output: Game must not be able to proceed
 	# 
 	def test_create_game_with_no_players(self):
-		self.assertRaises(Exception, Game, None, None)
+		self.assertRaises(Exception, Game, None, None, 0)
 
 	#
 	# Test Type: Incremental Test
@@ -45,7 +44,7 @@ class TestGame(unittest.TestCase):
 			environment = Environment(writeToDB=False)
 			agentX86P1 = AgentX86(environment,1)
 			agentX86P2 = AgentX86(environment,2)
-			game = Game(agentX86P1, agentX86P2)
+			game = Game(agentX86P1, agentX86P2, 0)
 			game.play_game(update_after_game = True)
 		except Exception:
 			self.fail("Playing a game causes an exception")
@@ -61,7 +60,7 @@ class TestGame(unittest.TestCase):
 		environment = Environment(writeToDB=False)
 		agentX86P1 = AgentX86(environment,1)
 		agentX86P2 = AgentX86(environment,2)
-		game = Game(agentX86P1, agentX86P2)
+		game = Game(agentX86P1, agentX86P2, 0)
 
 		state_histories_p1 = game.play_game(update_after_game = False, get_state_histories_for_p1 = True)
 
@@ -94,7 +93,7 @@ class TestGame(unittest.TestCase):
 		environment = Environment(writeToDB=False)
 		agentX86P1 = AgentX86(environment,1)
 		agentX86P2 = AgentX86(environment,2)
-		game = Game(agentX86P1, agentX86P2)
+		game = Game(agentX86P1, agentX86P2, 0)
 		game.play_game(update_after_game = False, get_state_histories_for_p1 = False, print_board = False)
 
 		sys.stdout = sys.__stdout__
@@ -112,13 +111,27 @@ class TestGame(unittest.TestCase):
 		environment = Environment(writeToDB=False)
 		agentX86P1 = AgentX86(environment,1)
 		agentX86P2 = AgentX86(environment,2)
-		game = Game(agentX86P1, agentX86P2)
+		game = Game(agentX86P1, agentX86P2, 0)
 
 		game.play_game(update_after_game = False, get_state_histories_for_p1 = True, print_board=True, get_players=True)
 		players = game.get_players()
 
 		if players[0] == players[1]:
 			self.fail("Not alternating in the initial moves")
+
+	#
+	# Test Type: Incremental Test
+	# What it is testing: Game play with an invalid map num passed from the aelinker
+	# Expected output: Environment creation must not be able to proceed
+	# 
+	def test_play_game_without_map(self):
+		try:
+			environment = Environment(writeToDB=False)
+			agentX86P1 = AgentX86(environment,1)
+			agentX86P2 = AgentX86(environment,2)
+			game = Game(agentX86P1, agentX86P2, 0)
+		except Exception as e: 
+			self.assertEqual(str(e), "__init__() missing 1 required positional argument: 'environment_id'")
 
 
 if __name__ == '__main__':

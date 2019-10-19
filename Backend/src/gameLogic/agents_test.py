@@ -61,8 +61,8 @@ class TestAgents(unittest.TestCase):
 		environment = Environment(writeToDB=False)
 		agentx86 = AgentX86(environment,1)
 		curr_env_count = agentx86.X_env.get_environment().count(0)
-		print(agentx86.take_action())
-		print(agentx86.take_action())
+		agentx86.take_action()
+		agentx86.take_action()
 		new_env_count = agentx86.X_env.get_environment().count(0)
 		self.assertEqual(curr_env_count-2, new_env_count)
 
@@ -92,6 +92,76 @@ class TestAgents(unittest.TestCase):
 			flag = flag and (value_dictionary == {})
 
 		self.assertEqual(flag, True)
+
+	#
+	# Test Type: Regression Test
+	# What it is testing: If there are no values in the counts, no move should be made and an exception should be raised
+	# Expected output: exception from the random action function
+	# 
+	def test_no_random_action(self):
+		environment = Environment(writeToDB=False)
+		agentx86 = AgentX86(environment,1)
+		bbs = [1] * 40
+		bbc = [0] * 40
+
+		self.assertRaises(Exception, agentx86.random_action, bbs, bbc)
+
+	#
+	# Test Type: Regression Test
+	# What it is testing: Incorrect values passed to random action should not be accepted and passed through
+	# Expected output: exception from the random action function
+	# 
+	def test_bad_random_action_parameters(self):
+		environment = Environment(writeToDB=False)
+		agentx86 = AgentX86(environment,1)
+		bbs = [1] * 39
+		bbc = [1] * 39
+
+		self.assertRaises(Exception, agentx86.random_action, bbs, bbc)
+
+
+	#
+	# Test Type: Incremental Test
+	# What it is testing: Both actions should make the same move in certain situations, as they build off of the same base modules
+	# Expected output: same action and values
+	# 
+	def test_both_action_choices(self):
+		environment = Environment(writeToDB=False)
+		agentx86 = AgentX86(environment,1)
+		bbs = [1] * 39
+		bbs.append(2)
+		bbc = [0] * 39
+		bbc.append(1)
+
+		self.assertEqual(agentx86.random_action(bbs,bbc), agentx86.find_action(bbs,bbc))
+
+
+	#
+	# Test Type: Incremental Test
+	# What it is testing: The entire pipeline should return a single integer to an environment after a move has been made
+	# Expected output: exception from the random action function
+	# 
+	def test_state_history_data_type(self):
+		environment = Environment(writeToDB=False)
+		agentx86 = AgentX86(environment,1)
+		agentx86.take_action()
+
+		for a in agentx86.agentlings:
+			try:
+				a.update_state_history()
+			except:
+				self.fail("State history failed after a single move")
+
+
+	#
+	# Test Type: Regression Test
+	# What it is testing: agents could previously be made with negative alpha values, messing up the database
+	# Expected output: negative alpha values should raise an exception
+	# 
+	def test_alpha_must_be_reasonable(self):
+		# set up the big agent and environment
+		environment = Environment(writeToDB=False)
+		self.assertRaises(Exception, AgentX86, environment, 1, alpha=-0.1)
 
 	#
 	# Test Type: Incremental Test
