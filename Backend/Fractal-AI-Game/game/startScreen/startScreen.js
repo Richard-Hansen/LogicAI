@@ -171,18 +171,6 @@ class StartScreen {
     })
   }
 
-  async checkKeyPress(keyCode) {
-    if (keyCode === 13 && this.nameInput.elt === document.activeElement) {
-      var res = await this.playGame()()
-      console.log("reesult", res);
-      if (res === 'OK') {
-        console.log("asdf")
-        window.localStorage.setItem("userName", that.nameInput.elt.value)
-        that.switchState(test)
-      }
-    }
-  }
-
   /**
    * draw - This function will be called when we are in gamestate 0
    */
@@ -378,10 +366,6 @@ class StartScreen {
     /* popping all my settings so other functions dont have to deal with them */
     pop();
   }
-}
-
-function keyPressed() {
-  mstartScreen.checkKeyPress(keyCode);
 }
 
 function mouseClicked() {
