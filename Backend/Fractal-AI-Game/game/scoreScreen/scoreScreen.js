@@ -3,6 +3,7 @@ class ScoreScreen {
     // this.callScoresRoute()
     this.scores = []
     this.inputsCreated = false;
+    this.shownInputs = false;
   }
 
   buildScreen() {
@@ -40,13 +41,14 @@ class ScoreScreen {
   }
 
   show() {
-    this.scoreContainer.show()
+    this.scoreContainer.style('display', 'flex')
   }
 
   goBack(that) {
     return function () {
       that.scoreContainer.hide()
       mgameScreen.init()
+      that.shownInputs = false;
       gameState = 0
     }
   }
@@ -197,13 +199,18 @@ class ScoreScreen {
   draw() {
     // no
     // this.hide()
-    if (!this.inputsCreated) {
-      this.inputsCreated = true;
-      this.createInputs()
-      this.callScoresRoute()
-      // this.hide()
+
+    if (!this.shownInputs) {
+      if (!this.inputsCreated) {
+        this.inputsCreated = true;
+        this.createInputs()
+        this.callScoresRoute()
+        // this.hide()
+      } else {
+        this.shownInputs = true
+        this.scoreContainer.style('display', 'flex')
+      }
     }
-    this.show();
   }
 }
 

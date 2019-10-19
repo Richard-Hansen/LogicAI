@@ -1,18 +1,12 @@
 #!/usr/bin/env bash
-################################################################################
-# Environmental setup for backend                                              #
-# Feel free to add other env things here, please dont break something :)       #
-# Run `chmod -x envsetup.sh` to give the script perms                          #
-# Run `. envsetup.sh` to run the script                                        #
-################################################################################
+
+# tests all functionality of LogicAI, may take a few minutes to run
 
 # Colors
 RED='\033[0;31m'
 NC='\033[0m'
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
-
-
 
 echo -e "${BLUE}Setting GOPATH${NC}"
 export GOPATH=$PWD
