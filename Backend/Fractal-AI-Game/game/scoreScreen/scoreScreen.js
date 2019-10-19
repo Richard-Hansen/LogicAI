@@ -46,6 +46,7 @@ class ScoreScreen {
   goBack(that) {
     return function () {
       that.scoreContainer.hide()
+      mgameScreen.init()
       gameState = 0
     }
   }
@@ -58,7 +59,7 @@ class ScoreScreen {
         // that.scores = [{ Index: 1, UserID: 1, Name: "name", Score: 10, Difficulty: 2, Board: 5 }]
         // that.scores = that.parseScores(that)
         that.validateScores(that)
-        that.parseScores(that)  
+        that.parseScores(that)
       })
     } catch (ReferenceError) {
       // testing
@@ -198,7 +199,7 @@ class ScoreScreen {
     // no
     // this.hide()
     if (!this.inputsCreated) {
-      this.inputsCreated = true;    
+      this.inputsCreated = true;
       this.createInputs()
       this.callScoresRoute()
       // this.hide()
