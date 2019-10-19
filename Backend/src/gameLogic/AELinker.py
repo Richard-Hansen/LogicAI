@@ -42,7 +42,7 @@ class Linker:
 		return new_areas
 
 	# train agents based on the provided number of epochs
-	def train(self, epochs, verbose=False, writeToDB=False):
+	def train(self, epochs, map_num, verbose=False, writeToDB=False):
 		if epochs < 1 or epochs > 10000:
 			raise Exception("Epochs should be between 1 and 10,000 inclusive.")
 		
@@ -50,7 +50,7 @@ class Linker:
 		for i in range(epochs):
 			print("Epoch: ",i)
 			# Environment - creates the environment and creates all the states for the environment
-			environment = Environment(self.areas, writeToDB=False)
+			environment = Environment(self.areas, environment_id=map_num, writeToDB=False)
 			if verbose:
 				print("Environment created")
 
