@@ -12,6 +12,7 @@ import (
 	// "math"
 	// "math/rand"
 	http "net/http"
+	"database/sql"
 )
 
 /* Everything is going to be put into these two 2d int arrays. */
@@ -37,12 +38,34 @@ func SendScoreHandler(w http.ResponseWriter, r *http.Request) {
 	/* Making an empty struct object */
 	scoreData := SendScoreDataType{}
 	reqBody, _ := ioutil.ReadAll(r.Body)
-
 	/* Marshal data into a the struct from above */
 	_ = json.Unmarshal(reqBody, &scoreData)
+	if scoreData.Time < 60 {
+		scoreData.Time = 60
+	}
 
+	var penalty float32 = (float32(scoreData.Difficulty)+1.0)/(4.0) * (60.0/float32(scoreData.Time))
+	var totalScore float32 = float32(scoreData.ScorePlayer) * penalty
+	db, err := sql.Open("mysql", "Richard:SteveIsTheBest@tcp(198.199.121.101:3306)/logic")
+	defer db.Close()
+	if err != nil {
+		panic(err.Error())
+	}
+	stmt, serr := db.Prepare("INSERT game SET score=?,userid=?,difficult=?,board=?")
+	if serr != nil {
+		panic(serr.Error())
+	}
+	res, rerr := stmt.Exec(int(totalScore), scoreData.UserID, scoreData.Difficulty, scoreData.MapName)
+	if rerr != nil {
+		// panic(rerr.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("500 - Something bad happened!"))
+		fmt.Fprintf(w, rerr.Error())
+		return
+	}
 	/* Printing what we got! */
 	fmt.Println(scoreData)
+	fmt.Println(res)
 
 
 	// db, err := sql.Open("mysql", "Richard:SteveIsTheBest@tcp(198.199.121.101:3306)/logic")
