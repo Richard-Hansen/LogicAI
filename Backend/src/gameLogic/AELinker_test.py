@@ -1,5 +1,5 @@
 import unittest
-from AELinker import Linker
+from AELinker import Linker, create_AI
 
 class TestLinker(unittest.TestCase):
 	#
@@ -48,6 +48,19 @@ class TestLinker(unittest.TestCase):
 		a = [0.045625,0.078125,0.081250,0.110938,0.038750,0.081250,0.071875,0.035938,0.061250,0.085937,0.026562,0.046875,0.038750,0.090625,0.065625,0.040625]
 		L = Linker(a)
 		self.assertRaises(Exception, L.train, 0)
+
+
+	#
+	# Test Type: Regression Test
+	# What it is testing: Make sure that a the map number training on is valid
+	# Expected output: Errors if the number of epochs is < 0
+	# 
+	def test_valid_maps(self):
+		a = [0.045625,0.078125,0.081250,0.110938,0.038750,0.081250,0.071875,0.035938,0.061250,0.085937,0.026562,0.046875,0.038750,0.090625,0.065625,0.040625]
+		with self.assertRaises(Exception) as context:
+			create_AI(a, -1)
+		self.assertTrue("All the maps looked at must have a map num greater than or equal to 0" in str(context.exception))
+
 
 if __name__ == '__main__':
 	unittest.main()

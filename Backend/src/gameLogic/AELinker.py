@@ -3,7 +3,11 @@ from environment import Environment, Envy
 from game import Game
 
 class Linker:
-	def __init__(self, areas, translate_areas=True):
+	def __init__(self, areas, translate_areas=True, map_num=0): 
+
+		if map_num < 0:
+			raise Exception("All the maps looked at must have a map num greater than or equal to 0")
+
 		if len(areas) != 16:
 			raise Exception("Invalid areas length, should be a list of 16 values")
 
@@ -14,6 +18,7 @@ class Linker:
 			raise Exception("All area values must be greater than 0")
 
 		self.areas = areas
+		self.map_num = map_num
 
 		if translate_areas:
 			self.areas = self.translate_areas()
@@ -60,6 +65,12 @@ class Linker:
 			game.play_game(update_after_game = True, verbose = verbose, get_state_histories_for_p1=True)
 
 		print("Training for %d epochs completed" % (epochs))
+
+	# create map values intialization function
+	def create_map_values(self):
+		environment = Environment(self.areas, writeToDB=True)
+		environment.create_envy_states()
+		print("Written to db")
 
 
 	# # # does the mapping from an edge to the vertices for all the edges
@@ -119,12 +130,32 @@ class Linker:
 
 # set up the big agent and environment
 # a = [0.045625,0.078125,0.081250,0.110938,0.038750,0.081250,0.071875,0.035938,0.061250,0.085937,0.026562,0.046875,0.038750,0.090625,0.065625,0.040625]
-a = [0.045625, 0.038750, 0.061250, 0.038750, 0.078125, 0.081250, 0.085937, 0.090625, 0.081250, 0.071875, 0.026562, 0.065625, 0.110938, 0.035938, 0.046875, 0.040625]
-# environment = Environment(a, writeToDB=True)
-# environment.create_envy_states()
-# print("Written to db")
-L = Linker(a)
-L.train(10000,verbose=False, writeToDB=False)
+
+
+
+a1 = [0.045625, 0.038750, 0.061250, 0.038750, 0.078125, 0.081250, 0.085937, 0.090625, 0.081250, 0.071875, 0.026562, 0.065625, 0.110938, 0.035938, 0.046875, 0.040625]
+a2 = []
+a3 = []
+
+# do the training given the areas
+def train_AI(areas, map_num):
+	L = Linker(areas = areas, map_num = map_num)
+	L.train(10000,verbose=False, writeToDB=False)
+
+
+# create the ai given the areas
+def create_AI(areas, map_num):
+	L = Linker(areas = areas, map_num = map_num)
+	L.create_map_values(areas)
+
+
+# call train for AI
+# train_AI(a1, 1)
+
+# call create for AI to set up environments for a given map
+# create_AI(a2, 1)
+
+
 
 
 # have an agent with its agentlings connected to the environment

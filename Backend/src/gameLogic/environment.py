@@ -128,9 +128,9 @@ class Envy:
                         #print(s, value_index, len(hash_values))
 			hash_codes_and_values[s] = hash_values[value_index]
 			#print(hash_codes_and_values[s])
-                        value_index += 1
+			value_index += 1
 
-                print("After the values")
+		print("After the values")
 		return hash_codes_and_values
 
 
