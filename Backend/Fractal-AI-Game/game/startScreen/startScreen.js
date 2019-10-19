@@ -19,6 +19,7 @@ class StartScreen {
     this.startScreenState = 0;
     currentMapSelected = 1;
     /* background object */
+    mgameScreen.init();
     Gamebackground = new gamebackground();
     this.buttonShown = false;
     this.boxAlpha = 0;

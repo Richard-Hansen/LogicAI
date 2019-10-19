@@ -32,6 +32,10 @@ var squaresAreas = [];
 
 var playerTimer;
 
+var currentMapSelected = 0;
+
+var difficulty = 0;
+
 /**
  * This function is going to check if any squares have been completed by either
  * the AI or the player.
@@ -48,6 +52,7 @@ class GameLogic {
   }
 
   httpPostSquareData(res) {
+    console.log(res);
     /* Splits the response by spaces and places it back into res */
     res = res.split(" ");
     /* Iterate through all indices */
@@ -158,7 +163,6 @@ class gameScreen {
   }
 
   init(test){
-    console.log(userID);
     /* Set player move */
     if(test) {
       return;
