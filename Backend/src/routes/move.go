@@ -20,7 +20,7 @@ import (
 type MoveDataType struct {
 	EdgesSquare [][]int `json: "edgesSquare"`
 	OwnerSquare [][]int `json: "ownerSquare"`
-	difficulty  int     `json: "difficulty"`
+	Difficulty  int     `json: "difficulty"`
 }
 
 var p1 int                   //player id
@@ -87,7 +87,7 @@ func set_difficulty(diff int) {
 func TakeAction(mapData MoveDataType, showDebugStatements bool) string {
 	p1 = 1
 
-	set_difficulty(mapData.difficulty)
+	set_difficulty(mapData.Difficulty)
 
 	/*maps a pair a vertices to an edge on the 4x4 board.*/
 	vertices_to_edges := map[[2]int]int{
