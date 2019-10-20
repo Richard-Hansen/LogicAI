@@ -66,7 +66,7 @@ type MoveData struct {
 func TestAllPossibleEdges(t *testing.T) {
 	curr_state := [...]int{1, 1, 1, 2, 2, 0, 2, 2, 1, 2, 1, 0, 1, 0, 0, 0}
 
-	recieved_actions := get_action_list(curr_state, 0, false)
+	recieved_actions := get_action_list(curr_state, 0, false, 0)
 	possible_edges := 0
 	var edges_chosen [2]int
 
@@ -91,7 +91,7 @@ func TestAllPossibleEdges(t *testing.T) {
 func TestExistingEdges(t *testing.T) {
 	curr_state := [...]int{1, 1, 1, 2, 2, 0, 2, 2, 1, 2, 1, 0, 1, 0, 0, 0}
 
-	recieved_actions := get_action_list(curr_state, 0, false)
+	recieved_actions := get_action_list(curr_state, 0, false,0)
 
 	found_existing := false
 	for i := 0; i < 12; i++ {
@@ -231,7 +231,7 @@ func TestValueAllFull(t *testing.T) {
 
 	idd := 0
 
-	values := GetValue(stateInfos, idd, false)
+	values := GetValue(stateInfos, idd, false,0)
 
 	for i := 0; i < 12; i++ {
 		if values[0] != -1 {
@@ -262,7 +262,7 @@ func TestDebugStatementsWithoutStatements(t *testing.T) {
 	defer func() {
 		log.SetOutput(os.Stdout)
 	}()
-	GetValue(stateInfos, idd, false)
+	GetValue(stateInfos, idd, false,0)
 	if strings.Contains(buf.String(), "SELECT") == true {
 		t.Errorf("Printed out the debug statements")
 	}

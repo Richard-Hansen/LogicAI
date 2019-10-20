@@ -12,8 +12,8 @@ class Linker:
 		if len(areas) != 16:
 			raise Exception("Invalid areas length, should be a list of 16 values")
 
-		if sum(areas) != 1.0:
-			raise Exception("Areas must sum to 1")
+		#if sum(areas) != 1.0:
+			#raise Exception("Areas must sum to 1")
 
 		if not self.area_vals(areas):
 			raise Exception("All area values must be greater than 0")
@@ -159,13 +159,13 @@ def create_AI(areas, map_num, exists):
 # train_AI(a1, 1)
 
 # call create for AI to set up environments for a given map
-create_AI(a0, 0, check_map(0))
+#create_AI(a0, 0, check_map(0))
 #train_AI(a0, 0)
 
-#create_AI(a1, 1, check_map(1))
+create_AI(a1, 1, check_map(1))
 #train_AI(a1, 1)
 
-#create_AI(a2, 2, check_map(2))
+create_AI(a2, 2, check_map(2))
 #train_AI(a2, 2)
 
 
