@@ -255,6 +255,7 @@ func HashCode(stateInfo [16]int) string {
 
 // get the value of the hash from the database
 func GetValue(stateInfos [12][16]int, idd int, showDebugStatements bool) [12]float64 {
+	connectionString = "Richard:SteveIsTheBest@tcp(198.199.121.101:3306)/logic"
 	// has all the hash codes for the values that we need to find
 	hashCodes := ""
 	// has all the values for each of the hash codes from the database
@@ -290,7 +291,7 @@ func GetValue(stateInfos [12][16]int, idd int, showDebugStatements bool) [12]flo
 	if showDebugStatements == true {
 		fmt.Println("----------------------- ", selectStatement)
 	}
-
+	
 	// make the call to the database
 	db, err := sql.Open("mysql", connectionString)
 	defer db.Close()
