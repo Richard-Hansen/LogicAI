@@ -376,6 +376,15 @@ class StartScreen {
     /* popping all my settings so other functions dont have to deal with them */
     pop();
   }
+
+  quickPlay() {
+    userID = 1337
+    username = "quickplayuser"
+    difficulty = ['easy', 'medium', 'hard', 'impossible'][Math.floor(Math.random() * 4)];
+    board = Math.floor(Math.random() * 3);
+    currentMapSelected = board;
+    gameState = 1;
+  }
 }
 
 function mouseClicked() {
@@ -391,12 +400,7 @@ function mouseClicked() {
     // quick play button clicked
     mgameScreen.init(false);
     mstartScreen.hide()
-    userID = 1337
-    username = "quickplayuser"
-    difficulty = ['easy', 'medium', 'hard', 'impossible'][Math.floor(Math.random() * 4)];
-    board = Math.floor(Math.random() * 3);
-    currentMapSelected = board;
-    gameState = 1;
+    mstartScreen.quickPlay()
   }
   push();
   translate(windowWidth / 2, windowHeight / 2)
