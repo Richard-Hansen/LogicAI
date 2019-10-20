@@ -44,7 +44,7 @@ class gamebackground {
   /* ctor, does not require any params. Asks the backend for all mapdata */
   constructor() {
     // this.mgameLogic = new GameLogic()
-    mgameLogic = new GameLogic();
+    // mgameLogic = new GameLogic();
     this.mmgameLogic = mgameLogic;
     httpPost("http://localhost:8088/map", { map: "Map" + currentMapSelected }, this.callMapRoute)
     /* Set player move */
@@ -246,6 +246,8 @@ class gamebackground {
         vertices[i].connections = temp[i].split(",");
       }
       /* Returning all the values that I set */
+      console.log("HERE");
+      console.log(vertices);
       return [mapName, size, sizeName, vertices];
   }
 
