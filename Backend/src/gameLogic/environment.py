@@ -28,8 +28,9 @@ class Environment:
 	def __create_envys(self):
 		envys = []
 		for i in range(9):
-			mini_areas = self.areas[i:i+2]
-			mini_areas += self.areas[i+4:i+6]
+			shift = int(i / 3)
+			mini_areas = self.areas[i+shift:i+2+shift]
+			mini_areas += self.areas[i+4+shift:i+6+shift]
 			envys.append(Envy(mini_areas, self.environment_id, i, self.writeToDB))
 		return envys
 
