@@ -596,8 +596,11 @@ class gameScreen {
  */
 function mouseClickedd() {
   if(mgameScreen.checkBackButton() != 255){
-    gameState = 0;
+    mgameScreen.init()
     mstartScreen.show()
+    WHoTheFuckMoves = 2;
+    Gamebackground = new gamebackground();
+    gameState = 0;
   }
   if(WHoTheFuckMoves == 2){
     return;
