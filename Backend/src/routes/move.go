@@ -21,6 +21,7 @@ type MoveDataType struct {
 	EdgesSquare [][]int `json: "edgesSquare"`
 	OwnerSquare [][]int `json: "ownerSquare"`
 	Difficulty  int     `json: "difficulty"`
+	MapNumber int       `json: "mapNumber"`
 }
 
 var p1 int                   //player id
@@ -87,6 +88,8 @@ func set_difficulty(diff int) {
 func TakeAction(mapData MoveDataType, showDebugStatements bool) string {
 	p1 = 1
 
+	fmt.Println(mapData.Difficulty)
+	fmt.Println(mapData.MapNumber)
 	set_difficulty(mapData.Difficulty)
 
 	/*maps a pair a vertices to an edge on the 4x4 board.*/
@@ -230,7 +233,7 @@ func TakeAction(mapData MoveDataType, showDebugStatements bool) string {
 			tiny_envys[agentling][12+agentling_square] = big_board_squares[i]
 		}
 	}
-	ret := calc_action(tiny_envys, eps, showDebugStatements)
+	ret := calc_action(tiny_envys, eps, showDebugStatements, mapData.MapNumber - 1)
 	rett := fmt.Sprintf("%d %d", ret[0], ret[1])
 	_ = rett
 
@@ -254,7 +257,7 @@ func HashCode(stateInfo [16]int) string {
 }
 
 // get the value of the hash from the database
-func GetValue(stateInfos [12][16]int, idd int, showDebugStatements bool) [12]float64 {
+func GetValue(stateInfos [12][16]int, idd int, showDebugStatements bool, mapNum int) [12]float64 {
 	connectionString = "Richard:SteveIsTheBest@tcp(198.199.121.101:3306)/logic"
 	// has all the hash codes for the values that we need to find
 	hashCodes := ""
@@ -274,12 +277,14 @@ func GetValue(stateInfos [12][16]int, idd int, showDebugStatements bool) [12]flo
 
 		hashCode := HashCode(stateInfo)
 		if len(hashCodes) == 0 {
-			hashCodes = `'0_` + fmt.Sprintf("%d", idd) + `_` + hashCode + `'`
+			hashCodes = `'` + fmt.Sprintf("%d", mapNum) + `_` + fmt.Sprintf("%d", idd) + `_` + hashCode + `'`
 		} else {
-			hashCodes = hashCodes + ", '0_" + fmt.Sprintf("%d", idd) + "_" + hashCode + `'`
+			hashCodes = hashCodes + ", '" + fmt.Sprintf("%d", mapNum) + "_" + fmt.Sprintf("%d", idd) + "_" + hashCode + `'`
 		}
 		values[i] = -2
 	}
+
+	fmt.Println(hashCodes)
 
 	if hashCodes == "" {
 		return values
@@ -291,7 +296,7 @@ func GetValue(stateInfos [12][16]int, idd int, showDebugStatements bool) [12]flo
 	if showDebugStatements == true {
 		fmt.Println("----------------------- ", selectStatement)
 	}
-	
+
 	// make the call to the database
 	db, err := sql.Open("mysql", connectionString)
 	defer db.Close()
@@ -347,7 +352,7 @@ func GetValue(stateInfos [12][16]int, idd int, showDebugStatements bool) [12]flo
 	// return 0
 }
 
-func get_action_list(curr_state [16]int, idd int, showDebugStatements bool) [12]float64 {
+func get_action_list(curr_state [16]int, idd int, showDebugStatements bool, mapNum int) [12]float64 {
 	// initialize variable to call value function with
 	var arr_to_pass [12][16]int
 
@@ -371,7 +376,7 @@ func get_action_list(curr_state [16]int, idd int, showDebugStatements bool) [12]
 	}
 
 	// gets list of action values of length 12
-	action_list := GetValue(arr_to_pass, idd, showDebugStatements)
+	action_list := GetValue(arr_to_pass, idd, showDebugStatements, mapNum)
 
 	return action_list
 }
@@ -413,7 +418,7 @@ func check_if_in_list(list [4]int, v int) bool {
 	return false
 }
 
-func calc_action(tiny_envys [9][16]int, eps float64, showDebugStatements bool) [2]int {
+func calc_action(tiny_envys [9][16]int, eps float64, showDebugStatements bool, mapNum int) [2]int {
 	var big_board_sums [40]float64
 	var big_board_counts [40]int
 
@@ -432,7 +437,7 @@ func calc_action(tiny_envys [9][16]int, eps float64, showDebugStatements bool) [
 	// 'a' represents the agentling index
 	for a := 0; a < 9; a++ {
 		// contains all the values
-		tiny_board_values := get_action_list(tiny_envys[a], a, showDebugStatements)
+		tiny_board_values := get_action_list(tiny_envys[a], a, showDebugStatements, mapNum)
 
 		for j := 0; j < 12; j++ {
 			// if edge not avaliable, skip
