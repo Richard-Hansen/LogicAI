@@ -22,7 +22,7 @@ class TestGame(unittest.TestCase):
 	# Expected output: game must not work
 	# 
 	def test_create_game_with_one_player(self):
-		environment = Environment(writeToDB=False)
+		environment = Environment(0,writeToDB=False)
 		agentX86P1 = AgentX86(environment,1)
 		self.assertRaises(Exception, Game, agentX86P1, None, 0)
 
@@ -41,10 +41,10 @@ class TestGame(unittest.TestCase):
 	def test_play_single_game_2_agents(self):
 		# set up the big agent and environment
 		try:
-			environment = Environment(writeToDB=False)
+			environment = Environment(0,writeToDB=False)
 			agentX86P1 = AgentX86(environment,1)
 			agentX86P2 = AgentX86(environment,2)
-			game = Game(agentX86P1, agentX86P2, 0)
+			game = Game(agentX86P1, agentX86P2)
 			game.play_game(update_after_game = True)
 		except Exception:
 			self.fail("Playing a game causes an exception")
@@ -57,10 +57,10 @@ class TestGame(unittest.TestCase):
 	# 
 	def test_play_game_state_histories(self):
 		# set up the big agent and environment
-		environment = Environment(writeToDB=False)
+		environment = Environment(0,writeToDB=False)
 		agentX86P1 = AgentX86(environment,1)
 		agentX86P2 = AgentX86(environment,2)
-		game = Game(agentX86P1, agentX86P2, 0)
+		game = Game(agentX86P1, agentX86P2)
 
 		state_histories_p1 = game.play_game(update_after_game = False, get_state_histories_for_p1 = True)
 
@@ -76,7 +76,7 @@ class TestGame(unittest.TestCase):
 	def test_play_game_without_player(self):
 		# set up the big agent and environment
 		# ensure that if the agent is not provided, there is an exception
-		environment = Environment(writeToDB=False)
+		environment = Environment(0,writeToDB=False)
 		self.assertRaises(Exception, AgentX86, environment, None)
 
 
@@ -90,10 +90,10 @@ class TestGame(unittest.TestCase):
 		sys.stdout = capturedOutput
 
 	    # set up the big agent and environment
-		environment = Environment(writeToDB=False)
+		environment = Environment(0,writeToDB=False)
 		agentX86P1 = AgentX86(environment,1)
 		agentX86P2 = AgentX86(environment,2)
-		game = Game(agentX86P1, agentX86P2, 0)
+		game = Game(agentX86P1, agentX86P2)
 		game.play_game(update_after_game = False, get_state_histories_for_p1 = False, print_board = False)
 
 		sys.stdout = sys.__stdout__
@@ -108,10 +108,10 @@ class TestGame(unittest.TestCase):
 	# 
 	def test_play_game_players(self):
 		# set up the big agent and environment
-		environment = Environment(writeToDB=False)
+		environment = Environment(0,writeToDB=False)
 		agentX86P1 = AgentX86(environment,1)
 		agentX86P2 = AgentX86(environment,2)
-		game = Game(agentX86P1, agentX86P2, 0)
+		game = Game(agentX86P1, agentX86P2)
 
 		game.play_game(update_after_game = False, get_state_histories_for_p1 = True, print_board=True, get_players=True)
 		players = game.get_players()
@@ -126,10 +126,10 @@ class TestGame(unittest.TestCase):
 	# 
 	def test_play_game_without_map(self):
 		try:
-			environment = Environment(writeToDB=False)
+			environment = Environment(0,writeToDB=False)
 			agentX86P1 = AgentX86(environment,1)
 			agentX86P2 = AgentX86(environment,2)
-			game = Game(agentX86P1, agentX86P2, 0)
+			game = Game(agentX86P1, agentX86P2)
 		except Exception as e: 
 			self.assertEqual(str(e), "__init__() missing 1 required positional argument: 'environment_id'")
 
