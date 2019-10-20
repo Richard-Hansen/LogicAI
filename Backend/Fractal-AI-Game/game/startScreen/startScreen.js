@@ -15,43 +15,6 @@ var currentMapSelected;
 // var difficultyIntForm;
 class StartScreen {
   constructor() {
-<<<<<<< HEAD
-    /* This is the state of the start screen we are in */
-    this.startScreenState = 0;
-    currentMapSelected = 1;
-    /* background object */
-    this.buttonShown = false;
-    this.boxAlpha = 0;
-    this.difficultyIntForm = 0;
-
-    buttonsOnStartScreen.push(
-      {
-        "x": (-windowWidth / 10),
-        "y": (windowHeight / 3.6)
-      }
-    )
-
-    buttonsOnStartScreen.push(
-      {
-        "x": (windowWidth / 10),
-        "y": (windowHeight / 3.6)
-      }
-    )
-    buttonsOnStartScreen.push(
-      {
-        "x": (-windowWidth / 9),
-        "y": (windowHeight / 10)
-      }
-    )
-    buttonsOnStartScreen.push(
-      {
-        "x": (windowWidth / 9),
-        "y": (windowHeight / 10)
-      }
-    )
-    mgameScreen.init();
-    Gamebackground = new gamebackground();
-=======
     try {
       /* This is the state of the start screen we are in */
       this.startScreenState = 0;
@@ -97,7 +60,6 @@ class StartScreen {
     } catch (e) {
       // console.log("error", e)
     }
->>>>>>> 60d1bafcc51642f4219d29b3768f395297b9e853
   }
 
   start() {

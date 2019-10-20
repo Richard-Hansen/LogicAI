@@ -709,7 +709,9 @@ function mouseClickedd() {
       case "hard": difficultyInt = 2; break;
       case "impossible": difficultyInt = 3; break;
     }
-    httpPost("http://localhost:8088/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare, "difficulty": difficultyInt }, function(res) {
+    console.log("PIZZA IS MY FAV FOOD");
+    console.log(currentMapSelected);
+    httpPost("http://localhost:8088/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare, "difficulty": difficultyInt, "mapNumber": currentMapSelected }, function(res) {
       mgameScreen.checkAIMove(res, mgameScreen);
     })
   }
