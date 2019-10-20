@@ -19,12 +19,8 @@ class StartScreen {
     this.startScreenState = 0;
     currentMapSelected = 1;
     /* background object */
-    mgameScreen.init();
-    Gamebackground = new gamebackground();
     this.buttonShown = false;
     this.boxAlpha = 0;
-
-
     this.difficultyIntForm = 0;
 
     buttonsOnStartScreen.push(
@@ -52,6 +48,8 @@ class StartScreen {
         "y": (windowHeight / 10)
       }
     )
+    mgameScreen.init();
+    Gamebackground = new gamebackground();
   }
 
   start() {

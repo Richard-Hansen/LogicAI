@@ -52,7 +52,6 @@ class GameLogic {
   }
 
   httpPostSquareData(res) {
-    console.log(res);
     /* Splits the response by spaces and places it back into res */
     res = res.split(" ");
     /* Iterate through all indices */
@@ -60,6 +59,10 @@ class GameLogic {
       squares.push(res[i].split(","));
     }
     squaresAreas = res[res.length - 1].split(",")
+
+    if(squares[0] == ""){
+      squares.splice(0,1)
+    }
     return [squares, squaresAreas]
   }
 
@@ -78,6 +81,9 @@ class GameLogic {
      go back and fix this if I have time @TODO */
   checkSquareTaken(vert, msquares) {
     console.log(msquares.length);
+    console.log(msquares);
+    console.log("HERE V2");
+    console.log(vert);
     for (var i = 0; i < msquares.length; i++) {
       var tempValue = 0;
       for (var j = 0; j < msquares[i].length; j++) {
@@ -155,7 +161,7 @@ class gameScreen {
     this.mmgameLogic = mgameLogic;
     WHoTheFuckMoves = 1;
     /* Sending HTTP request to the squareData route. Need to populate the squares/squaresArea array */
-    httpPost("http://localhost:8088/squareData", { Mapname: "Map" + currentMapSelected }, this.httpPostSquareData)
+    // httpPost("http://localhost:8088/squareData", { Mapname: "Map" + currentMapSelected }, this.httpPostSquareData)
 
     playerTimer = -1;
 
