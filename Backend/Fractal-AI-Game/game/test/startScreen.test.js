@@ -16,7 +16,7 @@ describe('StartScreen tests', function () {
         global.alert = function (val) { }
         global.gameState = 0
         global.this = {}
-	      global.isokay = true
+        global.isokay = true
         startScreen = new StartScreen();
     })
 
@@ -82,6 +82,34 @@ describe('StartScreen tests', function () {
     it('should start the game upon press', function (done) {
         startScreen.switchState(true)
         expect(gameState).to.equal(1)
+        done()
+    })
+
+    it('should start the game upon press of quick play button', function (done) {
+        global.username = "anything"
+        startScreen.quickPlay()
+        expect(gameState).to.equal(1)
+        done()
+    })
+
+    it('should start the game with invalid username', function (done) {
+        global.username = "inval!d"
+        startScreen.quickPlay()
+        expect(username).to.equal("quickplayuser")
+        done()
+    })
+
+    it('should start the game with blank username', function (done) {
+        global.username = ""
+        startScreen.quickPlay()
+        expect(username).to.equal("quickplayuser")
+        done()
+    })
+
+    it('should start the game with numbered username', function (done) {
+        global.username = "9"
+        startScreen.quickPlay()
+        expect(username).to.equal("quickplayuser")
         done()
     })
 })
