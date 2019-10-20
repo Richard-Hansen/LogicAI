@@ -28,7 +28,7 @@ class TestLinker(unittest.TestCase):
 	# 
 	def test_areas_translated(self):
 		a = [0.045625,0.078125,0.081250,0.110938,0.038750,0.081250,0.071875,0.035938,0.061250,0.085937,0.026562,0.046875,0.038750,0.090625,0.065625,0.040625]
-		L = Linker(a)
+		L = Linker(a,0)
 		self.assertNotEqual(a,L.areas)
 
 	#
@@ -38,7 +38,7 @@ class TestLinker(unittest.TestCase):
 	# 
 	def test_area_valid_inputs(self):
 		a = [0,0.12375,0.081250,0.110938,0.038750,0.081250,0.071875,0.035938,0.061250,0.085937,0.026562,0.046875,0.038750,0.090625,0.065625,0.040625]
-		self.assertRaises(Exception, Linker, a)
+		self.assertRaises(Exception, Linker, a, 0)
 
 	#
 	# Test Type: Unit Test
@@ -47,7 +47,7 @@ class TestLinker(unittest.TestCase):
 	# 
 	def test_valid_epochs(self):
 		a = [0.045625,0.078125,0.081250,0.110938,0.038750,0.081250,0.071875,0.035938,0.061250,0.085937,0.026562,0.046875,0.038750,0.090625,0.065625,0.040625]
-		L = Linker(a)
+		L = Linker(a,0)
 		self.assertRaises(Exception, L.train, 0)
 
 
