@@ -80,37 +80,39 @@ class GameLogic {
      I really do not like the way this is coded and I would love to
      go back and fix this if I have time @TODO */
   checkSquareTaken(vert, msquares) {
-    console.log(msquares.length);
-    console.log(msquares);
-    console.log("HERE V2");
-    console.log(vert);
+    var whatSquaresHaveThreeEdges = [];
+    let trashValue = [];
     for (var i = 0; i < msquares.length; i++) {
       var tempValue = 0;
+      trashValue = [];
       for (var j = 0; j < msquares[i].length; j++) {
         var shouldBeTwo = 0;
         if(msquares[i][j] != -1) {
           if(vert[msquares[i][j]].clickedConnections.includes(parseInt(msquares[i][0]))){
+            trashValue.push(1)
             shouldBeTwo++
             tempValue++
           }
           if(vert[msquares[i][j]].clickedConnections.includes(parseInt(msquares[i][1]))){
+            trashValue.push(2)
             shouldBeTwo++
             tempValue++
           }
           if(vert[msquares[i][j]].clickedConnections.includes(parseInt(msquares[i][2]))){
+            trashValue.push(3)
             shouldBeTwo++
             tempValue++
           }
           if(vert[msquares[i][j]].clickedConnections.includes(parseInt(msquares[i][3]))){
+            trashValue.push(4)
             shouldBeTwo++
             tempValue++
           }
-          if(shouldBeTwo == 0){
-            break;
-          }
         }
       }
-
+      if(tempValue == 3 && WHoTheFuckMoves == 2) {
+        whatSquaresHaveThreeEdges.push([i, j], trashValue);
+      }
       if (tempValue == 4) {
         this.fillQuads.push([msquares[i][0], msquares[i][1], msquares[i][2], msquares[i][3]]);
         if(WHoTheFuckMoves == 1) {
@@ -123,10 +125,25 @@ class GameLogic {
         msquares[i][2] = -1;
         msquares[i][3] = -1;
         var ret = squaresAreas[i]
-
+        WHoTheFuckMoves = 1;
         return [ret, i]
       }
     }
+    // if(whatSquaresHaveThreeEdges.length != 0){
+    //   console.log("AI PLAYED");
+    //   console.log(whatSquaresHaveThreeEdges[1]);
+    //   console.log(takenEdges[takenEdges.length - 1]);
+    //   console.log("BUT SHOULD HAVE PLAYED");
+    //   var vertexWithConnection = Math.min(takenEdges[takenEdges.length - 1][0], takenEdges[takenEdges.length - 1][1]);
+    //   var vertexWithoutConnection = Math.max(takenEdges[takenEdges.length - 1][0], takenEdges[takenEdges.length - 1][1]);
+    //   // console.log(vertexWithConnection + ":" + vertexWithoutConnection);
+    //   console.log(vertices[vertexWithConnection]);
+    //   vertices[vertexWithConnection].connections.push(parseInt(vertices[vertexWithConnection].clickedConnections[vertices[vertexWithConnection].clickedConnections.length - 1]));
+    //   vertices[vertexWithConnection].clickedConnections.splice(vertices[vertexWithConnection].clickedConnections.length-1, 1)
+    //   // takenEdges.splice(takenEdges.length - 1, 1);
+    //   console.log(vertices[vertexWithConnection]);
+    //   console.log(msquares[whatSquaresHaveThreeEdges[0][0]]);
+    // }
     return [undefined, undefined]
   }
 }
@@ -513,10 +530,44 @@ class gameScreen {
       /* Returning all the values that I set */
       return [mapName, size, sizeName, vertices];
   }
+  /* Nothing to see here */
+  checkOptMove(){
+    let howManyWeGot = [];
+    for (var i = 0; i < squares.length; i++) {
+      console.log(vertices[squares[i][0]]);
+      if(vertices[squares[i][0]].clickConnections.includes(squares[i][1])){
+        howManyWeGot.push(1)
+      }
+      if(vertices[squares[i][0]].clickConnections.includes(squares[i][2])){
+        howManyWeGot.push(2)
+      }
+      if(vertices[squares[i][1]].clickConnections.includes(squares[i][3])){
+        howManyWeGot.push(3)
+      }
+      if(vertices[squares[i][2]].clickConnections.includes(squares[i][3])){
+        howManyWeGot.push(4)
+      }
+    }
+    if(howManyWeGot.length == 4){
+      console.log("OPT");
+      console.log(howManyWeGot);
+    }
+    return [0,1];
+  }
 
   checkAIMove(res, fgameScreen) {
     console.log("RES AI: " + res);
+    /* How would this ever happen, good question */
+    // if(WHoTheFuckMoves == 1){
+    //   return;
+    // }
     var move = res.split(" ");
+    // let optMove = this.checkOptMove();
+    // if(optMove[0] != move[0] || optMove[1] != move[1]){
+    //   move[0] = optMove[0]
+    //   move[1] = optMove[1]
+    // }
+
     var vertexWithConnection = Math.min(move[0], move[1]);
     var vertexWithoutConnection = Math.max(move[0], move[1]);
     for (var i = 0; i < vertices[vertexWithConnection].connections.length; i++) {
@@ -526,7 +577,6 @@ class gameScreen {
         takenEdges.push([parseInt(move[0]), parseInt(move[1]), WHoTheFuckMoves])
         do {
           var addAndMore = this.mmgameLogic.checkSquareTaken(vertices, squares)
-          console.log(addAndMore);
           if (addAndMore[0] != undefined) {
             takenSquare.push([addAndMore[1], WHoTheFuckMoves])
             if(takenSquare.length == 16){
@@ -552,7 +602,7 @@ class gameScreen {
           }
         } while(addAndMore[0] != undefined)
         /* Change player turn */
-        if (WHoTheFuckMoves == 1) { WHoTheFuckMoves = 2 } else { WHoTheFuckMoves = 1 }
+        WHoTheFuckMoves = 1;
         return true;
       }
     }
@@ -571,7 +621,6 @@ class gameScreen {
         takenEdges.push([parseInt(move[0]), parseInt(move[1]), WHoTheFuckMoves])
         do {
           var addAndMore = fgameScreen.mmgameLogic.checkSquareTaken(vertices, squares)
-          console.log(addAndMore);
           if (addAndMore[0] != undefined) {
             // if(takenSquare)
             this.scorePlayer += (100 * addAndMore[0]);
@@ -629,7 +678,6 @@ function mouseClickedd() {
     /* We now need to check if the square has been taken by the person that clicked */
     do {
       addAndMore = mgameScreen.mmgameLogic.checkSquareTaken(vertices, squares)
-      console.log(addAndMore);
       if (addAndMore[0] != undefined) {
         takenSquare.push([addAndMore[1], WHoTheFuckMoves])
         if(takenSquare.length == 16){
