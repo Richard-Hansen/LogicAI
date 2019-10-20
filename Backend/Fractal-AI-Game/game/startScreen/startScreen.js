@@ -15,47 +15,51 @@ var currentMapSelected;
 // var difficultyIntForm;
 class StartScreen {
   constructor() {
-    /* This is the state of the start screen we are in */
-    this.startScreenState = 0;
-    currentMapSelected = 1;
-    /* background object */
-    mgameScreen.init();
-    Gamebackground = new gamebackground();
-    this.buttonShown = false;
-    this.boxAlpha = 0;
-    // this.y = windowHeight / 2.3
-    // this.width = windowWidth / 15;
-    // this.x = -1 * this.width * 2
-    // this.height = windowHeight / 15;
-    this.hiScoreButton = new ScreenButton((-1 * (windowWidth / 8)), windowHeight / 2.3, windowHeight / 15, windowWidth / 8, "High Scores");
-    this.quickPlayButton = new ScreenButton((1 * (windowWidth / 8)), windowHeight / 2.3, windowHeight / 15, windowWidth / 8, "Quick Play")
-    this.difficultyIntForm = 0;
+    try {
+      /* This is the state of the start screen we are in */
+      this.startScreenState = 0;
+      currentMapSelected = 1;
+      /* background object */
+      mgameScreen.init();
+      Gamebackground = new gamebackground();
+      this.buttonShown = false;
+      this.boxAlpha = 0;
+      // this.y = windowHeight / 2.3
+      // this.width = windowWidth / 15;
+      // this.x = -1 * this.width * 2
+      // this.height = windowHeight / 15;
+      this.hiScoreButton = new ScreenButton((-1 * (windowWidth / 8)), windowHeight / 2.3, windowHeight / 15, windowWidth / 8, "High Scores");
+      this.quickPlayButton = new ScreenButton((1 * (windowWidth / 8)), windowHeight / 2.3, windowHeight / 15, windowWidth / 8, "Quick Play")
+      this.difficultyIntForm = 0;
 
-    buttonsOnStartScreen.push(
-      {
-        "x": (-windowWidth / 10),
-        "y": (windowHeight / 3.6)
-      }
-    )
+      buttonsOnStartScreen.push(
+        {
+          "x": (-windowWidth / 10),
+          "y": (windowHeight / 3.6)
+        }
+      )
 
-    buttonsOnStartScreen.push(
-      {
-        "x": (windowWidth / 10),
-        "y": (windowHeight / 3.6)
-      }
-    )
-    buttonsOnStartScreen.push(
-      {
-        "x": (-windowWidth / 9),
-        "y": (windowHeight / 10)
-      }
-    )
-    buttonsOnStartScreen.push(
-      {
-        "x": (windowWidth / 9),
-        "y": (windowHeight / 10)
-      }
-    )
+      buttonsOnStartScreen.push(
+        {
+          "x": (windowWidth / 10),
+          "y": (windowHeight / 3.6)
+        }
+      )
+      buttonsOnStartScreen.push(
+        {
+          "x": (-windowWidth / 9),
+          "y": (windowHeight / 10)
+        }
+      )
+      buttonsOnStartScreen.push(
+        {
+          "x": (windowWidth / 9),
+          "y": (windowHeight / 10)
+        }
+      )
+    } catch (e) {
+      // console.log("error", e)
+    }
   }
 
   start() {
@@ -138,7 +142,6 @@ class StartScreen {
         var isokay = that.callAuthRoute()
 
         if (isokay && test) {
-          console.log("why am i here")
           window.localStorage.setItem("userName", that.nameInput.elt.value)
           that.switchState(test)
           return 'OK'
@@ -390,7 +393,7 @@ function mouseClicked() {
     mstartScreen.hide()
     userID = 1337
     username = "quickplayuser"
-    difficulty = ['easy','medium','hard','impossible'][Math.floor(Math.random() * 4)];
+    difficulty = ['easy', 'medium', 'hard', 'impossible'][Math.floor(Math.random() * 4)];
     board = Math.floor(Math.random() * 3);
     currentMapSelected = board;
     gameState = 1;
