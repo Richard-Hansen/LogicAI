@@ -316,7 +316,7 @@ describe('GameScreen tests', function () {
           */
           it('On the game screen, perform a move that will result in capturing a square next to the AI’s previously captured shape', function (done) {
               expect(gameScreen.mmgameLogic.whoTookQuad[0][0]).to.equal(216)
-              expect(gameScreen.mmgameLogic.whoTookQuad[2][0]).to.equal(216)
+              expect(gameScreen.mmgameLogic.whoTookQuad[2][0]).to.equal(197)
               done();
           })
 
