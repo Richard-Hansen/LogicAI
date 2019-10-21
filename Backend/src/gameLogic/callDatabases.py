@@ -112,6 +112,7 @@ def get_hash_values_and_by_hash_codes(hash_codes, environment_id, envy_id):
 
             # get the state and the value for the state
             select_statement_for_value_and_state = "SELECT `Value`, `HashCode` FROM hashes WHERE HashCode in (" + hash_code_string + ") ORDER BY FIELD(HashCode," + hash_code_string + ")" 
+            print(select_statement_for_value_and_state)
             # execute the select statement
             cursor.execute(select_statement_for_value_and_state)
             connection.commit()
@@ -137,8 +138,9 @@ def get_hash_values_and_by_hash_codes(hash_codes, environment_id, envy_id):
                 raise Exception("Error with selecting from database")
             
             return hash_codes_and_values
-    except Exception:
-        raise Exception
+    except Exception as e:
+        print e
+        # raise Exception
         
 
 # finds the value of the ternary
@@ -162,7 +164,7 @@ def fix_state_translated(state_translated):
 def build_update(values_to_update_by_hash,mapID):
     values = ""
     for i in range(len(values_to_update_by_hash)):
-        join_part = mapID + "_" + str(i)  + "_"
+        join_part = str(mapID) + "_" + str(i)  + "_"
         for hash_code in values_to_update_by_hash[i]:
             state_translated = ternary(hash_code)
             if len(state_translated) < 16:
