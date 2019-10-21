@@ -29,6 +29,7 @@ var difficulty int           //difficulty of game
 var eps float64              //randomization factor related to difficulty
 var showDebugStatements bool // whether debug statements must be shown
 var connectionString string
+var mapNum int
 
 /**
  * Should be called when the play makes a move.
@@ -85,12 +86,21 @@ func set_difficulty(diff int) {
 	eps = 1 - (0.25 * float64(difficulty))
 }
 
+func set_map_number(m int) {
+	mapNum = m
+}
+
+func get_map_number() int {
+	return mapNum
+}
+
 func TakeAction(mapData MoveDataType, showDebugStatements bool) string {
 	p1 = 1
 
 	fmt.Println(mapData.Difficulty)
 	fmt.Println(mapData.MapNumber)
 	set_difficulty(mapData.Difficulty)
+	set_map_number(mapData.MapNumber)
 
 	/*maps a pair a vertices to an edge on the 4x4 board.*/
 	vertices_to_edges := map[[2]int]int{
