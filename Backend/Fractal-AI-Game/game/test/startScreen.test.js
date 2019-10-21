@@ -17,6 +17,7 @@ describe('StartScreen tests', function () {
         global.gameState = 0
         global.this = {}
         global.isokay = true
+        global.userID = 1337
         startScreen = new StartScreen();
     })
 
