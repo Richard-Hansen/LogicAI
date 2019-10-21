@@ -533,26 +533,43 @@ class gameScreen {
   /* Nothing to see here */
   checkOptMove(){
     let howManyWeGot = [];
+    console.log(squares);
     for (var i = 0; i < squares.length; i++) {
-      console.log(vertices[squares[i][0]]);
-      if(vertices[squares[i][0]].clickConnections.includes(squares[i][1])){
-        howManyWeGot.push(1)
-      }
-      if(vertices[squares[i][0]].clickConnections.includes(squares[i][2])){
-        howManyWeGot.push(2)
-      }
-      if(vertices[squares[i][1]].clickConnections.includes(squares[i][3])){
-        howManyWeGot.push(3)
-      }
-      if(vertices[squares[i][2]].clickConnections.includes(squares[i][3])){
-        howManyWeGot.push(4)
+      if(squares[i][0] != -1) {
+        console.log("i:" + i);
+        howManyWeGot = [];
+
+        if(vertices[squares[i][0]].clickedConnections.includes(parseInt(squares[i][1]))){
+          howManyWeGot.push(1)
+        }
+        if(vertices[squares[i][0]].clickedConnections.includes(parseInt(squares[i][2]))){
+          howManyWeGot.push(2)
+        }
+        if(vertices[squares[i][1]].clickedConnections.includes(parseInt(squares[i][3]))){
+          howManyWeGot.push(3)
+        }
+        if(vertices[squares[i][2]].clickedConnections.includes(parseInt(squares[i][3]))){
+          howManyWeGot.push(4)
+        }
+        if(howManyWeGot.length == 3){
+          console.log("OPT");
+          console.log(howManyWeGot);
+          if(!howManyWeGot.includes(1)) {
+            return[squares[i][0], squares[i][1]]
+          }
+          if(!howManyWeGot.includes(2)) {
+            return[squares[i][0], squares[i][2]]
+          }
+          if(!howManyWeGot.includes(3)) {
+            return[squares[i][1], squares[i][3]]
+          }
+          if(!howManyWeGot.includes(4)) {
+            return[squares[i][2], squares[i][3]]
+          }
+        }
       }
     }
-    if(howManyWeGot.length == 4){
-      console.log("OPT");
-      console.log(howManyWeGot);
-    }
-    return [0,1];
+    return [-1,-1]
   }
 
   checkAIMove(res, fgameScreen) {
@@ -562,11 +579,13 @@ class gameScreen {
     //   return;
     // }
     var move = res.split(" ");
-    // let optMove = this.checkOptMove();
-    // if(optMove[0] != move[0] || optMove[1] != move[1]){
-    //   move[0] = optMove[0]
-    //   move[1] = optMove[1]
-    // }
+    let optMove = this.checkOptMove();
+    if(optMove[0] != -1){
+      if(optMove[0] != move[0] || optMove[1] != move[1]) {
+        move[0] = optMove[0]
+        move[1] = optMove[1]
+      }
+    }
 
     var vertexWithConnection = Math.min(move[0], move[1]);
     var vertexWithoutConnection = Math.max(move[0], move[1]);
