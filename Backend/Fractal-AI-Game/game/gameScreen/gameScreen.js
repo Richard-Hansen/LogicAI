@@ -48,7 +48,7 @@ class GameLogic {
     /* Who took the square */
     this.whoTookQuad = [];
     /* Sending HTTP request to the squareData route. Need to populate the squares/squaresArea array */
-    httpPost("http://localhost:8088/squareData", { Mapname: "Map" + currentMapSelected }, this.httpPostSquareData)
+    httpPost("http://198.199.121.101:8088/squareData", { Mapname: "Map" + currentMapSelected }, this.httpPostSquareData)
   }
 
   httpPostSquareData(res) {
@@ -201,9 +201,9 @@ class gameScreen {
     this.scorePlayer = 0;
     mgameLogic = new GameLogic();
     this.mmgameLogic = mgameLogic;
-    httpPost("http://localhost:8088/map", { map: "Map" + currentMapSelected }, this.callMapRoute)
+    httpPost("http://198.199.121.101:8088/map", { map: "Map" + currentMapSelected }, this.callMapRoute)
     /* Sending HTTP request to the squareData route. Need to populate the squares/squaresArea array */
-    httpPost("http://localhost:8088/squareData", { Mapname: "Map" + currentMapSelected }, this.httpPostSquareData)
+    httpPost("http://198.199.121.101:8088/squareData", { Mapname: "Map" + currentMapSelected }, this.httpPostSquareData)
   }
 
   /* draw function that will be called at 60fps once gameState has been moved to 1. */
@@ -612,7 +612,7 @@ class gameScreen {
               case "impossible": difficultyInt = 3; break;
             }
             if(takenSquare.length == 16){
-              httpPost("http://localhost:8088/score", { "time": playerTimer, "scorePlayer": mgameScreen.scorePlayer, "scoreAI": mgameScreen.scoreAI, "difficulty": difficultyInt, "mapname": currentMapSelected, "userID": parseInt(userID)}, function(res) {
+              httpPost("http://198.199.121.101:8088/score", { "time": playerTimer, "scorePlayer": mgameScreen.scorePlayer, "scoreAI": mgameScreen.scoreAI, "difficulty": difficultyInt, "mapname": currentMapSelected, "userID": parseInt(userID)}, function(res) {
                 mgameScreen.endGameSender(res, mgameScreen);
                 gameState = 2;
               })
@@ -706,7 +706,7 @@ function mouseClickedd() {
         }
 
         if(takenSquare.length == 16){
-          httpPost("http://localhost:8088/score", { "time": playerTimer, "scorePlayer": mgameScreen.scorePlayer, "scoreAI": mgameScreen.scoreAI, "difficulty": difficultyInt, "mapname": currentMapSelected, "userID": parseInt(userID) }, function(res) {
+          httpPost("http://198.199.121.101:8088/score", { "time": playerTimer, "scorePlayer": mgameScreen.scorePlayer, "scoreAI": mgameScreen.scoreAI, "difficulty": difficultyInt, "mapname": currentMapSelected, "userID": parseInt(userID) }, function(res) {
             mgameScreen.endGameSender(res, mgameScreen);
             gameState = 2;
           })
@@ -730,7 +730,7 @@ function mouseClickedd() {
     }
     console.log("PIZZA IS MY FAV FOOD");
     console.log(currentMapSelected);
-    httpPost("http://localhost:8088/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare, "difficulty": difficultyInt, "mapNumber": currentMapSelected }, function(res) {
+    httpPost("http://198.199.121.101:8088/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare, "difficulty": difficultyInt, "mapNumber": currentMapSelected }, function(res) {
       mgameScreen.checkAIMove(res, mgameScreen);
     })
   }
