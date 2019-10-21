@@ -80,39 +80,39 @@ class GameLogic {
      I really do not like the way this is coded and I would love to
      go back and fix this if I have time @TODO */
   checkSquareTaken(vert, msquares) {
-    var whatSquaresHaveThreeEdges = [];
-    let trashValue = [];
+    // var whatSquaresHaveThreeEdges = [];
+    // let trashValue = [];
     for (var i = 0; i < msquares.length; i++) {
       var tempValue = 0;
-      trashValue = [];
+      // trashValue = [];
       for (var j = 0; j < msquares[i].length; j++) {
         var shouldBeTwo = 0;
         if(msquares[i][j] != -1) {
           if(vert[msquares[i][j]].clickedConnections.includes(parseInt(msquares[i][0]))){
-            trashValue.push(1)
+            // trashValue.push(1)
             shouldBeTwo++
             tempValue++
           }
           if(vert[msquares[i][j]].clickedConnections.includes(parseInt(msquares[i][1]))){
-            trashValue.push(2)
+            // trashValue.push(2)
             shouldBeTwo++
             tempValue++
           }
           if(vert[msquares[i][j]].clickedConnections.includes(parseInt(msquares[i][2]))){
-            trashValue.push(3)
+            // trashValue.push(3)
             shouldBeTwo++
             tempValue++
           }
           if(vert[msquares[i][j]].clickedConnections.includes(parseInt(msquares[i][3]))){
-            trashValue.push(4)
+            // trashValue.push(4)
             shouldBeTwo++
             tempValue++
           }
         }
       }
-      if(tempValue == 3 && WHoTheFuckMoves == 2) {
-        whatSquaresHaveThreeEdges.push([i, j], trashValue);
-      }
+      // if(tempValue == 3 && WHoTheFuckMoves == 2) {
+      //   whatSquaresHaveThreeEdges.push([i, j], trashValue);
+      // }
       if (tempValue == 4) {
         this.fillQuads.push([msquares[i][0], msquares[i][1], msquares[i][2], msquares[i][3]]);
         if(WHoTheFuckMoves == 1) {
@@ -125,7 +125,7 @@ class GameLogic {
         msquares[i][2] = -1;
         msquares[i][3] = -1;
         var ret = squaresAreas[i]
-        WHoTheFuckMoves = 1;
+        // WHoTheFuckMoves = 1;
         return [ret, i]
       }
     }
