@@ -381,7 +381,7 @@ class StartScreen {
     userID = 1337
     username = "quickplayuser"
     difficulty = ['easy', 'medium', 'hard', 'impossible'][Math.floor(Math.random() * 4)];
-    board = Math.floor(Math.random() * 3);
+    board = Math.floor(Math.random() * 3) + 1;
     currentMapSelected = board;
     gameState = 1;
   }

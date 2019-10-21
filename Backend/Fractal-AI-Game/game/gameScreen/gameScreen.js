@@ -32,7 +32,7 @@ var squaresAreas = [];
 
 var playerTimer;
 
-var currentMapSelected = 0;
+var currentMapSelected = 1;
 
 var difficulty = 0;
 
