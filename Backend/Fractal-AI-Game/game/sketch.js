@@ -6,6 +6,7 @@ var size;
 var gameState;
 var mgameScreen;
 var userID;
+var username;
 var difficulty;
 var board;
 var activeImage;
