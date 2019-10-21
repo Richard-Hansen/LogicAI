@@ -260,6 +260,9 @@ class gamebackground {
     console.log(vertexWithConnection+ ":" + vertexWithoutConnection);
     if(move[0] == -1){ return; }
     for (var i = 0; i < vertices[vertexWithConnection].connections.length; i++) {
+      if(gameState == 1) {
+        return false;
+      }
       if (vertices[vertexWithConnection].connections[i] == vertexWithoutConnection) {
         vertices[vertexWithConnection].clickedConnections.push(parseInt(vertexWithoutConnection));
         vertices[vertexWithConnection].connections.splice(i, 1);
