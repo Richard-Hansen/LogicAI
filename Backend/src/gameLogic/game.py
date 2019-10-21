@@ -37,8 +37,8 @@ class Game:
 		#if update_after_game flag is set to True, update agent weights after each game ends
 		if update_after_game:
 			# print("Updating agents")
-			put_values(self.p1.update(),mapNum)
-			put_values(self.p2.update(),mapNum)
+			put_values(self.p1.update(),self.mapNum)
+			put_values(self.p2.update(),self.mapNum)
 
 		if get_state_histories_for_p1:
 			return self.p1.get_state_histories()
