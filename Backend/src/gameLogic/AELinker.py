@@ -58,7 +58,7 @@ class Linker:
 			agentX86P1 = AgentX86(environment,1)
 			agentX86P2 = AgentX86(environment,2)
 
-			game = Game(agentX86P1, agentX86P2)
+			game = Game(agentX86P1, agentX86P2, map_num)
 		        #print(environment, agentX86P1, agentX86P2, game)	
 			if verbose:
 				print("Starting Game ", i)
@@ -160,7 +160,7 @@ def create_AI(areas, map_num, exists):
 
 # call create for AI to set up environments for a given map
 #create_AI(a0, 0, check_map(0))
-train_AI(a0, 0)
+#train_AI(a0, 0)
 
 #create_AI(a1, 1, check_map(1))
 train_AI(a1, 1)
