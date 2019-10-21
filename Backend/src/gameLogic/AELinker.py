@@ -146,7 +146,7 @@ a2 = [0.106875,0.073750,0.040625,0.082812,0.078125,0.076250,0.021875,0.067188,0.
 # do the training given the areas
 def train_AI(areas, map_num):
 	L = Linker(areas = areas, map_num = map_num, translate_areas=False)
-	L.train(1000,verbose=False, writeToDB=False)
+	L.train(1000,map_num,verbose=False, writeToDB=False)
 
 
 # create the ai given the areas
@@ -163,10 +163,10 @@ def create_AI(areas, map_num, exists):
 #train_AI(a0, 0)
 
 #create_AI(a1, 1, check_map(1))
-train_AI(a1, 1)
+#train_AI(a1, 1)
 
-#create_AI(a2, 2, check_map(2))
-train_AI(a2, 2)
+create_AI(a2, 2, check_map(2))
+#train_AI(a2, 2)
 
 
 
