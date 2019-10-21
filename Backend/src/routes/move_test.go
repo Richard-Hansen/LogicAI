@@ -202,6 +202,44 @@ func TestValidDifficulty(t *testing.T) {
 
 /**
  * Test Type: Verification Test
+ * What it is testing: Check that difficulty changes are kept
+ * Expected output: I expect to only be using the most recent set difficulty
+ */
+func TestCurrentMap(t *testing.T) {
+
+	set_map_number(1)
+	if get_map_number() != 1 {
+		t.Errorf("map not updating to 1")
+	}
+
+	set_map_number(2)
+	if get_map_number() != 2 {
+		t.Errorf("map not updating to 2")
+	}
+
+	set_map_number(3)
+	if get_map_number() != 3 {
+		t.Errorf("map not updating to 3")
+	}
+}
+
+/**
+ * Test Type: Verification Test
+ * What it is testing: Check that difficulty changes are kept
+ * Expected output: I expect to only be using the most recent set difficulty
+ */
+func TestCurrentMap(t *testing.T) {
+
+	set_map_number(1)
+	set_map_number(2)
+	set_map_number(1)
+	if get_map_number() != 1 {
+		t.Errorf("map cannot be updated correctly")
+	}
+}
+
+/**
+ * Test Type: Verification Test
  * What it is testing: Check that difficulty is 1 if not set previously set
  * Expected output: I expect the difficulty to be 1 set_difficulty is not called
  */

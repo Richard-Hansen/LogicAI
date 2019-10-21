@@ -159,10 +159,10 @@ def fix_state_translated(state_translated):
     return (['0'] * (16 - len(state_translated))) + state_translated
 
 # build update statement
-def build_update(values_to_update_by_hash):
+def build_update(values_to_update_by_hash,mapID):
     values = ""
     for i in range(len(values_to_update_by_hash)):
-        join_part = "0" + "_" + str(i)  + "_"
+        join_part = mapID + "_" + str(i)  + "_"
         for hash_code in values_to_update_by_hash[i]:
             state_translated = ternary(hash_code)
             if len(state_translated) < 16:
@@ -178,7 +178,7 @@ def build_update(values_to_update_by_hash):
 
 
 # puts all the values of the state with the hashes
-def put_values(values_to_update_by_hash):
+def put_values(values_to_update_by_hash, mapID):
     # SELECT * FROM hashes WHERE HashCode LIKE '0_%_227205' AND WHERE State = '0000102112200000';
     # INSERT INTO hashes (HashCode, Value, State) VALUES ('0_0_227205',4084488000.5,'0000102112200000'), ('0_0_227205',4084488000.5,'0000102112200000')  ON DUPLICATE KEY UPDATE State=VALUES(State), Value=VALUES(Value);
     try:
@@ -189,7 +189,7 @@ def put_values(values_to_update_by_hash):
 
         # connection is established
         with connection.cursor() as cursor:
-            update_statement_for_hash_and_value = build_update(values_to_update_by_hash)
+            update_statement_for_hash_and_value = build_update(values_to_update_by_hash,mapID)
 
             # INSERT INTO hashes (HashCode, Value) VALUES (0_8_5919480,0.14167968750000004) ON DUPLICATE KEY UPDATE HashCode=VALUES(HashCode), Value=VALUES(Value);
 

@@ -1,7 +1,7 @@
 from callDatabases import put_values
 
 class Game:
-	def __init__(self, p1, p2):
+	def __init__(self, p1, p2, mapNum):
 		if p1 == None or p2 == None:
 			raise Exception("Invalid players passed, 1 or more are none")
 		self.p1 = p1 # AgentX86/human object
@@ -9,6 +9,7 @@ class Game:
 		self.current_player = p2 # initialize current player to p2, so the first loop of play_game() sets p1 to the current player
 		self.game_board = [0] * 40 # 4x4 game board is made up of 40 edges
 		self.players = []
+		self.mapNum = mapNum
 
 	def play_game(self, update_after_game=False, get_state_histories_for_p1=False, print_board=False, verbose=False, get_players=False):
 		#while game is not over
@@ -36,8 +37,8 @@ class Game:
 		#if update_after_game flag is set to True, update agent weights after each game ends
 		if update_after_game:
 			# print("Updating agents")
-			put_values(self.p1.update())
-			put_values(self.p2.update())
+			put_values(self.p1.update(),mapNum)
+			put_values(self.p2.update(),mapNum)
 
 		if get_state_histories_for_p1:
 			return self.p1.get_state_histories()
