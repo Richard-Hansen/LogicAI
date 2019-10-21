@@ -1,8 +1,19 @@
 import unittest
-from callDatabases import get_hash_values_and_by_hash_codes, put_values, ternary, fix_state_translated, build_update
+from callDatabases import get_hash_values_and_by_hash_codes, put_values, ternary, fix_state_translated, build_update, check_num_maps
 import time
 
 class TestCallDatabases(unittest.TestCase):
+
+	#
+	# Test Type: Unit Test
+	# What it is testing: Make sure that there is at least one model for the agent to use
+	# Expected output: I expect that there is at least one unique model for hte agent
+	# 
+	def test_valid_maps(self):
+		num_maps = check_num_maps()
+		assert num_maps >= 1
+
+
 	#
 	# What it is testing: Invalid hash code not returning state
 	# Expected output: I expect that the invalid hash code does not return a state corresponding to it
@@ -48,7 +59,7 @@ class TestCallDatabases(unittest.TestCase):
 
 		try:
 			# send these values back to the database as they are already existing without failing on duplicate key
-			put_values(code_value_dictionary)
+			put_values(code_value_dictionary, '0')
 		except Exception as e:
 			self.fail("Unable to work with already existing values in the database on insert")
 
@@ -86,7 +97,7 @@ class TestCallDatabases(unittest.TestCase):
 		hash_codes = ['0', '81']
 		hash_codes_and_values = get_hash_values_and_by_hash_codes(hash_codes, 0, 0)
 		code_value_dictionary = [{0: hash_codes_and_values[0], 81: hash_codes_and_values[1]}]
-		update_statement_for_hash_and_value = build_update(code_value_dictionary)
+		update_statement_for_hash_and_value = build_update(code_value_dictionary, '0')
 
 		if "'0000000000010000'" not in update_statement_for_hash_and_value:
 			self.fail("Does not contain the quotes necessary for state")
