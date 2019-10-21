@@ -140,7 +140,7 @@ class ScoreScreen {
     var yourResults = that.getUserAndNearbyScores(that.scores)
     console.log("user in top 10? ", that.userIsInTopTen(that.scores))
     if (yourResults != 'NONE' && !that.userIsInTopTen(that.scores)) {
-      that.createTableHeader("Your Results")
+      that.createTableHeader("Your Top Result")
       for (var i = 0; i < yourResults.length; i++) {
         var score = yourResults[i]
         // score.Index = i + 1 this was an error
