@@ -12,7 +12,6 @@
 var Gamebackground;
 var buttonsOnStartScreen = [];
 var currentMapSelected;
-var username;
 // var difficultyIntForm;
 class StartScreen {
   constructor() {
