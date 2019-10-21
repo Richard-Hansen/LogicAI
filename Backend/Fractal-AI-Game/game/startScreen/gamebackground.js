@@ -52,7 +52,7 @@ class gamebackground {
     this.scoreAI = 0;
     this.scorePlayer = 0;
 
-    httpPost("http://localhost:8088/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare, "difficulty": 0 }, function(res) {
+    httpPost("http://localhost:8088/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare, "difficulty": 0, "mapNumber": currentMapSelected }, function(res) {
       Gamebackground.checkAIMove(res, Gamebackground);
     })
   }
@@ -246,8 +246,6 @@ class gamebackground {
         vertices[i].connections = temp[i].split(",");
       }
       /* Returning all the values that I set */
-      console.log("HERE");
-      console.log(vertices);
       return [mapName, size, sizeName, vertices];
   }
 
@@ -259,6 +257,8 @@ class gamebackground {
     var move = res.split(" ");
     var vertexWithConnection = Math.min(move[0], move[1]);
     var vertexWithoutConnection = Math.max(move[0], move[1]);
+    console.log(vertexWithConnection+ ":" + vertexWithoutConnection);
+    if(move[0] == -1){ return; }
     for (var i = 0; i < vertices[vertexWithConnection].connections.length; i++) {
       if (vertices[vertexWithConnection].connections[i] == vertexWithoutConnection) {
         vertices[vertexWithConnection].clickedConnections.push(parseInt(vertexWithoutConnection));
@@ -279,7 +279,7 @@ class gamebackground {
         } while(addAndMore[0] != undefined)
         /* Change player turn */
         if (WHoTheFuckMoves == 1) { WHoTheFuckMoves = 2 } else { WHoTheFuckMoves = 1 }
-        httpPost("http://localhost:8088/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare, "difficulty": 3 }, function(res) {
+        httpPost("http://localhost:8088/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare, "difficulty": 3, "mapNumber": currentMapSelected }, function(res) {
           Gamebackground.checkAIMove(res, Gamebackground);
         })
         return true;
