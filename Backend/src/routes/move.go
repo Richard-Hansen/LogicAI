@@ -247,6 +247,9 @@ func TakeAction(mapData MoveDataType, showDebugStatements bool) string {
 	rett := fmt.Sprintf("%d %d", ret[0], ret[1])
 	_ = rett
 
+	fmt.Println("RESULTING MOVE")
+	fmt.Println(rett)
+
 	return rett
 }
 
@@ -540,5 +543,7 @@ func calc_action(tiny_envys [9][16]int, eps float64, showDebugStatements bool, m
 	if CheckAction(action) == true {
 		return big_to_vertex[action]
 	}
+	fmt.Println(big_board_counts)
+	fmt.Println(big_to_vertex)
 	return [...]int{-1, -1}
 }
