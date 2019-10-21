@@ -239,6 +239,38 @@ def check_map(map_id_to_check):
 
     except Exception as e:
         print("EXCEPTION", e)
+
+
+# check how many maps there are in the database
+def check_num_maps():
+    try:
+        # open the connecton
+        connection = pymysql.connect('198.199.121.101', 'Richard', pwd, 'logic')
+
+        # connection is established
+        with connection.cursor() as cursor:
+            select_statement = "SELECT DISTINCT LEFT(HashCode, 1) FROM hashes;"
+
+            # execute the select statement
+            cursor.execute(select_statement)
+            connection.commit()
+
+            rows = cursor.fetchall()
+
+            count = 0
+
+            # for each of the row
+            for row in rows:
+                # value found
+                value = row[0]
+                
+                count += 1
+
+            connection.close()
+            return count
+
+    except Exception as e:
+        print("EXCEPTION", e)
         
 
 
