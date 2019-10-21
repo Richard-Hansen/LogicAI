@@ -12,6 +12,7 @@
 var Gamebackground;
 var buttonsOnStartScreen = [];
 var currentMapSelected;
+var username;
 // var difficultyIntForm;
 class StartScreen {
   constructor() {
@@ -411,7 +412,7 @@ function mouseClicked() {
       } else if (i == 1 && mstartScreen.difficultyIntForm < 4) {
         mstartScreen.difficultyIntForm++;
       }
-      if (i == 2 && currentMapSelected > 0) {
+      if (i == 2 && currentMapSelected > 1) {
         currentMapSelected--;
         mgameScreen.init();
         Gamebackground = new gamebackground();
