@@ -424,11 +424,11 @@ function mouseClicked() {
   }
   if (mstartScreen.checkPlayButton() == 30) {
     mgameScreen.init(false);
-   if (mstartScreen.playGame(mstartScreen)() === 'OK') {
+   // if (mstartScreen.playGame(mstartScreen)() === 'OK') {
      // mgameScreen.init(false);
       mstartScreen.hide()
       gameState = 1;
-    }
+    // }
   }
   pop();
 }
