@@ -67,13 +67,18 @@ class GameLogic {
   }
 
   draw() {
-    push();
-    translate(windowWidth / 2, windowHeight / 2)
-    for (var i = 0; i < this.fillQuads.length; i++) {
-      fill(this.whoTookQuad[i][0],this.whoTookQuad[i][1],this.whoTookQuad[i][2], this.whoTookQuad[i][3]);
-      quad(vertices[this.fillQuads[i][0]].screenX, vertices[this.fillQuads[i][0]].screenY, vertices[this.fillQuads[i][2]].screenX, vertices[this.fillQuads[i][2]].screenY, vertices[this.fillQuads[i][3]].screenX, vertices[this.fillQuads[i][3]].screenY, vertices[this.fillQuads[i][1]].screenX, vertices[this.fillQuads[i][1]].screenY);
+    try {
+      push();
+      translate(windowWidth / 2, windowHeight / 2)
+      for (var i = 0; i < this.fillQuads.length; i++) {
+        fill(this.whoTookQuad[i][0],this.whoTookQuad[i][1],this.whoTookQuad[i][2], this.whoTookQuad[i][3]);
+        quad(vertices[this.fillQuads[i][0]].screenX, vertices[this.fillQuads[i][0]].screenY, vertices[this.fillQuads[i][2]].screenX, vertices[this.fillQuads[i][2]].screenY, vertices[this.fillQuads[i][3]].screenX, vertices[this.fillQuads[i][3]].screenY, vertices[this.fillQuads[i][1]].screenX, vertices[this.fillQuads[i][1]].screenY);
+      }
+      pop();
+    } catch(error) {
+      console.log("LOL");
+      pop();
     }
-    pop();
   }
 
   /* this.checkSquareTaken will check if a square has been taken.
@@ -533,10 +538,26 @@ class gameScreen {
   /* Nothing to see here */
   checkOptMove(){
     let howManyWeGot = [];
-    console.log(squares);
+    var randomDiff = Math.floor(Math.random() * 11);
+    console.log("RAND: " + difficulty);
+    if(difficulty == "easy") {
+      console.log("YES");
+      if(randomDiff < 7) {
+        return [-1,-1];
+      }
+    }else if(difficulty == "medium") {
+      if(randomDiff < 5) {
+        return [-1,-1];
+      }
+    }else if(difficulty == "hard") {
+      if(randomDiff < 2) {
+        return [-1,-1];
+      }
+    }
+    // console.log(squares);
     for (var i = 0; i < squares.length; i++) {
       if(squares[i][0] != -1) {
-        console.log("i:" + i);
+        // console.log("i:" + i);
         howManyWeGot = [];
 
         if(vertices[squares[i][0]].clickedConnections.includes(parseInt(squares[i][1]))){
@@ -552,8 +573,6 @@ class gameScreen {
           howManyWeGot.push(4)
         }
         if(howManyWeGot.length == 3){
-          console.log("OPT");
-          console.log(howManyWeGot);
           if(!howManyWeGot.includes(1)) {
             return[squares[i][0], squares[i][1]]
           }
@@ -614,7 +633,7 @@ class gameScreen {
             if(takenSquare.length == 16){
               httpPost("http://198.199.121.101:8088/score", { "time": playerTimer, "scorePlayer": mgameScreen.scorePlayer, "scoreAI": mgameScreen.scoreAI, "difficulty": difficultyInt, "mapname": currentMapSelected, "userID": parseInt(userID)}, function(res) {
                 mgameScreen.endGameSender(res, mgameScreen);
-                gameState = 2;
+                setTimeout(function(){ gameState = 2; }, 3000);
               })
             }
             // this.scoreAI += (100 * addAndMore[0]);
@@ -708,7 +727,7 @@ function mouseClickedd() {
         if(takenSquare.length == 16){
           httpPost("http://198.199.121.101:8088/score", { "time": playerTimer, "scorePlayer": mgameScreen.scorePlayer, "scoreAI": mgameScreen.scoreAI, "difficulty": difficultyInt, "mapname": currentMapSelected, "userID": parseInt(userID) }, function(res) {
             mgameScreen.endGameSender(res, mgameScreen);
-            gameState = 2;
+            setTimeout(function(){ gameState = 2; }, 3000);
           })
         }
         // if(takenSquare.length == 16){
@@ -728,8 +747,6 @@ function mouseClickedd() {
       case "hard": difficultyInt = 2; break;
       case "impossible": difficultyInt = 3; break;
     }
-    console.log("PIZZA IS MY FAV FOOD");
-    console.log(currentMapSelected);
     httpPost("http://198.199.121.101:8088/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare, "difficulty": difficultyInt, "mapNumber": currentMapSelected }, function(res) {
       mgameScreen.checkAIMove(res, mgameScreen);
     })
