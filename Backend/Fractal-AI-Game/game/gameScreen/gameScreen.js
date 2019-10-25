@@ -627,7 +627,7 @@ class gameScreen {
               // this.scorePlayer = int(this.scorePlayer)
               // this.scoreAI = 100 - this.scorePlayer;
             }else {
-              this.scoreAI += (100 * addAndMore[0]);
+              this.scorePlayer += (100 * addAndMore[0]);
             }
             let difficultyInt;
             switch(difficulty) {
@@ -728,7 +728,7 @@ function mouseClickedd() {
         if(takenSquare.length == 16){
           mgameScreen.scorePlayer = 100 - mgameScreen.scoreAI;
         }else {
-          mgameScreen.scorePlayer += (100 * addAndMore[0]);
+          mgameScreen.scoreAI += (100 * addAndMore[0]);
         }
 
         if(takenSquare.length == 16){
