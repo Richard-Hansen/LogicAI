@@ -103,7 +103,7 @@ class ScoreScreen {
   }
 
   getScoreHighlight(score) {
-    if (score.UserID.toString() === userID.toString()) {
+    if (score.UserID.toString() === this.scores[2].UserID.toString()) {
       return 'rgba(255, 159, 0, 0.8)'
     }
     return 'white'
