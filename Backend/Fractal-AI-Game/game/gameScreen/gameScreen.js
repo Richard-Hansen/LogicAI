@@ -123,7 +123,11 @@ class GameLogic {
         if(WHoTheFuckMoves == 1) {
           this.whoTookQuad.push([197,255,158,100])
         }else {
-          this.whoTookQuad.push([216,158,255,100])
+          if(gameState == 0) {
+            this.whoTookQuad.push([197,255,158,100])
+          }else {
+            this.whoTookQuad.push([216,158,255,100])
+          }
         }
         msquares[i][0] = -1;
         msquares[i][1] = -1;
@@ -702,9 +706,9 @@ function mouseClickedd() {
     Gamebackground = new gamebackground();
     gameState = 0;
   }
-  if(WHoTheFuckMoves == 2){
-    return;
-  }
+  // if(WHoTheFuckMoves == 2){
+  //   return;
+  // }
   if(gameState == 0){
     return;
   }
