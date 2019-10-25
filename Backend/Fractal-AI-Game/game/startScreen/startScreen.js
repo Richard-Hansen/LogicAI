@@ -283,7 +283,7 @@ class StartScreen {
       case 0: difficulty = "easy"; break;
       case 1: difficulty = "medium"; break;
       case 2: difficulty = "hard"; break;
-      case 3: difficulty = "impossible"; break;
+      case 4: difficulty = "impossible"; break;
     }
     text(difficulty, 0, windowHeight / 3.2);
     this.drawArrows(-windowWidth / 10, windowHeight / 3.3, "right");
