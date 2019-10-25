@@ -47,6 +47,10 @@ class gamebackground {
     // mgameLogic = new GameLogic();
     this.mmgameLogic = mgameLogic;
     httpPost("http://localhost:8088/map", { map: "Map" + currentMapSelected }, this.callMapRoute)
+    if(currentMapSelected == 2 || currentMapSelected == 3) {
+      httpPost("http://localhost:8088/map", { map: "Map1" }, this.callMapRoute)
+    }
+
     /* Set player move */
     WHoTheFuckMoves = 1;
     this.scoreAI = 0;

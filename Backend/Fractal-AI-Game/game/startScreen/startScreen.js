@@ -230,7 +230,7 @@ class StartScreen {
     /* Setting my strokeweight */
     strokeWeight(4);
     /* Setting my stroke color */
-    stroke(0, 0, 0, mstartScreen.checkPlayButton());
+    stroke(0, 0, 0, 0);
     /* Drawing my rectangle */
     strokeWeight(0);
     textSize(windowHeight / 30);
@@ -241,7 +241,7 @@ class StartScreen {
     /* popping all my settings so other functions dont have to deal with them */
     stroke(0, 0, 0, 255);
     strokeWeight(1);
-    fill(0, 0, 0, mstartScreen.checkPlayButton())
+    fill(0, 0, 0, 0)
     rect(0, windowHeight / 2.3, windowWidth / 16, windowHeight / 15, 20);
     pop();
   }
@@ -278,6 +278,7 @@ class StartScreen {
     textFont('Georgia');
     /* Write the back onto the box */
     fill(255, 0, 0, this.boxAlpha)
+    difficulty = "";
     switch (this.difficultyIntForm) {
       case 0: difficulty = "easy"; break;
       case 1: difficulty = "medium"; break;
@@ -398,7 +399,7 @@ function mouseClicked() {
   }
   if (mstartScreen.quickPlayButton.checkMouse() === 30) {
     // quick play button clicked
-    mgameScreen.init(false);
+    mgameScreen.init(false, true);
     mstartScreen.hide()
     mstartScreen.quickPlay()
   }
@@ -406,16 +407,16 @@ function mouseClicked() {
   translate(windowWidth / 2, windowHeight / 2)
   for (var i = 0; i < buttonsOnStartScreen.length; i++) {
     if (dist(buttonsOnStartScreen[i].x, buttonsOnStartScreen[i].y, mouseX - windowWidth / 2, mouseY - windowHeight / 2) < 30) {
-      if (i == 0 && mstartScreen.difficultyIntForm > 0) {
+      if (i == 0) {
         mstartScreen.difficultyIntForm--;
-      } else if (i == 1 && mstartScreen.difficultyIntForm < 4) {
+      } else if (i == 1) {
         mstartScreen.difficultyIntForm++;
       }
-      if (i == 2 && currentMapSelected > 1) {
+      if (i == 2) {
         currentMapSelected--;
         mgameScreen.init();
         Gamebackground = new gamebackground();
-      } else if (i == 3 && currentMapSelected < 3) {
+      } else if (i == 3) {
         currentMapSelected++;
         mgameScreen.init();
         Gamebackground = new gamebackground();
@@ -423,7 +424,7 @@ function mouseClicked() {
     }
   }
   if (mstartScreen.checkPlayButton() == 30) {
-    mgameScreen.init(false);
+    mgameScreen.init(false, true);
    // if (mstartScreen.playGame(mstartScreen)() === 'OK') {
      // mgameScreen.init(false);
       mstartScreen.hide()

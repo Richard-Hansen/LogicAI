@@ -186,11 +186,10 @@ class gameScreen {
     // httpPost("http://localhost:8088/squareData", { Mapname: "Map" + currentMapSelected }, this.httpPostSquareData)
 
     playerTimer = -1;
-
-    setInterval(function(){ playerTimer++ }, 1000);
+    playerTimer++
   }
 
-  init(test){
+  init(test, defect){
     /* Set player move */
     if(test) {
       return;
@@ -206,9 +205,16 @@ class gameScreen {
     this.scorePlayer = 0;
     mgameLogic = new GameLogic();
     this.mmgameLogic = mgameLogic;
-    httpPost("http://localhost:8088/map", { map: "Map" + currentMapSelected }, this.callMapRoute)
+    if(defect) {
+      httpPost("http://localhost:8088/map", { map: "Map1" }, this.callMapRoute)
+      httpPost("http://localhost:8088/squareData", { Mapname: "Map1" }, this.httpPostSquareData)
+    }
+    else {
+      httpPost("http://localhost:8088/map", { map: "Map" + currentMapSelected }, this.callMapRoute)
+      httpPost("http://localhost:8088/squareData", { Mapname: "Map" + currentMapSelected }, this.httpPostSquareData)
+    }
     /* Sending HTTP request to the squareData route. Need to populate the squares/squaresArea array */
-    httpPost("http://localhost:8088/squareData", { Mapname: "Map" + currentMapSelected }, this.httpPostSquareData)
+
   }
 
   /* draw function that will be called at 60fps once gameState has been moved to 1. */
@@ -618,8 +624,8 @@ class gameScreen {
           if (addAndMore[0] != undefined) {
             takenSquare.push([addAndMore[1], WHoTheFuckMoves])
             if(takenSquare.length == 16){
-              this.scorePlayer = int(this.scorePlayer)
-              this.scoreAI = 100 - this.scorePlayer;
+              // this.scorePlayer = int(this.scorePlayer)
+              // this.scoreAI = 100 - this.scorePlayer;
             }else {
               this.scoreAI += (100 * addAndMore[0]);
             }
@@ -634,7 +640,7 @@ class gameScreen {
               httpPost("http://localhost:8088/score", { "time": playerTimer, "scorePlayer": mgameScreen.scorePlayer, "scoreAI": mgameScreen.scoreAI, "difficulty": difficultyInt, "mapname": currentMapSelected, "userID": parseInt(userID)}, function(res) {
                 mgameScreen.endGameSender(res, mgameScreen);
                 setTimeout(function(){ gameState = 2; }, 3000);
-                
+
               })
             }
             // this.scoreAI += (100 * addAndMore[0]);
@@ -728,6 +734,7 @@ function mouseClickedd() {
         if(takenSquare.length == 16){
           httpPost("http://localhost:8088/score", { "time": playerTimer, "scorePlayer": mgameScreen.scorePlayer, "scoreAI": mgameScreen.scoreAI, "difficulty": difficultyInt, "mapname": currentMapSelected, "userID": parseInt(userID) }, function(res) {
             mgameScreen.endGameSender(res, mgameScreen);
+
             setTimeout(function(){ gameState = 2; }, 3000);
           })
         }
