@@ -132,6 +132,7 @@ class ScoreScreen {
       score.Index = i + 1
       var bgColor = that.getScoreHighlight(score)
       that.createTableElement(score, bgColor)
+      that.createTableElement(score, bgColor)
     }
     that.addUserResults()
     that.addLastResult()
