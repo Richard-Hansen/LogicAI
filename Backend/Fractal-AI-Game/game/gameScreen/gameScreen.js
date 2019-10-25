@@ -648,6 +648,7 @@ class gameScreen {
               })
             }
             // this.scoreAI += (100 * addAndMore[0]);
+            WHoTheFuckMoves = 1;
           }
         } while(addAndMore[0] != undefined)
         /* Change player turn */
@@ -749,9 +750,10 @@ function mouseClickedd() {
         //   })
         // }
       }
+      WHoTheFuckMoves = 2
     } while(addAndMore[0] != undefined)
     /* Change player turn */
-    if (WHoTheFuckMoves == 1) { WHoTheFuckMoves = 2 } else { WHoTheFuckMoves = 1 }
+    // if (WHoTheFuckMoves == 1) { WHoTheFuckMoves = 2 } else { WHoTheFuckMoves = 1 }
     let difficultyInt;
     switch(difficulty) {
       case "easy": difficultyInt = 0; break;
