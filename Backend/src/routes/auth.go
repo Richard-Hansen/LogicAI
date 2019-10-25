@@ -26,7 +26,7 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
 	in := []byte(reqBody)
 	var raw map[string]interface{}
 	json.Unmarshal(in, &raw)
-	db, err := sql.Open("mysql", "Richard:SteveIsTheBest@tcp(198.199.121.101:3306)/logic")
+	db, err := sql.Open("mysql", "Richard:SteveIsTheBest@tcp(localhost:3306)/logic")
 	defer db.Close()
 	if err != nil {
 		panic(err.Error())

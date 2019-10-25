@@ -81,7 +81,7 @@ class ScoreScreen {
   callScoresRoute() {
     var that = this;
     try {
-      httpPost("http://198.199.121.101:8088/hiscores", { user: userID }, function (res) {
+      httpPost("http://localhost1:8088/hiscores", { user: userID }, function (res) {
         that.scores = JSON.parse(res)
         // that.scores = [{ Index: 1, UserID: 1, Name: "name", Score: 10, Difficulty: 2, Board: 5 }]
         // that.scores = that.parseScores(that)
