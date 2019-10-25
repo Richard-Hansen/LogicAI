@@ -254,6 +254,10 @@ class gamebackground {
   }
 
   checkAIMove(res, fgameScreen) {
+    console.log("takenSquare: " + takenSquare.length);
+    if(takenSquare.length > 8){
+      return false;
+    }
     // console.log("RES AI: " + res);
     if(gameState == 1) {
       return false;

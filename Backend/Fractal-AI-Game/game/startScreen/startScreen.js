@@ -349,12 +349,11 @@ class StartScreen {
         this.nameInput.show()
         this.buttonShown = true;
       }
-    } else {
-      /* This will start bring the title up */
-      this.titleY -= windowHeight / 150;
-      /* This will decrease the size of the title as it moves */
-      this.titleSize -= windowHeight / 400;
     }
+    /* This will start bring the title up */
+    this.titleY -= windowHeight / 150;
+    /* This will decrease the size of the title as it moves */
+    this.titleSize -= windowHeight / 400;
   }
 
   /**
