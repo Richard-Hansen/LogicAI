@@ -634,6 +634,7 @@ class gameScreen {
               httpPost("http://198.199.121.101:8088/score", { "time": playerTimer, "scorePlayer": mgameScreen.scorePlayer, "scoreAI": mgameScreen.scoreAI, "difficulty": difficultyInt, "mapname": currentMapSelected, "userID": parseInt(userID)}, function(res) {
                 mgameScreen.endGameSender(res, mgameScreen);
                 setTimeout(function(){ gameState = 2; }, 3000);
+                
               })
             }
             // this.scoreAI += (100 * addAndMore[0]);
