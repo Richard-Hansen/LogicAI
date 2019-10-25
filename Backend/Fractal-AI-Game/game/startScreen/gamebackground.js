@@ -46,13 +46,13 @@ class gamebackground {
     // this.mgameLogic = new GameLogic()
     // mgameLogic = new GameLogic();
     this.mmgameLogic = mgameLogic;
-    httpPost("http://198.199.121.101:8088/map", { map: "Map" + currentMapSelected }, this.callMapRoute)
+    httpPost("http://localhost:8088/map", { map: "Map" + currentMapSelected }, this.callMapRoute)
     /* Set player move */
     WHoTheFuckMoves = 1;
     this.scoreAI = 0;
     this.scorePlayer = 0;
 
-    httpPost("http://198.199.121.101:8088/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare, "difficulty": 0, "mapNumber": currentMapSelected }, function(res) {
+    httpPost("http://localhost:8088/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare, "difficulty": 0, "mapNumber": currentMapSelected }, function(res) {
       Gamebackground.checkAIMove(res, Gamebackground);
     })
   }
@@ -282,7 +282,7 @@ class gamebackground {
         } while(addAndMore[0] != undefined)
         /* Change player turn */
         if (WHoTheFuckMoves == 1) { WHoTheFuckMoves = 2 } else { WHoTheFuckMoves = 1 }
-        httpPost("http://198.199.121.101:8088/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare, "difficulty": 3, "mapNumber": currentMapSelected }, function(res) {
+        httpPost("http://localhost:8088/move", { "edgesSquare": takenEdges, "ownerSquare": takenSquare, "difficulty": 3, "mapNumber": currentMapSelected }, function(res) {
           Gamebackground.checkAIMove(res, Gamebackground);
         })
         return true;
