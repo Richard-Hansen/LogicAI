@@ -129,7 +129,7 @@ class ScoreScreen {
   parseScores(that) {
     for (var i = 0; i < 10 && i < that.scores.length; i += 1) {
       var score = that.scores[i]
-      score.Index = i + 1
+      score.Index = i - 1
       var bgColor = that.getScoreHighlight(score)
       that.createTableElement(score, bgColor)
       that.createTableElement(score, bgColor)
