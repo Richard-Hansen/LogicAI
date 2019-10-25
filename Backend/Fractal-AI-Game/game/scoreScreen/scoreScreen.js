@@ -113,7 +113,7 @@ class ScoreScreen {
     var lastScore = { GameID: -1 }
     for (var i = 0; i < scores.length; i += 1) {
       if (scores[i].GameID > lastScore.GameID && scores[i].UserID.toString() === userID.toString()) {
-        lastScore = scores[i]
+        lastScore = scores[0]
       }
     }
     if (lastScore.GameID !== -1) {
