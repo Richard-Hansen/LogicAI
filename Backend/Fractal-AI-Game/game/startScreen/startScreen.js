@@ -169,7 +169,7 @@ class StartScreen {
   */
   async callAuthRoute() {
     var that = this
-    await httpPost("http://198.199.121.101:8088/auth", { user: userID, username: that.nameInput.elt.value }, function (res) {
+    await httpPost("http://localhost:8088/auth", { user: userID, username: that.nameInput.elt.value }, function (res) {
       console.log("RES:", res)
       window.localStorage.setItem("userName", that.nameInput.elt.value)
       that.switchState(false)
